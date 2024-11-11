@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesex.MessagingController">
+   <children>
+      <SplitPane dividerPositions="0.2945891783567134" layoutX="-9.0" prefHeight="602.4" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <SplitPane dividerPositions="0.8800268096514745" layoutY="76.0" orientation="VERTICAL" prefHeight="598.4" prefWidth="159.2" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <SplitPane dividerPositions="0.1271121351766513" layoutX="35.0" layoutY="72.0" orientation="VERTICAL" prefHeight="522.4" prefWidth="230.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <items>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="50.0" prefWidth="229.0">
+                                       <children>
+                                          <ToolBar layoutX="-16.0" layoutY="12.0" prefHeight="63.2" prefWidth="228.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <items>
+                                                <Button mnemonicParsing="false" onAction="#addFriend" text="New" />
+                                                <Button mnemonicParsing="false" text="A" />
+                                                <Button mnemonicParsing="false" text="A" />
+                                            </items>
+                                          </ToolBar>
+                                       </children>
+                                    </AnchorPane>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="470.0" prefWidth="229.0">
+                                       <children>
+                                          <ListView fx:id="myListView" layoutY="14.0" prefHeight="452.0" prefWidth="228.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </items>
+                              </SplitPane>
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                    </items>
+                  </SplitPane>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="546.0">
+               <children>
+                  <SplitPane dividerPositions="0.1109249329758713" layoutX="111.0" layoutY="110.0" orientation="VERTICAL" prefHeight="598.4" prefWidth="560.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <items>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="58.0" prefWidth="558.0">
+                           <children>
+                              <Label fx:id="myLabel" layoutX="24.0" layoutY="23.0" text="Lpel" />
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <SplitPane dividerPositions="0.8666413373860181" layoutX="103.0" layoutY="109.0" orientation="VERTICAL" prefHeight="528.0" prefWidth="558.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <items>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                       <children>
+                                          <ListView fx:id="messages" layoutX="149.0" layoutY="109.0" prefHeight="453.6" prefWidth="556.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children>
+                                    </AnchorPane>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                       <children>
+                                          <Button layoutX="478.0" layoutY="21.0" mnemonicParsing="false" onAction="#addMessage" text="Send" />
+                                          <TextArea fx:id="myTextArea" layoutX="24.0" layoutY="14.0" onInputMethodTextChanged="#updateMessageBuffer" prefHeight="39.0" prefWidth="440.0" />
+                                       </children>
+                                    </AnchorPane>
+                                </items>
+                              </SplitPane>
+                           </children>
+                        </AnchorPane>
+                    </items>
+                  </SplitPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

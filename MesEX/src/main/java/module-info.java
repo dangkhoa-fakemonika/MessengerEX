@@ -8,6 +8,7 @@ module org.example.mesex {
     requires net.synedra.validatorfx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires java.desktop;
 
     opens org.example.mesex to javafx.fxml;
     exports org.example.mesex;

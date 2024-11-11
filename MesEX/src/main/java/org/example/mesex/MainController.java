@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javax.imageio.IIOException;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -30,6 +31,11 @@ public class MainController {
 
     public void loginScene(ActionEvent actionEvent) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
+        bufferScene(actionEvent);
+    }
+
+    public void mainScene(ActionEvent actionEvent) throws IOException{
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
         bufferScene(actionEvent);
     }
 }
