@@ -2,6 +2,7 @@ package org.example.mesex;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -46,22 +48,46 @@ public class MessagingController implements Initializable {
         stage.show();
     }
 
-    public void addFriend(ActionEvent actionEvent){
-        String s = "dummy";
+    HBox makeFriendBox(String s){
         HBox p = new HBox();
-        Button b = new Button();
-        b.setText("...");
+
         p.setId(s);
         Label thisLabel = new Label();
         thisLabel.setText(s);
         p.getChildren().add(thisLabel);
-        p.getChildren().add(b);
+
+//        p.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                Button b = new Button();
+//                b.setText("...");
+//                p.getChildren().add(b);
+//            }
+//        });
+//
+//        p.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                Button b = new Button();
+//                b.setText("...");
+//                p.getChildren().remove(b);
+//            }
+//        });
+
         p.setSpacing(20);
+
+        return p;
+    }
+
+    public void addFriend(ActionEvent actionEvent){
+        String s = "dummy";
+        HBox p = makeFriendBox(s);
+
         myListView.getItems().add(p);
     }
 
     public void updateMessageBuffer(ActionEvent actionEvent){
-
+//        if (actionEvent.getEventType())
     }
 
     public void addMessage(ActionEvent actionEvent){
@@ -77,15 +103,7 @@ public class MessagingController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         for (String s : friendList){
-            HBox p = new HBox();
-            Button b = new Button();
-            b.setText("...");
-            p.setId(s);
-            Label thisLabel = new Label();
-            thisLabel.setText(s);
-            p.getChildren().add(thisLabel);
-            p.getChildren().add(b);
-            p.setSpacing(20);
+            HBox p = makeFriendBox(s);
             myListView.getItems().add(p);
         }
 
