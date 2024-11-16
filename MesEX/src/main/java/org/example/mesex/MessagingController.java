@@ -9,10 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -42,7 +39,7 @@ public class MessagingController implements Initializable {
     String currentFriend;
 
     void bufferScene(ActionEvent actionEvent){
-        stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+        stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -55,24 +52,6 @@ public class MessagingController implements Initializable {
         Label thisLabel = new Label();
         thisLabel.setText(s);
         p.getChildren().add(thisLabel);
-
-//        p.addEventHandler(MouseEvent.MOUSE_ENTERED_TARGET, new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                Button b = new Button();
-//                b.setText("...");
-//                p.getChildren().add(b);
-//            }
-//        });
-//
-//        p.addEventHandler(MouseEvent.MOUSE_EXITED_TARGET, new EventHandler<MouseEvent>() {
-//            @Override
-//            public void handle(MouseEvent mouseEvent) {
-//                Button b = new Button();
-//                b.setText("...");
-//                p.getChildren().remove(b);
-//            }
-//        });
 
         p.setSpacing(20);
 
@@ -115,5 +94,13 @@ public class MessagingController implements Initializable {
             }
         });
 
+    }
+
+    public void friendsSettingScene(ActionEvent actionEvent) throws IOException{
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-friend-config.fxml")));
+        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root);
+        thisStage.setScene(scene);
+        thisStage.show();
     }
 }

@@ -8,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -18,6 +17,7 @@ public class MainController {
     private Parent root;
 
     void bufferScene(ActionEvent actionEvent){
+//        System.out.println(actionEvent.getSource());
         stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
