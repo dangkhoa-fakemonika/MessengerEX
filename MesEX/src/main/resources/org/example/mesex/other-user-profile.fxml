@@ -38,7 +38,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="420.0" prefWidth="798.0">
                <children>
-                  <VBox layoutX="16.0" layoutY="14.0" prefHeight="232.0" prefWidth="375.0" style="-fx-padding: 20;">
+                  <VBox layoutX="16.0" layoutY="14.0" prefHeight="287.0" prefWidth="375.0" style="-fx-padding: 20;">
                      <children>
                          <Label alignment="CENTER" prefHeight="51.0" prefWidth="421.0" style="-fx-padding:10;" text="Account Information">
                            <font>
@@ -55,6 +55,7 @@
                               <Font size="15.0" />
                            </font>
                         </TextField>
+                        <Pane prefHeight="26.0" prefWidth="382.0" style="-fx-pref-height: 10;" />
                         <Pane prefHeight="26.0" prefWidth="382.0" style="-fx-pref-height: 25;" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email">
                            <font>
@@ -81,6 +82,7 @@
                            </font>
                         </Text>
                         <DatePicker disable="true" prefHeight="30.0" prefWidth="176.0" />
+                        <Pane prefHeight="26.0" prefWidth="382.0" style="-fx-pref-height: 10;" />
                         <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 25;" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Last active">
                            <font>
