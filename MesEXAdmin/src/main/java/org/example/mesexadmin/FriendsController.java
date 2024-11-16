@@ -37,9 +37,9 @@ public class FriendsController implements Initializable {
     }
 
     final ObservableList<UserData> data = FXCollections.observableArrayList(
-            new UserData("FakeMonika", "fakemonika", "example@email.com"),
-            new UserData("KanCh", "kanch", "example@email.com"),
-            new UserData("Ryan Gosling", "him", "example@email.com")
+            new UserData("FakeMonika", "fakemonika", "example@email.com", "Active"),
+            new UserData("KanCh", "kanch", "example@email.com", "Active"),
+            new UserData("Ryan Gosling", "him", "example@email.com", "Offline")
     );
 
     @Override

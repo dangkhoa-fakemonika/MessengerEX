@@ -148,4 +148,12 @@ public class MessagingController implements Initializable {
         thisStage.setScene(scene);
         thisStage.show();
     }
+
+    public void appManagementScene(ActionEvent actionEvent) throws IOException{
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-app-manager.fxml")));
+        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root);
+        thisStage.setScene(scene);
+        thisStage.show();
+    }
 }

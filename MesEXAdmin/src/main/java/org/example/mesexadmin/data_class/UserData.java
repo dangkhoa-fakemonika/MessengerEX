@@ -12,14 +12,24 @@ public class UserData {
     public SimpleStringProperty dateCreated;
 
 
-    public UserData(String newName, String newId, String newEmail){
+    public UserData(String newName, String newId, String newEmail, String currentStatus){
         name = new SimpleStringProperty(newName);
         id = new SimpleStringProperty(newId);
         email = new SimpleStringProperty(newEmail);
-        status = new SimpleStringProperty("Active");
+        status = new SimpleStringProperty(currentStatus);
         lastActive = new SimpleStringProperty("27 years ago");
         friendCount = new SimpleStringProperty("-1");
         dateCreated = new SimpleStringProperty("Tomorrow");
+    }
+
+    public UserData(UserData u){
+        name = new SimpleStringProperty(u.getName());
+        id = new SimpleStringProperty(u.getId());
+        email = new SimpleStringProperty(u.getEmail());
+        status = new SimpleStringProperty(u.getStatus());
+        lastActive = new SimpleStringProperty(u.getLastActive());
+        friendCount = new SimpleStringProperty(u.getFriendCount());
+        dateCreated = new SimpleStringProperty(u.getDateCreated());
     }
 
     public void setEmail(String email) {

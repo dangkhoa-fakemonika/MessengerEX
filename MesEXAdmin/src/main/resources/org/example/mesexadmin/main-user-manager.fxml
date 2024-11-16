@@ -16,6 +16,7 @@
                   <Button layoutX="659.0" layoutY="28.0" mnemonicParsing="false" text="Ban" />
                   <Button layoutX="705.0" layoutY="28.0" mnemonicParsing="false" text="Details" />
                   <Button layoutX="542.0" layoutY="28.0" mnemonicParsing="false" text="Unmark as Spam" />
+                  <Button layoutX="23.0" layoutY="28.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
@@ -29,7 +30,7 @@
                         </Tab>
                         <Tab closable="false" text="Spam Report">
                            <content>
-                              <TableView fx:id="pendingTable" prefHeight="511.2" prefWidth="798.4" />
+                              <TableView fx:id="spamTable" prefHeight="511.2" prefWidth="798.4" />
                            </content>
                         </Tab>
                         <Tab closable="false" text="Banned">
@@ -37,7 +38,7 @@
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                           </content>
                            <content>
-                              <TableView prefHeight="200.0" prefWidth="200.0" />
+                              <TableView fx:id="bannedTable" prefHeight="200.0" prefWidth="200.0" />
                            </content>
                         </Tab>
                      </tabs>

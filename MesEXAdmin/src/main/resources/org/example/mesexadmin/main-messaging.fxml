@@ -39,7 +39,7 @@
                                           </MenuButton>
                                           <MenuButton layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="App" textAlignment="CENTER">
                                              <items>
-                                                <MenuItem mnemonicParsing="false" text="Manage App" />
+                                                <MenuItem mnemonicParsing="false" onAction="#appManagementScene" text="Manage App" />
                                                 <MenuItem mnemonicParsing="false" onAction="#userManagementScene" text="Manage Users" />
                                                 <MenuItem mnemonicParsing="false" onAction="#groupManagementScene" text="Manage Chats" />
                                              </items>
