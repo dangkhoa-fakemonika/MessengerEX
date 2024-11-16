@@ -1,4 +1,5 @@
-package org.example.mesex;
+package org.example.mesexadmin;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -9,10 +10,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -78,6 +82,17 @@ public class MessagingController implements Initializable {
         }
     }
 
+    public void addMessage(){
+        if (!myTextArea.getText().trim().isEmpty()){
+            Label newLabel = new Label();
+            newLabel.setText("admin: " + myTextArea.getText().trim());
+            messages.getItems().add(newLabel);
+            myTextArea.setText("");
+        }
+    }
+
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -93,6 +108,21 @@ public class MessagingController implements Initializable {
                 myLabel.setText(currentFriend);
             }
         });
+
+        myTextArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                if (keyEvent.getCode() == KeyCode.ENTER)  {
+                    if (keyEvent.isShiftDown()){
+                        myTextArea.appendText("\n");
+                    }
+                    else {
+                        addMessage();
+                    }
+                }
+            }
+        });
+
     }
 
     public void friendsSettingScene(ActionEvent actionEvent) throws IOException{
@@ -103,5 +133,19 @@ public class MessagingController implements Initializable {
         thisStage.show();
     }
 
+    public void userManagementScene(ActionEvent actionEvent) throws IOException{
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-user-manager.fxml")));
+        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root);
+        thisStage.setScene(scene);
+        thisStage.show();
+    }
 
+    public void groupManagementScene(ActionEvent actionEvent) throws IOException{
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-group-manager.fxml")));
+        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root);
+        thisStage.setScene(scene);
+        thisStage.show();
+    }
 }

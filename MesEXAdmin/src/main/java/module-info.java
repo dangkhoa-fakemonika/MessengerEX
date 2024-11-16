@@ -11,4 +11,6 @@ module org.example.mesexadmin {
 
     opens org.example.mesexadmin to javafx.fxml;
     exports org.example.mesexadmin;
+    exports org.example.mesexadmin.data_class;
+    opens org.example.mesexadmin.data_class to javafx.fxml;
 }
