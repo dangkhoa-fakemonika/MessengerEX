@@ -50,6 +50,7 @@
                               <Font size="15.0" />
                            </font>
                         </TextField>
+                        <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 10;" />
                         <Pane prefHeight="26.0" prefWidth="335.0" style="-fx-pref-height: 25;" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email">
                            <font>
@@ -67,7 +68,6 @@
                               <Button mnemonicParsing="false" text="Change email" />
                            </buttons>
                         </ButtonBar>
-                        <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 25;" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
                            <font>
                               <Font name="System Bold" size="15.0" />
@@ -95,6 +95,7 @@
                            </font>
                         </Text>
                         <DatePicker disable="true" prefHeight="30.0" prefWidth="176.0" />
+                        <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 10;" />
                         <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 25;" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Last Active">
                            <font>
