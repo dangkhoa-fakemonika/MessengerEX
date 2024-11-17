@@ -12,9 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import org.example.mesex.FriendRequestData;
-import org.example.mesex.SpamTicketData;
-import org.example.mesex.UserData;
+import org.example.mesex.data_class.FriendRequestData;
+import org.example.mesex.data_class.UserData;
 
 import java.io.IOException;
 import java.net.URL;

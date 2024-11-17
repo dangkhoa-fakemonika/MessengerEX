@@ -14,7 +14,7 @@
             <TextField layoutX="79.0" layoutY="35.0" prefHeight="25.0" prefWidth="235.0" />
             <Label layoutY="4.0" text="Username:" />
             <Label layoutX="1.0" layoutY="39.0" text="Password:" />
-            <Button layoutX="139.0" layoutY="88.0" mnemonicParsing="false" text="Login" />
+            <Button layoutX="139.0" layoutY="88.0" mnemonicParsing="false" onAction="#mainScene" text="Login" />
          </children>
       </Pane>
       <Label layoutX="302.0" layoutY="379.0" text="Don't have an account?" />

@@ -29,14 +29,14 @@
                                               <MenuItem mnemonicParsing="false" onAction="#addFriend" text="Add Friend" />
                                               <MenuItem mnemonicParsing="false" onAction="#friendsSettingScene" text="Manage Friend" />
                                                 <MenuItem mnemonicParsing="false" onAction="#addFriend" text="Create Group" />
-                                                <MenuItem mnemonicParsing="false" onAction="#addFriend" text="Manage Groups" />
+                                                <MenuItem mnemonicParsing="false" onAction="#personalGroupManagementScene" text="Manage Groups" />
                                             </items>
                                           </MenuButton>
                                           <TextField layoutX="14.0" layoutY="67.0" prefHeight="26.0" prefWidth="199.0" promptText="Search..." />
                                           <MenuButton layoutX="137.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="79.0" text="Account">
                                             <items>
-                                              <MenuItem mnemonicParsing="false" text="Details" />
-                                              <MenuItem mnemonicParsing="false" text="Manage" />
+                                              <MenuItem mnemonicParsing="false" onAction="#profileScene" text="Manage" />
+                                              <MenuItem mnemonicParsing="false" onAction="#returnLogin" text="Log Out" />
                                             </items>
                                           </MenuButton>
                                           <MenuButton layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="App" textAlignment="CENTER">

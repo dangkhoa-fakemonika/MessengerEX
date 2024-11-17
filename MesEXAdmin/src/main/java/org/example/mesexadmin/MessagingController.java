@@ -1,6 +1,5 @@
 package org.example.mesexadmin;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -16,13 +15,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -158,4 +155,29 @@ public class MessagingController implements Initializable {
         thisStage.setScene(scene);
         thisStage.show();
     }
+
+    public void personalGroupManagementScene(ActionEvent actionEvent) throws IOException{
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-convo-config.fxml")));
+        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root);
+        thisStage.setScene(scene);
+        thisStage.show();
+    }
+
+    public void profileScene(ActionEvent actionEvent) throws IOException{
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("edit-user-profile.fxml")));
+        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root);
+        thisStage.setScene(scene);
+        thisStage.show();
+    }
+
+    public void returnLogin(ActionEvent actionEvent) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
+        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root);
+        thisStage.setScene(scene);
+        thisStage.show();
+    }
+
 }

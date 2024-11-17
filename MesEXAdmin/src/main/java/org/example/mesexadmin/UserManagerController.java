@@ -9,8 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.example.mesexadmin.data_class.SpamTicketData;
@@ -130,6 +129,17 @@ public class UserManagerController implements Initializable {
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
         bufferScene(actionEvent);
+    }
+
+    public void resetPassword(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-reset-password.fxml"));
+        Dialog<Objects> dialog = new Dialog<>();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        DialogPane dialogPane = loader.load();
+        PopUpController popUpController = loader.getController();
+        popUpController.currentDialog = dialog;
+        dialog.setDialogPane(dialogPane);
+        dialog.showAndWait();
     }
 
     @Override

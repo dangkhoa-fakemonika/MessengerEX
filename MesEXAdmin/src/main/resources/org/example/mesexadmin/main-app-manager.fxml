@@ -24,7 +24,7 @@
                <children>
                   <TabPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <tabs>
-                        <Tab closable="false" text="Activity">
+                        <Tab closable="false" text="All Activity">
                            <content>
                               <AnchorPane>
                                  <children>
@@ -35,11 +35,34 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="Register Stats">
+                        <Tab closable="false" text="Login History">
+                           <content>
+                              <AnchorPane>
+                                 <children>
+                                    <TableView layoutY="49.0" prefHeight="433.0" prefWidth="798.0" />
+                                    <TextField layoutX="6.0" layoutY="14.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="151.0" layoutY="14.0" prefHeight="26.0" prefWidth="96.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab closable="false" text="Recent New Accounts">
+                           <content>
+                              <AnchorPane>
+                                 <children>
+                                    <TableView layoutY="49.0" prefHeight="433.0" prefWidth="798.0" />
+                                    <TextField layoutX="6.0" layoutY="14.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter Name" />
+                                    <ChoiceBox layoutX="296.0" layoutY="14.0" prefHeight="26.0" prefWidth="96.0" />
+                                    <TextField layoutX="150.0" layoutY="14.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter Date Range" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab closable="false" text="New Account Stats">
                            <content>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                  <children>
-                                    <BarChart layoutX="29.0" layoutY="68.0" prefHeight="482.4" prefWidth="798.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <BarChart layoutX="29.0" layoutY="52.0" prefHeight="430.0" prefWidth="798.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0">
                                       <xAxis>
                                         <CategoryAxis side="BOTTOM" />
                                       </xAxis>
@@ -47,13 +70,15 @@
                                         <NumberAxis side="LEFT" />
                                       </yAxis>
                                     </BarChart>
+                                    <TextField layoutX="31.0" layoutY="25.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="176.0" layoutY="25.0" prefHeight="26.0" prefWidth="96.0" />
                                  </children></AnchorPane>
                            </content></Tab>
-                        <Tab closable="false" text="Login Stats">
+                        <Tab closable="false" text="Login Statuses">
                            <content>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                  <children>
-                                    <BarChart layoutX="29.0" layoutY="68.0" prefHeight="482.4" prefWidth="798.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <BarChart layoutX="29.0" layoutY="52.0" prefHeight="430.0" prefWidth="798.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0">
                                        <xAxis>
                                           <CategoryAxis side="BOTTOM" />
                                        </xAxis>
@@ -61,6 +86,30 @@
                                           <NumberAxis side="LEFT" />
                                        </yAxis>
                                     </BarChart>
+                                    <TextField layoutX="41.0" layoutY="25.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="186.0" layoutY="25.0" prefHeight="26.0" prefWidth="96.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab closable="false" text="Social Statuses">
+                           <content>
+                              <AnchorPane>
+                                 <children>
+                                    <TableView layoutY="49.0" prefHeight="433.0" prefWidth="798.0" />
+                                    <TextField layoutX="6.0" layoutY="14.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="151.0" layoutY="14.0" prefHeight="26.0" prefWidth="96.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab closable="false" text="Active Users">
+                           <content>
+                              <AnchorPane>
+                                 <children>
+                                    <TableView layoutY="49.0" prefHeight="433.0" prefWidth="798.0" />
+                                    <TextField layoutX="6.0" layoutY="14.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="151.0" layoutY="14.0" prefHeight="26.0" prefWidth="96.0" />
                                  </children>
                               </AnchorPane>
                            </content>

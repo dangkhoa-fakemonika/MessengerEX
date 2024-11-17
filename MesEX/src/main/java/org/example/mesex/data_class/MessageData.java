@@ -1,4 +1,4 @@
-package org.example.mesex;
+package org.example.mesex.data_class;
 
 import javafx.beans.property.SimpleStringProperty;
 

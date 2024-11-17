@@ -32,4 +32,10 @@ public class MainController {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
         bufferScene(actionEvent);
     }
+
+    public void mainScene(ActionEvent actionEvent) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
+        bufferScene(actionEvent);
+    }
+
 }
