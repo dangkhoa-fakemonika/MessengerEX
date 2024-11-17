@@ -5,6 +5,7 @@ db.createCollection("activity_monitor", {
             required: ["userId"],
             properties: {
                 userId: { bsonType: "objectId" },
+                name: { bsonType: "string" },
                 loginLogs: { 
                     bsonType: "array",
                     items: { bsonType: "date" }
