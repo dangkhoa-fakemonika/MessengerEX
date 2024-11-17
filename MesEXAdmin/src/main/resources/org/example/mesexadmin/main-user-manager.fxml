@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesexadmin.UserManagerController">
@@ -13,9 +15,7 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <Button layoutX="659.0" layoutY="28.0" mnemonicParsing="false" text="Ban" />
-                  <Button layoutX="705.0" layoutY="28.0" mnemonicParsing="false" text="Details" />
-                  <Button layoutX="542.0" layoutY="28.0" mnemonicParsing="false" text="Unmark as Spam" />
+                  <Button layoutX="674.0" layoutY="28.0" mnemonicParsing="false" text="See User's Details" />
                   <Button layoutX="23.0" layoutY="28.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
                </children>
             </AnchorPane>
@@ -23,14 +23,32 @@
                <children>
                   <TabPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <tabs>
-                        <Tab closable="false" text="Users' Status">
+                        <Tab closable="false" text="Active Users">
                            <content>
-                              <TableView fx:id="userTable" prefHeight="511.2" prefWidth="798.4" />
+                              <AnchorPane>
+                                 <children>
+                                    <TableView fx:id="userTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
+                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" text="Delete User" />
+                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
+                                    <Button layoutX="560.0" layoutY="13.0" mnemonicParsing="false" text="Add User" />
+                                    <Button layoutX="633.0" layoutY="13.0" mnemonicParsing="false" text="Ban User" />
+                                 </children>
+                              </AnchorPane>
                            </content>
                         </Tab>
                         <Tab closable="false" text="Spam Report">
                            <content>
-                              <TableView fx:id="spamTable" prefHeight="511.2" prefWidth="798.4" />
+                              <AnchorPane>
+                                 <children>
+                                    <TableView fx:id="spamTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
+                                    <Button layoutX="521.0" layoutY="13.0" mnemonicParsing="false" text="Unmark as Spam" />
+                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
+                                    <Button layoutX="635.0" layoutY="13.0" mnemonicParsing="false" text="Ban User" />
+                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" text="Delete User" />
+                                 </children>
+                              </AnchorPane>
                            </content>
                         </Tab>
                         <Tab closable="false" text="Banned">
@@ -38,7 +56,15 @@
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                           </content>
                            <content>
-                              <TableView fx:id="bannedTable" prefHeight="200.0" prefWidth="200.0" />
+                              <AnchorPane>
+                                 <children>
+                                    <TableView fx:id="bannedTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
+                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" text="Delete User" />
+                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
+                                    <Button layoutX="621.0" layoutY="13.0" mnemonicParsing="false" text="Unban User" />
+                                 </children>
+                              </AnchorPane>
                            </content>
                         </Tab>
                      </tabs>

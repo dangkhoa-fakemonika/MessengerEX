@@ -13,7 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import org.example.mesexadmin.data_class.GroupData;
+import org.example.mesexadmin.data_class.ConversationData;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,9 +26,9 @@ public class GroupManagerController implements Initializable {
     private Parent root;
 
     @FXML
-    private TableView<GroupData> activeGroupTable;
+    private TableView<ConversationData> activeGroupTable;
     @FXML
-    private TableView<GroupData> inactiveGroupTable;
+    private TableView<ConversationData> inactiveGroupTable;
 
     void bufferScene(ActionEvent actionEvent){
 //        System.out.println(actionEvent.getSource());
@@ -38,22 +38,22 @@ public class GroupManagerController implements Initializable {
         stage.show();
     }
 
-    final ObservableList<GroupData> data = FXCollections.observableArrayList(
-        new GroupData("group1", "T1", "faker"),
-        new GroupData("group2", "Gen.G", "chovy"),
-        new GroupData("group3", "GAM Esports", "levi")
+    final ObservableList<ConversationData> data = FXCollections.observableArrayList(
+        new ConversationData("group1", "T1", "faker"),
+        new ConversationData("group2", "Gen.G", "chovy"),
+        new ConversationData("group3", "GAM Esports", "levi")
     );
 
-    final ObservableList<GroupData> inactiveData = FXCollections.observableArrayList(
-            new GroupData("group1", "SKT T1", "faker?"),
-            new GroupData("group2", "Samsung Galaxy", "cuvee")
+    final ObservableList<ConversationData> inactiveData = FXCollections.observableArrayList(
+            new ConversationData("group1", "SKT T1", "faker?"),
+            new ConversationData("group2", "Samsung Galaxy", "cuvee")
     );
 
-    ObservableList<TableColumn<GroupData, String>> generateColumns(){
-        TableColumn<GroupData, String> groupIdCol;
-        TableColumn<GroupData, String> groupNameCol;
-        TableColumn<GroupData, String> hostCol;
-        TableColumn<GroupData, String> participantCol;
+    ObservableList<TableColumn<ConversationData, String>> generateColumns(){
+        TableColumn<ConversationData, String> groupIdCol;
+        TableColumn<ConversationData, String> groupNameCol;
+        TableColumn<ConversationData, String> hostCol;
+        TableColumn<ConversationData, String> participantCol;
 
         groupIdCol = new TableColumn<>("Group Name");
         groupNameCol = new TableColumn<>("Group ID");

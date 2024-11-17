@@ -8,14 +8,14 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class GroupData {
+public class ConversationData {
 
     public SimpleStringProperty groupID;
     public SimpleStringProperty groupName;
     public SimpleListProperty<SimpleStringProperty> participantIDs;
     public SimpleStringProperty hostID;
 
-    public GroupData(String newGroupID, String newGroupName, String newHostID){
+    public ConversationData(String newGroupID, String newGroupName, String newHostID){
         groupID = new SimpleStringProperty(newGroupID);
         groupName = new SimpleStringProperty(newGroupName);
         ObservableList<SimpleStringProperty> observableList = FXCollections.observableArrayList(new ArrayList<>());
