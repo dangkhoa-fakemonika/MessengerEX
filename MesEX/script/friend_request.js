@@ -13,4 +13,4 @@ db.createCollection("friend_request", {
     validationAction: "error"
 });
 
-db.friend_requests.createIndex({ "timeSent": -1 });
+db.friend_request.createIndex({ "timeSent": -1 });
