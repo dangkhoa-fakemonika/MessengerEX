@@ -41,7 +41,6 @@ public class UserManagerController implements Initializable {
         stage.show();
     }
 
-
 //    ObservableList<UserData> spamData = FXCollections.observableArrayList(new ArrayList<>());
 //    ObservableList<UserData> bannedData = FXCollections.observableArrayList(new ArrayList<>());
 

@@ -14,9 +14,10 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <Button layoutX="638.0" layoutY="28.0" mnemonicParsing="false" text="Block" />
-                  <Button layoutX="585.0" layoutY="28.0" mnemonicParsing="false" text="Add" />
+                  <Button layoutX="638.0" layoutY="28.0" mnemonicParsing="false" onAction="#blockUser" text="Block" />
+                  <Button layoutX="585.0" layoutY="28.0" mnemonicParsing="false" onAction="#addFriend" text="Add" />
                   <Button layoutX="699.0" layoutY="28.0" mnemonicParsing="false" text="Details" />
+                  <Button layoutX="29.0" layoutY="28.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">

@@ -10,14 +10,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import org.example.mesexadmin.popups.AddUserController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,6 +38,12 @@ public class MessagingController implements Initializable {
     private Label myLabel;
     @FXML
     private TextArea myTextArea;
+
+    @FXML
+    private AnchorPane basePane;
+
+    @FXML
+    private AnchorPane popUpPane;
 
     List<String> friendList = List.of(new String[]{"f1", "f2", "f3"});
     String currentFriend;
@@ -62,11 +68,16 @@ public class MessagingController implements Initializable {
         return p;
     }
 
-    public void addFriend(ActionEvent actionEvent){
-        String s = "dummy";
-        HBox p = makeFriendBox(s);
-
-        myListView.getItems().add(p);
+    public void addFriend(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add.fxml"));
+        Dialog<Objects> dialog = new Dialog<>();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        DialogPane dialogPane = loader.load();
+        PopUpController popUpController = loader.getController();
+        popUpController.currentDialog = dialog;
+        dialog.setDialogPane(dialogPane);
+        dialog.showAndWait();
+        dialog.close();
     }
 
     public void updateMessageBuffer(ActionEvent actionEvent){
