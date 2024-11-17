@@ -8,6 +8,7 @@ module org.example.mesexadmin {
     requires net.synedra.validatorfx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
+    requires mongo.java.driver;
 
     opens org.example.mesexadmin to javafx.fxml;
     exports org.example.mesexadmin;
