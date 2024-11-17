@@ -10,23 +10,28 @@ import java.util.Arrays;
 
 public class ConversationData {
 
-    public SimpleStringProperty groupID;
-    public SimpleStringProperty groupName;
-    public SimpleListProperty<SimpleStringProperty> participantIDs;
-    public SimpleStringProperty hostID;
+    public SimpleStringProperty dateCreated;
+    public SimpleStringProperty conversationName;
+    public SimpleListProperty<SimpleStringProperty> membersId;
+    public SimpleListProperty<SimpleStringProperty> moderatorsId;
+    public SimpleStringProperty lastMessageId;
+    public SimpleStringProperty type;
 
-    public ConversationData(String newGroupID, String newGroupName, String newHostID){
-        groupID = new SimpleStringProperty(newGroupID);
-        groupName = new SimpleStringProperty(newGroupName);
+    public ConversationData(String newGroupName, String newHostID){
+        dateCreated = new SimpleStringProperty("b");
+        conversationName = new SimpleStringProperty(newGroupName);
         ObservableList<SimpleStringProperty> observableList = FXCollections.observableArrayList(new ArrayList<>());
-        participantIDs = new SimpleListProperty<>(observableList);
-        participantIDs.add(new SimpleStringProperty(newHostID));
-        hostID = new SimpleStringProperty(newHostID);
+        membersId = new SimpleListProperty<>(observableList);
+        membersId.add(new SimpleStringProperty(newHostID));
+        ObservableList<SimpleStringProperty> observableList1 = FXCollections.observableArrayList(new ArrayList<>());
+        moderatorsId = new SimpleListProperty<>(observableList1);
+        lastMessageId = new SimpleStringProperty("a");
+        type = new SimpleStringProperty("chat");
     }
 
-    public String getParticipantIDs() {
+    public String getMembersId() {
         StringBuilder res =  new StringBuilder();
-        for (SimpleStringProperty i : participantIDs){
+        for (SimpleStringProperty i : membersId){
             if (!i.getValueSafe().trim().isEmpty())
                 res.append(i.getValueSafe()).append(", ");
         }
@@ -34,39 +39,61 @@ public class ConversationData {
         return !res.isEmpty() ? res.toString() : "Empty Group";
     }
 
-    public String getGroupID() {
-        return groupID.get();
+    public String getDateCreated() {
+        return dateCreated.get();
     }
 
-    public String getGroupName() {
-        return groupName.get();
+    public String getLastMessageId() {
+        return lastMessageId.get();
     }
 
-    public String getHostID() {
-        return hostID.get();
+    public String getConversationName() {
+        return conversationName.get();
     }
 
-    public void setGroupID(String groupID) {
-        this.groupID.set(groupID);
+    public String getModeratorsId() {
+        StringBuilder res =  new StringBuilder();
+        for (SimpleStringProperty i : moderatorsId){
+            if (!i.getValueSafe().trim().isEmpty())
+                res.append(i.getValueSafe()).append(", ");
+        }
+
+        return !res.isEmpty() ? res.toString() : "No Admin";
     }
 
-    public void setHostID(String hostID) {
-        this.hostID.set(hostID);
+    public String getType() {
+        return type.get();
     }
 
-    public void setParticipantIDs(SimpleStringProperty participantIDs) {
+    public void setDateCreated(String dateCreated) {
+        this.dateCreated.set(dateCreated);
+    }
+
+    public void setModeratorsId(String moderatorsId) {
+//        this.hostsId.set(hostsId);
+    }
+
+    public void setMembersId(String membersId) {
 //        this.participantIDs.set(participantIDs);
     }
 
     public void addIDs(SimpleStringProperty[] newIDs){
-        participantIDs.addAll(Arrays.asList(newIDs));
+        membersId.addAll(Arrays.asList(newIDs));
     }
 
     public void removeID(String id){
-        participantIDs.remove(new SimpleStringProperty(id));
+        membersId.remove(new SimpleStringProperty(id));
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName.set(groupName);
+    public void setLastMessageId(String lastMessageId) {
+        this.lastMessageId.set(lastMessageId);
+    }
+
+    public void setType(String type) {
+        this.type.set(type);
+    }
+
+    public void setConversationName(String conversationName) {
+        this.conversationName.set(conversationName);
     }
 }

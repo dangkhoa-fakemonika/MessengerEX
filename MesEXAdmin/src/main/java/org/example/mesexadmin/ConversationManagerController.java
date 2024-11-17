@@ -20,7 +20,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class GroupManagerController implements Initializable {
+public class ConversationManagerController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -39,38 +39,38 @@ public class GroupManagerController implements Initializable {
     }
 
     final ObservableList<ConversationData> data = FXCollections.observableArrayList(
-        new ConversationData("group1", "T1", "faker"),
-        new ConversationData("group2", "Gen.G", "chovy"),
-        new ConversationData("group3", "GAM Esports", "levi")
+        new ConversationData("T1", "faker"),
+        new ConversationData("Gen.G", "chovy"),
+        new ConversationData( "GAM Esports", "levi")
     );
 
     final ObservableList<ConversationData> inactiveData = FXCollections.observableArrayList(
-            new ConversationData("group1", "SKT T1", "faker?"),
-            new ConversationData("group2", "Samsung Galaxy", "cuvee")
+            new ConversationData("SKT T1", "faker?"),
+            new ConversationData("Samsung Galaxy", "cuvee")
     );
 
     ObservableList<TableColumn<ConversationData, String>> generateColumns(){
-        TableColumn<ConversationData, String> groupIdCol;
         TableColumn<ConversationData, String> groupNameCol;
         TableColumn<ConversationData, String> hostCol;
+        TableColumn<ConversationData, String> cDateCol;
         TableColumn<ConversationData, String> participantCol;
 
-        groupIdCol = new TableColumn<>("Group Name");
-        groupNameCol = new TableColumn<>("Group ID");
-        hostCol = new TableColumn<>("Host");
+        groupNameCol = new TableColumn<>("Conversation Name");
+        cDateCol = new TableColumn<>("Date Created");
+        hostCol = new TableColumn<>("Hosts");
         participantCol = new TableColumn<>("Participants");
 
-        groupIdCol.setCellValueFactory(new PropertyValueFactory<>("groupName"));
-        groupNameCol.setCellValueFactory(new PropertyValueFactory<>("groupID"));
-        hostCol.setCellValueFactory(new PropertyValueFactory<>("hostID"));
-        participantCol.setCellValueFactory(new PropertyValueFactory<>("participantIDs"));
+        groupNameCol.setCellValueFactory(new PropertyValueFactory<>("conversationName"));
+        cDateCol.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
+        hostCol.setCellValueFactory(new PropertyValueFactory<>("moderatorsId"));
+        participantCol.setCellValueFactory(new PropertyValueFactory<>("membersId"));
 
-        groupIdCol.setMinWidth(150);
+        cDateCol.setMinWidth(150);
         groupNameCol.setMinWidth(150);
         hostCol.setMinWidth(150);
         participantCol.setMinWidth(350);
 
-        return FXCollections.observableArrayList(groupNameCol, groupIdCol, hostCol, participantCol);
+        return FXCollections.observableArrayList(groupNameCol, cDateCol, hostCol, participantCol);
     }
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {

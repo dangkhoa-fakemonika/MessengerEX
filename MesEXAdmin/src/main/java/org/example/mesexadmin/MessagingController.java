@@ -1,7 +1,10 @@
 package org.example.mesexadmin;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,9 +18,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
-import org.example.mesexadmin.popups.AddUserController;
 
 import java.io.IOException;
 import java.net.URL;
@@ -31,7 +32,7 @@ public class MessagingController implements Initializable {
     private Parent root;
 
     @FXML
-    private ListView<HBox> myListView;
+    private ListView<String> myListView;
     @FXML
     private ListView<Label> messages;
     @FXML
@@ -39,13 +40,8 @@ public class MessagingController implements Initializable {
     @FXML
     private TextArea myTextArea;
 
-    @FXML
-    private AnchorPane basePane;
 
-    @FXML
-    private AnchorPane popUpPane;
-
-    List<String> friendList = List.of(new String[]{"f1", "f2", "f3"});
+    ObservableList<String> friendList = FXCollections.observableArrayList("user1", "user2", "user3");
     String currentFriend;
 
     void bufferScene(ActionEvent actionEvent){
@@ -105,15 +101,12 @@ public class MessagingController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        for (String s : friendList){
-            HBox p = makeFriendBox(s);
-            myListView.getItems().add(p);
-        }
+        myListView.getItems().addAll(friendList);
 
-        myListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<HBox>() {
+        myListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue<? extends HBox> observableValue, HBox hBox, HBox t1) {
-                currentFriend = myListView.getSelectionModel().getSelectedItem().getId();
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                currentFriend = myListView.getSelectionModel().getSelectedItem();
                 myLabel.setText(currentFriend);
             }
         });

@@ -13,6 +13,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.example.mesexadmin.data_class.SpamTicketData;
 import org.example.mesexadmin.data_class.UserData;
 
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class UserManagerController implements Initializable {
     @FXML
     private TableView<UserData> userTable;
     @FXML
-    private TableView<UserData> spamTable;
+    private TableView<SpamTicketData> spamTable;
     @FXML
     private TableView<UserData> bannedTable;
 
@@ -51,9 +52,9 @@ public class UserManagerController implements Initializable {
             new UserData("Ryan Gosling", "him", "example@email.com", "Offline")
     );
 
-    final ObservableList<UserData> spamData = FXCollections.observableArrayList(
-            new UserData("FakeMonika2", "fakemonika4", "example@email.com", "Reported"),
-            new UserData("KanCh2", "kanch4", "example@email.com", "Reported")
+    final ObservableList<SpamTicketData> spamData = FXCollections.observableArrayList(
+            new SpamTicketData("user2", "fakemonika4", "now"),
+            new SpamTicketData("user2", "kanch4", "now")
     );
 
     final ObservableList<UserData> bannedData = FXCollections.observableArrayList(
@@ -61,40 +62,69 @@ public class UserManagerController implements Initializable {
             new UserData("KanCh4", "kanch4", "example@email.com", "Banned")
     );
 
-    public ObservableList<TableColumn<UserData, String>> generateColumns(){
+    public ObservableList<TableColumn<UserData, String>> generateUserColumns(){
+        TableColumn<UserData, String> usernameCol;
         TableColumn<UserData, String> nameCol;
-        TableColumn<UserData, String> idCol;
-        TableColumn<UserData, String> statusCol;
         TableColumn<UserData, String> emailCol;
-        TableColumn<UserData, String> lastActiveCol;
-        TableColumn<UserData, String> frCountCol;
+
+        TableColumn<UserData, String> statusCol;
         TableColumn<UserData, String> cDateCol;
 
+        TableColumn<UserData, String> addressCol;
+        TableColumn<UserData, String> genderCol;
+        TableColumn<UserData, String> birthCol;
+
+
         nameCol = new TableColumn<>("Name");
-        idCol = new TableColumn<>("Id");
-        lastActiveCol = new TableColumn<>("Last Active");
+        usernameCol = new TableColumn<>("Username");
         emailCol = new TableColumn<>("Email");
-        frCountCol = new TableColumn<>("Friends");
+
         statusCol = new TableColumn<>("Status");
         cDateCol = new TableColumn<>("Date Created");
 
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-        lastActiveCol.setCellValueFactory(new PropertyValueFactory<>("lastActive"));
+        addressCol = new TableColumn<>("Address");
+        birthCol = new TableColumn<>("Date of Birth");
+        genderCol = new TableColumn<>("Gender");
+
+        usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("displayName"));
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-        frCountCol.setCellValueFactory(new PropertyValueFactory<>("friendCount"));
+
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         cDateCol.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
 
-        nameCol.setMinWidth(100);
-        idCol.setMinWidth(100);
-        lastActiveCol.setMinWidth(80);
-        emailCol.setMinWidth(260);
-        cDateCol.setMinWidth(80);
-        frCountCol.setMinWidth(80);
-        statusCol.setMinWidth(80);
+        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+        birthCol.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
+        genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
 
-        return FXCollections.observableArrayList(nameCol, idCol, emailCol, statusCol, cDateCol, lastActiveCol, frCountCol);
+        usernameCol.setMinWidth (100);
+        nameCol.setMinWidth (100);
+        emailCol.setMinWidth (100);
+
+        statusCol.setMinWidth (100);
+        cDateCol.setMinWidth (100);
+
+        addressCol.setMinWidth (100);
+        birthCol.setMinWidth (100);
+        genderCol.setMinWidth (100);
+
+        return FXCollections.observableArrayList(usernameCol, nameCol, emailCol, statusCol, cDateCol, addressCol, birthCol, genderCol);
+    }
+
+    public ObservableList<TableColumn<SpamTicketData, String>> generateSpamColumns(){
+        TableColumn<SpamTicketData, String> reporterCol = new TableColumn<>("Reporter");
+        reporterCol.setCellValueFactory(new PropertyValueFactory<>("reporterId"));
+        reporterCol.setMinWidth(100);
+
+        TableColumn<SpamTicketData, String> reportedCol = new TableColumn<>("Reported Account");
+        reportedCol.setCellValueFactory(new PropertyValueFactory<>("reportedId"));
+        reportedCol.setMinWidth(100);
+
+        TableColumn<SpamTicketData, String> timeCol = new TableColumn<>("Reporter");
+        timeCol.setCellValueFactory(new PropertyValueFactory<>("reportedId"));
+        timeCol.setMinWidth(100);
+
+        return FXCollections.observableArrayList(reportedCol, reporterCol, timeCol);
     }
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
@@ -106,11 +136,10 @@ public class UserManagerController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         userTable.setItems(data);
-        userTable.getColumns().addAll(generateColumns());
+        userTable.getColumns().addAll(generateUserColumns());
         spamTable.setItems(spamData);
-        spamTable.getColumns().addAll(generateColumns());
+        spamTable.getColumns().addAll(generateSpamColumns());
         bannedTable.setItems(bannedData);
-        bannedTable.getColumns().addAll(generateColumns());
-
+        bannedTable.getColumns().addAll(generateUserColumns());
     }
 }
