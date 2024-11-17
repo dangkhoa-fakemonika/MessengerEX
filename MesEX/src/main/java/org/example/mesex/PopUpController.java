@@ -1,4 +1,4 @@
-package org.example.mesexadmin;
+package org.example.mesex;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
