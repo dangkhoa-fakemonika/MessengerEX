@@ -11,15 +11,15 @@
    <content>
       <AnchorPane prefHeight="112.0" prefWidth="242.0">
          <children>
-            <Button layoutX="171.0" layoutY="59.0" mnemonicParsing="false" onAction="#closeDialog" text="Send Request" />
+            <Button layoutX="204.0" layoutY="59.0" mnemonicParsing="false" onAction="#closeDialog" text="Confirm" />
             <Button layoutX="95.0" layoutY="59.0" mnemonicParsing="false" onAction="#closeDialog" text="Cancel" />
-            <Label layoutX="85.0" layoutY="13.0" text="Username" />
+            <Label layoutX="84.0" layoutY="13.0" text="Username" />
             <TextField layoutX="146.0" layoutY="9.0" promptText="user-123" />
          </children>
       </AnchorPane>
    </content>
    <header>
-      <Label style="-fx-padding: 10;" text="Friend Request">
+      <Label style="-fx-padding: 10;" text="Add Member">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>

@@ -20,7 +20,9 @@
                   <Button layoutX="23.0" layoutY="28.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
                   <MenuButton layoutX="667.0" layoutY="28.0" mnemonicParsing="false" text="User's Detail">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#resetPassword" text="Reset Password" />
+                      <MenuItem mnemonicParsing="false" onAction="#changePassword" text="Change Password" />
+                        <MenuItem mnemonicParsing="false" onAction="#resetPassword" text="Password Reset" />
+                        <MenuItem mnemonicParsing="false" onAction="#editProfile" text="Edit Details" />
                       <MenuItem mnemonicParsing="false" text="View Friend List" />
                         <MenuItem mnemonicParsing="false" text="View Login History" />
                     </items>
@@ -36,11 +38,11 @@
                               <AnchorPane>
                                  <children>
                                     <TableView fx:id="userTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
-                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" text="Delete User" />
+                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" onAction="#removeUser" text="Delete User" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
-                                    <Button layoutX="560.0" layoutY="13.0" mnemonicParsing="false" text="Add User" />
-                                    <Button layoutX="633.0" layoutY="13.0" mnemonicParsing="false" text="Ban User" />
+                                    <Button layoutX="560.0" layoutY="13.0" mnemonicParsing="false" onAction="#createNewProfile" text="Add User" />
+                                    <Button layoutX="633.0" layoutY="13.0" mnemonicParsing="false" onAction="#banUser" text="Ban User" />
                                  </children>
                               </AnchorPane>
                            </content>
@@ -50,11 +52,11 @@
                               <AnchorPane>
                                  <children>
                                     <TableView fx:id="spamTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
-                                    <Button layoutX="521.0" layoutY="13.0" mnemonicParsing="false" text="Unmark as Spam" />
+                                    <Button layoutX="521.0" layoutY="13.0" mnemonicParsing="false" onAction="#unSpam" text="Unmark as Spam" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
-                                    <Button layoutX="635.0" layoutY="13.0" mnemonicParsing="false" text="Ban User" />
-                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" text="Delete User" />
+                                    <Button layoutX="635.0" layoutY="13.0" mnemonicParsing="false" onAction="#banUser" text="Ban User" />
+                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" onAction="#removeUser" text="Delete User" />
                                  </children>
                               </AnchorPane>
                            </content>
@@ -67,10 +69,10 @@
                               <AnchorPane>
                                  <children>
                                     <TableView fx:id="bannedTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
-                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" text="Delete User" />
+                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" onAction="#removeUser" text="Delete User" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
-                                    <Button layoutX="621.0" layoutY="13.0" mnemonicParsing="false" text="Unban User" />
+                                    <Button layoutX="621.0" layoutY="13.0" mnemonicParsing="false" onAction="#unbanUser" text="Unban User" />
                                  </children>
                               </AnchorPane>
                            </content>

@@ -131,7 +131,73 @@ public class UserManagerController implements Initializable {
         bufferScene(actionEvent);
     }
 
-    public void resetPassword(ActionEvent actionEvent) throws IOException {
+
+    public void banUser(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Ban this user?");
+        newAlert.setHeaderText("Ban User");
+        newAlert.showAndWait();
+    }
+
+    public void unbanUser(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Remove ban this user?");
+        newAlert.setHeaderText("Unban User");
+        newAlert.showAndWait();
+    }
+
+    public void resetPassword(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Send reset request to user's email?");
+        newAlert.setHeaderText("Reset User");
+        newAlert.showAndWait();
+    }
+
+    public void unSpam(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Unmark this user as spam?");
+        newAlert.setHeaderText("Unmark as spam");
+        newAlert.showAndWait();
+    }
+
+    public void editProfile(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-modify-user.fxml"));
+        Dialog<Objects> dialog = new Dialog<>();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        DialogPane dialogPane = loader.load();
+        PopUpController popUpController = loader.getController();
+        popUpController.currentDialog = dialog;
+        dialog.setDialogPane(dialogPane);
+        dialog.showAndWait();
+        dialog.close();
+    }
+
+    public void createNewProfile(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add-user.fxml"));
+        Dialog<Objects> dialog = new Dialog<>();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        DialogPane dialogPane = loader.load();
+        PopUpController popUpController = loader.getController();
+        popUpController.currentDialog = dialog;
+        dialog.setDialogPane(dialogPane);
+        dialog.showAndWait();
+        dialog.close();
+    }
+
+    public void removeUser(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-delete-member.fxml"));
+        Dialog<Objects> dialog = new Dialog<>();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        DialogPane dialogPane = loader.load();
+        PopUpController popUpController = loader.getController();
+        popUpController.currentDialog = dialog;
+        dialog.setDialogPane(dialogPane);
+        dialog.showAndWait();
+        dialog.close();
+    }
+
+
+    public void changePassword(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-reset-password.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);

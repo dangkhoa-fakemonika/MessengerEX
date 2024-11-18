@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<DialogPane prefHeight="120.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesexadmin.PopUpController">
+<DialogPane prefHeight="300.0" prefWidth="379.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesexadmin.PopUpController">
    <header>
-      <Label style="-fx-padding: 10;" text="Update User Information">
+      <Label style="-fx-padding: 10;" text="Create New User">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
@@ -25,10 +25,12 @@
             <TextField layoutX="152.0" layoutY="44.0" prefHeight="26.0" prefWidth="216.0" />
             <Label layoutX="14.0" layoutY="91.0" text="Date of birth" />
             <Label layoutX="14.0" layoutY="134.0" text="Gender" />
-            <TextField layoutX="153.0" layoutY="130.0" prefHeight="26.0" prefWidth="215.0" />
+            <TextField layoutX="153.0" layoutY="126.0" prefHeight="26.0" prefWidth="215.0" />
             <DatePicker layoutX="153.0" layoutY="87.0" prefHeight="26.0" prefWidth="216.0" />
-            <Button layoutX="201.0" layoutY="176.0" mnemonicParsing="false" onAction="#closeDialog" text="Confirm" />
-            <Button layoutX="123.0" layoutY="176.0" mnemonicParsing="false" onAction="#closeDialog" text="Cancel" />
+            <Button layoutX="200.0" layoutY="201.0" mnemonicParsing="false" onAction="#closeDialog" text="Confirm" />
+            <Label layoutX="14.0" layoutY="171.0" text="Password" />
+            <TextField layoutX="152.0" layoutY="166.0" prefHeight="26.0" prefWidth="215.0" />
+            <Button layoutX="123.0" layoutY="201.0" mnemonicParsing="false" onAction="#closeDialog" text="Cancel" />
          </children>
       </AnchorPane>
    </content>

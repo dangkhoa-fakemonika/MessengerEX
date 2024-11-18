@@ -48,18 +48,18 @@ public class MessagingController implements Initializable {
         stage.show();
     }
 
-    HBox makeFriendBox(String s){
-        HBox p = new HBox();
-
-        p.setId(s);
-        Label thisLabel = new Label();
-        thisLabel.setText(s);
-        p.getChildren().add(thisLabel);
-
-        p.setSpacing(20);
-
-        return p;
-    }
+//    HBox makeFriendBox(String s){
+//        HBox p = new HBox();
+//
+//        p.setId(s);
+//        Label thisLabel = new Label();
+//        thisLabel.setText(s);
+//        p.getChildren().add(thisLabel);
+//
+//        p.setSpacing(20);
+//
+//        return p;
+//    }
 
     public void addFriend(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add.fxml"));
@@ -172,8 +172,24 @@ public class MessagingController implements Initializable {
         thisStage.show();
     }
 
+    public void configureChatHistory(ActionEvent actionEvent) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-chat-history-management.fxml")));
+        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root);
+        thisStage.setScene(scene);
+        thisStage.show();
+    }
+
     public void returnLogin(ActionEvent actionEvent) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
+        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root);
+        thisStage.setScene(scene);
+        thisStage.show();
+    }
+
+    public void configureGroup(ActionEvent actionEvent) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-single-group-manager.fxml")));
         Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
         scene = new Scene(root);
         thisStage.setScene(scene);
