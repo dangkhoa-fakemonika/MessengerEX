@@ -26,7 +26,10 @@ db.createCollection("users", {
                     bsonType: "string",
                     enum: ["male", "female"]
                 },
-                email: { bsonType: "string" },
+                email: { 
+                    bsonType: "string",
+                    minLength: 3
+                },
                 passwordHash: { bsonType: "string" },
                 friendList: { 
                     bsonType: "array",
