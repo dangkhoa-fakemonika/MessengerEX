@@ -149,7 +149,7 @@ public class UserManagerController implements Initializable {
     public void resetPassword(ActionEvent actionEvent) {
         Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
         newAlert.setContentText("Send reset request to user's email?");
-        newAlert.setHeaderText("Reset User");
+        newAlert.setHeaderText("Reset User's Password");
         newAlert.showAndWait();
     }
 

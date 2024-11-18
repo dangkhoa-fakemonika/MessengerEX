@@ -95,6 +95,18 @@ public class MessagingController implements Initializable {
         }
     }
 
+    public void addGroup(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-create-group.fxml"));
+        Dialog<Objects> dialog = new Dialog<>();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        DialogPane dialogPane = loader.load();
+        PopUpController popUpController = loader.getController();
+        popUpController.currentDialog = dialog;
+        dialog.setDialogPane(dialogPane);
+        dialog.showAndWait();
+        dialog.close();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -104,7 +116,7 @@ public class MessagingController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
                 currentFriend = myListView.getSelectionModel().getSelectedItem();
-                myLabel.setText(currentFriend);
+                myLabel.setText("Selected Chat: " + currentFriend);
             }
         });
 
@@ -194,6 +206,13 @@ public class MessagingController implements Initializable {
         scene = new Scene(root);
         thisStage.setScene(scene);
         thisStage.show();
+    }
+
+    public void blockUser(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Block this User?");
+        newAlert.setHeaderText("Block User");
+        newAlert.showAndWait();
     }
 
 }

@@ -28,7 +28,7 @@
                                             <items>
                                               <MenuItem mnemonicParsing="false" onAction="#addFriend" text="Add Friend" />
                                               <MenuItem mnemonicParsing="false" onAction="#friendsSettingScene" text="Manage Friend" />
-                                                <MenuItem mnemonicParsing="false" onAction="#addFriend" text="Create Group" />
+                                                <MenuItem mnemonicParsing="false" onAction="#addGroup" text="Create Group" />
                                                 <MenuItem mnemonicParsing="false" onAction="#personalGroupManagementScene" text="Manage Groups" />
                                             </items>
                                           </MenuButton>
@@ -72,6 +72,7 @@
                                 <items>
                                   <MenuItem mnemonicParsing="false" onAction="#configureChatHistory" text="Messages" />
                                   <MenuItem mnemonicParsing="false" onAction="#configureGroup" text="Group" />
+                                    <MenuItem mnemonicParsing="false" onAction="#blockUser" text="Block User" />
                                 </items>
                               </MenuButton>
                            </children>

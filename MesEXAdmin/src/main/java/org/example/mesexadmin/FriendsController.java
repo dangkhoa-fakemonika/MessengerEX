@@ -62,16 +62,47 @@ public class FriendsController implements Initializable {
     }
 
     public void blockUser(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-block.fxml"));
-        Dialog<Objects> dialog = new Dialog<>();
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        DialogPane dialogPane = loader.load();
-        PopUpController popUpController = loader.getController();
-        popUpController.currentDialog = dialog;
-        dialog.setDialogPane(dialogPane);
-        dialog.showAndWait();
-        dialog.close();
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Block this user?");
+        newAlert.setHeaderText("Block User");
+        newAlert.showAndWait();
     }
+
+    public void unFriend(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Remove this user from your friend list?");
+        newAlert.setHeaderText("Unfriend");
+        newAlert.showAndWait();
+    }
+
+    public void removeRequest(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Un-send friend request to this user?");
+        newAlert.setHeaderText("Remove Request");
+        newAlert.showAndWait();
+    }
+
+    public void acceptFriend(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Accept friend request?");
+        newAlert.setHeaderText("Accept Friend");
+        newAlert.showAndWait();
+    }
+
+    public void denyFriend(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Deny friend request?");
+        newAlert.setHeaderText("Deny Friend");
+        newAlert.showAndWait();
+    }
+
+    public void unblockUser(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Remove block on this user?");
+        newAlert.setHeaderText("Unblock User");
+        newAlert.showAndWait();
+    }
+
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));

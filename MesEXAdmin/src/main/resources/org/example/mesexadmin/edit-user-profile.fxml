@@ -28,7 +28,7 @@
                         <Font size="20.0" />
                      </font>
                   </Text>
-                  <Button layoutX="542.0" layoutY="45.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Change Name" />
+                  <Button layoutX="542.0" layoutY="45.0" mnemonicParsing="false" onAction="#changeUsername" prefHeight="26.0" prefWidth="98.0" text="Change Name" />
                   <Button layoutX="14.0" layoutY="30.0" mnemonicParsing="false" onAction="#returnToMain" prefHeight="26.0" prefWidth="98.0" text="Back to Main" />
                   <Button layoutX="138.0" layoutY="30.0" mnemonicParsing="false" onAction="#returnToMain" prefHeight="26.0" prefWidth="147.0" text="Save Changes and Back" />
                </children>
@@ -102,7 +102,7 @@
                         <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 10;" />
                         <ButtonBar prefHeight="15.0" prefWidth="335.0">
                            <buttons>
-                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Change Email" />
+                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#changeEmail" text="Change Email" />
                            </buttons>
                         </ButtonBar>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
@@ -113,8 +113,8 @@
                         <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 10;" />
                         <ButtonBar prefHeight="15.0" prefWidth="335.0">
                            <buttons>
-                              <Button mnemonicParsing="false" text="Change Password" />
-                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Reset Password" />
+                              <Button mnemonicParsing="false" onAction="#changePassword" text="Change Password" />
+                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#resetPassword" text="Reset Password" />
                            </buttons>
                         </ButtonBar>
                      </children>
