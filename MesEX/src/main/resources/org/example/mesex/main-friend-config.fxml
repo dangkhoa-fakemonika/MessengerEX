@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesex.FriendsController">
@@ -14,9 +15,9 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <Button layoutX="638.0" layoutY="28.0" mnemonicParsing="false" text="Block" />
-                  <Button layoutX="585.0" layoutY="28.0" mnemonicParsing="false" text="Add" />
-                  <Button layoutX="699.0" layoutY="28.0" mnemonicParsing="false" text="Details" />
+                  <Button layoutX="597.0" layoutY="28.0" mnemonicParsing="false" onAction="#addFriend" text="Add Friend" />
+                  <Button layoutX="688.0" layoutY="28.0" mnemonicParsing="false" text="See User Detail" />
+                  <Button layoutX="29.0" layoutY="28.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
@@ -25,29 +26,54 @@
                      <tabs>
                         <Tab closable="false" text="Current">
                            <content>
-                              <TableView fx:id="friendsTable" prefHeight="511.2" prefWidth="798.4" />
+                              <AnchorPane>
+                                 <children>
+                                    <TableView fx:id="friendsTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
+                                    <Button layoutX="712.0" layoutY="14.0" mnemonicParsing="false" text="Block User" />
+                                    <Button layoutX="555.0" layoutY="14.0" mnemonicParsing="false" text="Remove from Friend List" />
+                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
+                                 </children>
+                              </AnchorPane>
                            </content>
                         </Tab>
                         <Tab closable="false" text="Pending">
                            <content>
-                              <TableView fx:id="pendingTable" prefHeight="511.2" prefWidth="798.4">
-                                 <columns>
-                                    <TableColumn prefWidth="135.20000916719437" text="Name" />
-                                    <TableColumn minWidth="0.0" prefWidth="147.1999969482422" text="ID" />
-                                    <TableColumn prefWidth="516.0000610351562" text="Status" />
-                                 </columns>
-                              </TableView>
+                              <AnchorPane>
+                                 <children>
+                                    <TableView fx:id="pendingTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
+                                    <Button layoutX="712.0" layoutY="14.0" mnemonicParsing="false" text="Block User" />
+                                    <Button layoutX="599.0" layoutY="14.0" mnemonicParsing="false" text="Remove Request" />
+                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab closable="false" text="Requests">
+                           <content>
+                              <AnchorPane>
+                                 <children>
+                                    <TableView layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
+                                    <Button layoutX="712.0" layoutY="13.0" mnemonicParsing="false" text="Block User" />
+                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
+                                    <Button layoutX="651.0" layoutY="13.0" mnemonicParsing="false" text="Accept" />
+                                 </children>
+                              </AnchorPane>
                            </content>
                         </Tab>
                         <Tab closable="false" text="Blocked">
                            <content>
-                              <TableView fx:id="blockedTable" prefHeight="511.2" prefWidth="798.4">
-                                 <columns>
-                                    <TableColumn prefWidth="135.20000916719437" text="Name" />
-                                    <TableColumn minWidth="0.0" prefWidth="147.1999969482422" text="ID" />
-                                    <TableColumn prefWidth="516.0000610351562" text="Status" />
-                                 </columns>
-                              </TableView>
+                              <AnchorPane>
+                                 <children>
+                                    <TableView fx:id="blockedTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
+                                    <Button layoutX="697.0" layoutY="13.0" mnemonicParsing="false" text="Unblock User" />
+                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
+                                    <Button layoutX="623.0" layoutY="13.0" mnemonicParsing="false" text="Add User" />
+                                 </children>
+                              </AnchorPane>
                            </content>
                         </Tab>
                      </tabs>
