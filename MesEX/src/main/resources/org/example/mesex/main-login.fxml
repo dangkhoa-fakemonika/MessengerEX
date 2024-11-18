@@ -19,6 +19,6 @@
       </Pane>
       <Label layoutX="302.0" layoutY="379.0" text="Don't have an account?" />
       <Button layoutX="436.0" layoutY="375.0" mnemonicParsing="false" onAction="#registerScene" text="Register" />
-      <Label layoutX="348.0" layoutY="193.0" text="User Registration" />
+      <Label layoutX="348.0" layoutY="193.0" text="User Login" />
    </children>
 </AnchorPane>
