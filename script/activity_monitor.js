@@ -1,3 +1,5 @@
+db = connect('mongodb://localhost/messenger-ex-app');
+
 db.createCollection("activity_monitor", {
     validator: {
         $jsonSchema: {
@@ -15,5 +17,3 @@ db.createCollection("activity_monitor", {
     },
     validationAction: "error"
 });
-
-db.users.createIndex({ "userId": 1 }, { unique: true });

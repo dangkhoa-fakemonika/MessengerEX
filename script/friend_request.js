@@ -1,3 +1,5 @@
+db = connect('mongodb://localhost/messenger-ex-app');
+
 db.createCollection("friend_request", {
     validator: {
         $jsonSchema: {
@@ -12,5 +14,3 @@ db.createCollection("friend_request", {
     },
     validationAction: "error"
 });
-
-db.friend_request.createIndex({ "timeSent": -1 });

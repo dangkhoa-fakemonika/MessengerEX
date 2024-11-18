@@ -1,3 +1,5 @@
+db = connect('mongodb://localhost/messenger-ex-app');
+
 db.createCollection("conversations", {
     validator: {
         $jsonSchema: {

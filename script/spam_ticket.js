@@ -1,3 +1,5 @@
+db = connect('mongodb://localhost/messenger-ex-app');
+
 db.createCollection("spam_ticket", {
     validator: {
         $jsonSchema: {
@@ -12,5 +14,3 @@ db.createCollection("spam_ticket", {
     },
     validationAction: "error"
 });
-
-db.friend_requests.createIndex({ "timeSent": -1 });
