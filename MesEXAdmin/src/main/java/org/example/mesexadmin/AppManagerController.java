@@ -37,8 +37,6 @@ public class AppManagerController implements Initializable {
     @FXML
     private TableView<UserData> activeTable;
 
-
-
     void bufferScene(ActionEvent actionEvent){
 //        System.out.println(actionEvent.getSource());
         stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
@@ -100,33 +98,33 @@ public class AppManagerController implements Initializable {
 
     ObservableList<TableColumn<UserData, String>> generateFriendColumns(){
         TableColumn<UserData, String> idCol = new TableColumn<>("Username");
-        idCol.setMinWidth(250);
+        idCol.setMinWidth(160);
 //        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         TableColumn<UserData, String> timeCol = new TableColumn<>("Full name");
-        timeCol.setMinWidth(250);
+        timeCol.setMinWidth(160);
 //        timeCol.setCellValueFactory(new PropertyValueFactory<>("time"));
         TableColumn<UserData, String> actionCol = new TableColumn<>("Time");
-        actionCol.setMinWidth(300);
+        actionCol.setMinWidth(160);
 //        actionCol.setCellValueFactory(new PropertyValueFactory<>("action"));
         TableColumn<UserData, String> directFriendCol = new TableColumn<>("Direct Friends");
-        directFriendCol.setMinWidth(300);
+        directFriendCol.setMinWidth(160);
         TableColumn<UserData, String> indirectFriendCol = new TableColumn<>("Indirect Friends");
-        indirectFriendCol.setMinWidth(300);
+        indirectFriendCol.setMinWidth(160);
 
         return FXCollections.observableArrayList(idCol, timeCol, actionCol, directFriendCol, indirectFriendCol);
     }
 
     ObservableList<TableColumn<UserData, String>> generatePersonalActiveColumns(){
         TableColumn<UserData, String> idCol = new TableColumn<>("Username");
-        idCol.setMinWidth(250);
+        idCol.setMinWidth(160);
         TableColumn<UserData, String> actionCol = new TableColumn<>("Time");
-        actionCol.setMinWidth(300);
+        actionCol.setMinWidth(160);
         TableColumn<UserData, String> timeCol = new TableColumn<>("App Open Frequency");
-        timeCol.setMinWidth(250);
+        timeCol.setMinWidth(160);
         TableColumn<UserData, String> directFriendCol = new TableColumn<>("Groups Chat");
-        directFriendCol.setMinWidth(300);
+        directFriendCol.setMinWidth(160);
         TableColumn<UserData, String> indirectFriendCol = new TableColumn<>("Private Chat");
-        indirectFriendCol.setMinWidth(300);
+        indirectFriendCol.setMinWidth(160);
 
         return FXCollections.observableArrayList(idCol, timeCol, actionCol, directFriendCol, indirectFriendCol);
     }

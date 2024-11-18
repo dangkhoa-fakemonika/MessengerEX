@@ -117,10 +117,10 @@ public class UserManagerController implements Initializable {
 
         TableColumn<SpamTicketData, String> reportedCol = new TableColumn<>("Reported Account");
         reportedCol.setCellValueFactory(new PropertyValueFactory<>("reportedId"));
-        reportedCol.setMinWidth(100);
+        reportedCol.setMinWidth(150);
 
-        TableColumn<SpamTicketData, String> timeCol = new TableColumn<>("Reporter");
-        timeCol.setCellValueFactory(new PropertyValueFactory<>("reportedId"));
+        TableColumn<SpamTicketData, String> timeCol = new TableColumn<>("Time");
+        timeCol.setCellValueFactory(new PropertyValueFactory<>("timeSent"));
         timeCol.setMinWidth(100);
 
         return FXCollections.observableArrayList(reportedCol, reporterCol, timeCol);
