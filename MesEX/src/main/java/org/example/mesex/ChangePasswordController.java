@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class MainController {
+public class ChangePasswordController {
     private Stage stage;
     private Scene scene;
     private Parent root;
@@ -23,18 +23,13 @@ public class MainController {
         stage.show();
     }
 
-    public void registerScene(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-register.fxml")));
-        bufferScene(actionEvent);
-    }
-
-    public void loginScene(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
-        bufferScene(actionEvent);
-    }
-
-    public void mainScene(ActionEvent actionEvent) throws IOException {
+    public void returnToMain(ActionEvent actionEvent) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
+        bufferScene(actionEvent);
+    }
+
+    public void returnToChange(ActionEvent actionEvent) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("edit-user-profile.fxml")));
         bufferScene(actionEvent);
     }
 

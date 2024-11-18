@@ -6,6 +6,7 @@ public class ActivityData {
     public SimpleStringProperty id;
     public SimpleStringProperty time;
     public SimpleStringProperty action;
+    public SimpleStringProperty username;
 
     public ActivityData(String dataID, String dataTime, String dataAction){
         id = new SimpleStringProperty(dataID);
