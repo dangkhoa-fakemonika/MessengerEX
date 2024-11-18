@@ -15,8 +15,6 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <Button layoutX="618.0" layoutY="28.0" mnemonicParsing="false" text="Create Group" />
-                  <Button layoutX="717.0" layoutY="28.0" mnemonicParsing="false" text="Details" />
                   <Button layoutX="24.0" layoutY="28.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
                </children>
             </AnchorPane>
@@ -29,9 +27,11 @@
                               <AnchorPane>
                                  <children>
                                     <TableView fx:id="allGroupTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
-                                    <Button layoutX="691.0" layoutY="13.0" mnemonicParsing="false" text="Leave Group" />
+                                    <Button layoutX="691.0" layoutY="13.0" mnemonicParsing="false" onAction="#leaveGroup" text="Leave Group" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
+                                    <Button layoutX="616.0" layoutY="13.0" mnemonicParsing="false" onAction="#addMember" text="Add User" />
+                                    <Button layoutX="512.0" layoutY="13.0" mnemonicParsing="false" onAction="#renameGroup" text="Rename Group" />
                                  </children>
                               </AnchorPane>
                            </content>
@@ -43,10 +43,9 @@
                                     <TableView fx:id="myGroupTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
-                                    <Button layoutX="504.0" layoutY="13.0" mnemonicParsing="false" text="Add Admin" />
-                                    <Button layoutX="691.0" layoutY="13.0" mnemonicParsing="false" text="Leave Group" />
-                                    <Button layoutX="593.0" layoutY="13.0" mnemonicParsing="false" text="Delete Group" />
-                                    <Button layoutX="423.0" layoutY="13.0" mnemonicParsing="false" text="Add User" />
+                                    <Button layoutX="573.0" layoutY="13.0" mnemonicParsing="false" onAction="#configureGroup" text="Configure Group" />
+                                    <Button layoutX="691.0" layoutY="13.0" mnemonicParsing="false" onAction="#leaveGroup" text="Leave Group" />
+                                    <Button layoutX="473.0" layoutY="13.0" mnemonicParsing="false" onAction="#addGroup" text="Create Group" />
                                  </children>
                               </AnchorPane>
                            </content>

@@ -32,14 +32,8 @@ public class EditProfileController {
     }
 
     public void changePassword(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-reset-password.fxml"));
-        Dialog<Objects> dialog = new Dialog<>();
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        DialogPane dialogPane = loader.load();
-        PopUpController popUpController = loader.getController();
-        popUpController.currentDialog = dialog;
-        dialog.setDialogPane(dialogPane);
-        dialog.showAndWait();
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("change-password.fxml")));
+        bufferScene(actionEvent);
     }
 
     public void changeUsername(ActionEvent actionEvent) throws IOException {

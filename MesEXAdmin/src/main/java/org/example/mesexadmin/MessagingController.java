@@ -107,6 +107,14 @@ public class MessagingController implements Initializable {
         dialog.close();
     }
 
+    public void advanced(ActionEvent actionEvent) throws IOException{
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-all-chat-history-management.fxml")));
+        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+        scene = new Scene(root);
+        thisStage.setScene(scene);
+        thisStage.show();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

@@ -72,22 +72,22 @@ public class SingleGroupManagerController implements Initializable {
 
     public void removeUser(ActionEvent actionEvent) {
         Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Remove User");
-        newAlert.setHeaderText("Remove this user?");
+        newAlert.setContentText("Remove this user?");
+        newAlert.setHeaderText("Remove User");
         newAlert.showAndWait();
     }
 
     public void leaveGroup(ActionEvent actionEvent) {
         Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Leave Group");
-        newAlert.setHeaderText("Leave this group?");
+        newAlert.setContentText("Leave this group?");
+        newAlert.setHeaderText("Leave Group");
         newAlert.showAndWait();
     }
 
     public void deleteGroup(ActionEvent actionEvent) {
         Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Delete Group");
-        newAlert.setHeaderText("Delete this group?");
+        newAlert.setContentText("Delete this group?");
+        newAlert.setHeaderText("Delete Group");
         newAlert.showAndWait();
     }
 

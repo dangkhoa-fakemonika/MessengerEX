@@ -9,8 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import org.example.mesexadmin.data_class.ConversationData;
@@ -76,6 +75,54 @@ public class ConversationController implements Initializable {
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
         bufferScene(actionEvent);
+    }
+
+    public void configureGroup(ActionEvent actionEvent) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-single-group-manager.fxml")));
+        bufferScene(actionEvent);
+    }
+
+    public void leaveGroup(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Leave this group?");
+        newAlert.setHeaderText("Leave Group");
+        newAlert.showAndWait();
+    }
+
+    public void addMember(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add-member.fxml"));
+        Dialog<Objects> dialog = new Dialog<>();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        DialogPane dialogPane = loader.load();
+        PopUpController popUpController = loader.getController();
+        popUpController.currentDialog = dialog;
+        dialog.setDialogPane(dialogPane);
+        dialog.showAndWait();
+        dialog.close();
+    }
+
+    public void addGroup(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-create-group.fxml"));
+        Dialog<Objects> dialog = new Dialog<>();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        DialogPane dialogPane = loader.load();
+        PopUpController popUpController = loader.getController();
+        popUpController.currentDialog = dialog;
+        dialog.setDialogPane(dialogPane);
+        dialog.showAndWait();
+        dialog.close();
+    }
+
+    public void renameGroup(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-change-group-name.fxml"));
+        Dialog<Objects> dialog = new Dialog<>();
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        DialogPane dialogPane = loader.load();
+        PopUpController popUpController = loader.getController();
+        popUpController.currentDialog = dialog;
+        dialog.setDialogPane(dialogPane);
+        dialog.showAndWait();
+        dialog.close();
     }
 
     @Override
