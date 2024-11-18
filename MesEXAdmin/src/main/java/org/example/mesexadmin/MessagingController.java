@@ -107,6 +107,13 @@ public class MessagingController implements Initializable {
         dialog.close();
     }
 
+    public void reportUser(ActionEvent actionEvent) {
+        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        newAlert.setContentText("Report this user?");
+        newAlert.setHeaderText("Spam Report");
+        newAlert.showAndWait();
+    }
+
     public void advanced(ActionEvent actionEvent) throws IOException{
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-all-chat-history-management.fxml")));
         Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();

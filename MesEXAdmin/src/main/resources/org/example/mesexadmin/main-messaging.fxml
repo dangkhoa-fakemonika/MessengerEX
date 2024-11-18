@@ -76,6 +76,7 @@
                                   <MenuItem mnemonicParsing="false" onAction="#configureGroup" text="Group" />
                                     <MenuItem mnemonicParsing="false" onAction="#blockUser" text="Block User" />
                                     <MenuItem mnemonicParsing="false" onAction="#advanced" text="Advanced Search" />
+                                    <MenuItem mnemonicParsing="false" onAction="#reportUser" text="Report Spam" />
                                 </items>
                               </MenuButton>
                            </children>
