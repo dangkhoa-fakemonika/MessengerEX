@@ -1,9 +1,13 @@
 package org.example.mesexadmin;
 
+import com.mongodb.client.ChangeStreamIterable;
+import com.mongodb.client.model.changestream.ChangeStreamDocument;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,13 +19,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.bson.Document;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class MessagingController implements Initializable {
     private Stage stage;
@@ -47,19 +52,6 @@ public class MessagingController implements Initializable {
         stage.setScene(scene);
         stage.show();
     }
-
-//    HBox makeFriendBox(String s){
-//        HBox p = new HBox();
-//
-//        p.setId(s);
-//        Label thisLabel = new Label();
-//        thisLabel.setText(s);
-//        p.getChildren().add(thisLabel);
-//
-//        p.setSpacing(20);
-//
-//        return p;
-//    }
 
     public void addFriend(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add.fxml"));
@@ -149,6 +141,24 @@ public class MessagingController implements Initializable {
             }
         });
 
+        Thread thread = getThread();
+        thread.start();
+
+    }
+
+    private Thread getThread() {
+        Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                ChangeStreamIterable<Document> changeStream = Main.myMongo.messages.watch();
+                changeStream.forEach((Consumer<? super ChangeStreamDocument<Document>>) (n) -> Platform.runLater(() -> MongoManagement.processPushMongo(n, messages)));
+                return null;
+            }
+        };
+
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        return thread;
     }
 
     public void friendsSettingScene(ActionEvent actionEvent) throws IOException{

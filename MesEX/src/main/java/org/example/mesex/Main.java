@@ -13,7 +13,7 @@ import java.util.Objects;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-friend-config.fxml")));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
 //        Group root = new Group();
         Scene scene = new Scene(root);
         Stage stage = new Stage();

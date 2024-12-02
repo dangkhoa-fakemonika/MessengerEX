@@ -9,6 +9,8 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 public class Main extends Application {
+    public static MongoManagement myMongo;
+
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
