@@ -17,15 +17,34 @@ public class UserData {
     public SimpleStringProperty dateCreated;
     public SimpleStringProperty role;
 
-    public SimpleListProperty<SimpleStringProperty> friend;
-    public SimpleListProperty<SimpleStringProperty> blocked;
+    // public SimpleListProperty<SimpleStringProperty> friend;
+    // public SimpleListProperty<SimpleStringProperty> blocked;
+    public ArrayList<SimpleStringProperty> friend;
+    public ArrayList<SimpleStringProperty> blocked;
 
     public SimpleStringProperty address;
     public SimpleStringProperty dateOfBirth;
     public SimpleStringProperty gender;
     public SimpleStringProperty passwordHashed;
 
-
+    public UserData() {
+        username = new SimpleStringProperty("");
+        email = new SimpleStringProperty("");
+        passwordHashed = new SimpleStringProperty("");
+        
+        displayName = new SimpleStringProperty("");
+        dateOfBirth = new SimpleStringProperty("");
+        address = new SimpleStringProperty("");
+        gender = new SimpleStringProperty("");
+        
+        status = new SimpleStringProperty("");
+        role = new SimpleStringProperty("user");
+        dateCreated = new SimpleStringProperty("");
+        lastLogin = new SimpleStringProperty("");
+        
+        friend = new ArrayList<>();
+        blocked = new ArrayList<>();
+    }
 
     public UserData(String newName, String newUsername, String newEmail, String currentStatus){
         displayName = new SimpleStringProperty(newName);
@@ -34,11 +53,11 @@ public class UserData {
         status = new SimpleStringProperty(currentStatus);
         lastLogin = new SimpleStringProperty("27 years ago");
 
-        ObservableList<SimpleStringProperty> observableList1 = FXCollections.observableArrayList(new ArrayList<>());
-        ObservableList<SimpleStringProperty> observableList2 = FXCollections.observableArrayList(new ArrayList<>());
+        // ObservableList<SimpleStringProperty> observableList1 = FXCollections.observableArrayList(new ArrayList<>());
+        // ObservableList<SimpleStringProperty> observableList2 = FXCollections.observableArrayList(new ArrayList<>());
 
-        friend = new SimpleListProperty<>(observableList1);
-        blocked = new SimpleListProperty<>(observableList2);
+        // friend = new SimpleListProperty<>(observableList1);
+        // blocked = new SimpleListProperty<>(observableList2);
 
         dateCreated = new SimpleStringProperty("Tomorrow");
         address = new SimpleStringProperty("");

@@ -16,11 +16,11 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
 //        Group root = new Group();
         Scene scene = new Scene(root);
-        Stage stage = new Stage();
+        // Stage stage = new Stage();
 
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.show();
+        primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
+        primaryStage.show();
     }
 
     public static void main(String[] args) {

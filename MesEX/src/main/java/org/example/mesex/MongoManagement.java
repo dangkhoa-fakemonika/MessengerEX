@@ -12,11 +12,15 @@ public class MongoManagement {
         client = new MongoClient("localhost", 27017);
         System.out.println("Mongo created");
 
-        database = client.getDatabase("messenger-ex-app");
+        database = client.getDatabase("messenger-ex");
         System.out.println("Database got");
 
         for (String s : client.listDatabaseNames()) {
             System.out.println(s);
         }
+    }
+
+    public static void main(String[] args) {
+        MongoManagement mm = new MongoManagement();
     }
 }
