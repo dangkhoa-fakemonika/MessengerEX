@@ -1,4 +1,4 @@
-package org.example.mesexadmin;
+package org.example.mesexadmin.ui.user_level;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +10,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
+import org.example.mesexadmin.PopUpController;
 
 import java.io.IOException;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package org.example.mesexadmin;
+package org.example.mesexadmin.ui.admin_level;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.data_class.SpamTicketData;
 import org.example.mesexadmin.data_class.UserData;
 

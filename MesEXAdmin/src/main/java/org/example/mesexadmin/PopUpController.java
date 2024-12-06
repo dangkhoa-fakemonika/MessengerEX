@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 
 public class PopUpController implements Initializable {
 
-    Dialog<Objects> currentDialog;
+    public Dialog<Objects> currentDialog;
     private Stage stage;
     private Scene scene;
     private Parent root;

@@ -1,4 +1,4 @@
-package org.example.mesexadmin;
+package org.example.mesexadmin.ui.user_level;
 
 import com.mongodb.client.ChangeStreamIterable;
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
@@ -21,6 +21,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.bson.Document;
+import org.example.mesexadmin.Main;
+import org.example.mesexadmin.MongoManagement;
+import org.example.mesexadmin.PopUpController;
 
 import java.io.IOException;
 import java.net.URL;

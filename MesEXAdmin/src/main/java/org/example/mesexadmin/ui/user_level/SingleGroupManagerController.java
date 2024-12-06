@@ -1,4 +1,4 @@
-package org.example.mesexadmin;
+package org.example.mesexadmin.ui.user_level;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.example.mesexadmin.PopUpController;
 
 import java.io.IOException;
 import java.net.URL;

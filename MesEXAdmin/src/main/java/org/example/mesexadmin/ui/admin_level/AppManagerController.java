@@ -1,4 +1,4 @@
-package org.example.mesexadmin;
+package org.example.mesexadmin.ui.admin_level;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
