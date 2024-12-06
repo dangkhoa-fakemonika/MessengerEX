@@ -9,6 +9,7 @@ module org.example.mesexadmin {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires mongo.java.driver;
+    requires javafx.base;
 
     opens org.example.mesexadmin to javafx.fxml;
     exports org.example.mesexadmin;

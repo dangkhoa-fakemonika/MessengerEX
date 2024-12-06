@@ -36,7 +36,7 @@ public class UserData {
         gender = new SimpleStringProperty("");
         
         status = new SimpleStringProperty("");
-        role = new SimpleStringProperty("user");
+        role = new SimpleStringProperty("admin");
         dateCreated = new SimpleStringProperty("");
         lastLogin = new SimpleStringProperty("");
         
@@ -57,7 +57,7 @@ public class UserData {
         // friend = new SimpleListProperty<>(observableList1);
         // blocked = new SimpleListProperty<>(observableList2);
 
-        dateCreated = new SimpleStringProperty("Tomorrow");
+        dateCreated = new SimpleStringProperty("");
         address = new SimpleStringProperty("");
         dateOfBirth = new SimpleStringProperty("");
         gender = new SimpleStringProperty("");
