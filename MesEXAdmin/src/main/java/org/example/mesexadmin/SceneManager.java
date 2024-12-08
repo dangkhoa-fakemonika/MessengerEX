@@ -12,8 +12,8 @@ import javafx.stage.Stage;
 
 public class SceneManager {
     
-    private Map<String, Scene> sceneMap = new HashMap<>();
-    private Stage stage;
+    private final Map<String, Scene> sceneMap = new HashMap<>();
+    private final Stage stage;
 
     public SceneManager(Stage primarStage) {
         this.stage = primarStage;

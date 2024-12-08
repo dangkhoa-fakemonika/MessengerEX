@@ -10,6 +10,8 @@ import javafx.scene.control.PasswordField;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.SceneManager;
 
+import java.io.IOException;
+
 public class RegisterController {
     private SceneManager sceneManager;
 
@@ -22,6 +24,24 @@ public class RegisterController {
 
     public RegisterController() {
         sceneManager = Main.getSceneManager();
+    }
+
+    public void loginScene(ActionEvent actionEvent) throws IOException {
+        // root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
+        // bufferScene(actionEvent);
+        sceneManager.addScene("Login", "main-login.fxml");
+        sceneManager.switchScene("Login");
+    }
+
+    public void verifyRegister(ActionEvent actionEvent) throws IOException {
+
+    }
+
+    public void mainScene(ActionEvent actionEvent) throws IOException {
+        // root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
+        // bufferScene(actionEvent);
+        sceneManager.addScene("Main", "main-messaging.fxml");
+        sceneManager.switchScene("Main");
     }
 
     @FXML
@@ -47,12 +67,4 @@ public class RegisterController {
         passwordField.clear();
         confirmPasswordField.clear();
     }
-
-    // public void mainScene(ActionEvent actionEvent) throws IOException {
-    //     // root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-    //     // bufferScene(actionEvent);
-    //     sceneManager.addScene("Main", "main-messaging.fxml");
-    //     sceneManager.switchScene("Main");
-    // }
-
 }

@@ -1,13 +1,9 @@
 package org.example.mesexadmin.ui.user_level;
 
-import com.mongodb.client.ChangeStreamIterable;
-import com.mongodb.client.model.changestream.ChangeStreamDocument;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,21 +16,21 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import org.bson.Document;
 import org.example.mesexadmin.Main;
-import org.example.mesexadmin.MongoManagement;
 import org.example.mesexadmin.PopUpController;
+import org.example.mesexadmin.data_class.ConversationData;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 
 public class MessagingController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
+
+    ConversationData currentConversation;
 
     @FXML
     private ListView<String> myListView;
@@ -127,6 +123,9 @@ public class MessagingController implements Initializable {
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
                 currentFriend = myListView.getSelectionModel().getSelectedItem();
                 myLabel.setText("Selected Chat: " + currentFriend);
+
+                // Get current conversation
+                currentConversation = Main.globalQuery.conversations().getConversation(null);
             }
         });
 
@@ -138,31 +137,33 @@ public class MessagingController implements Initializable {
                         myTextArea.appendText("\n");
                     }
                     else {
+                        boolean res = Main.globalQuery.conversations().addMessageCon(null, null);
+                        System.out.println(res);
                         addMessage();
                     }
                 }
             }
         });
 
-        Thread thread = getThread();
-        thread.start();
+//        Thread thread = getThread();
+//        thread.start();
 
     }
 
-    private Thread getThread() {
-        Task<Void> task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-                ChangeStreamIterable<Document> changeStream = Main.myMongo.messages.watch();
-                changeStream.forEach((Consumer<? super ChangeStreamDocument<Document>>) (n) -> Platform.runLater(() -> MongoManagement.processPushMongo(n, messages)));
-                return null;
-            }
-        };
-
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        return thread;
-    }
+//    private Thread getThread() {
+//        Task<Void> task = new Task<Void>() {
+//            @Override
+//            protected Void call() throws Exception {
+//                ChangeStreamIterable<Document> changeStream = Main.myMongo.messages.watch();
+//                changeStream.forEach((Consumer<? super ChangeStreamDocument<Document>>) (n) -> Platform.runLater(() -> MongoManagement.processPushMongo(n, messages)));
+//                return null;
+//            }
+//        };
+//
+//        Thread thread = new Thread(task);
+//        thread.setDaemon(true);
+//        return thread;
+//    }
 
     public void friendsSettingScene(ActionEvent actionEvent) throws IOException{
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-friend-config.fxml")));

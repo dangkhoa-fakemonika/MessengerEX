@@ -2,10 +2,12 @@ package org.example.mesexadmin;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.example.mesexadmin.data_access.GlobalQuery;
 
 public class Main extends Application {
-    public static MongoManagement myMongo;
+    public static GlobalQuery globalQuery;
     private static SceneManager sceneManager;
+    public static SessionUser thisUser;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -23,10 +25,13 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        globalQuery = new GlobalQuery(null);
+
         launch(args);
     }
 
     public static SceneManager getSceneManager() {
         return sceneManager;
     }
+    public static SessionUser getThisUser() {return thisUser;}
 }

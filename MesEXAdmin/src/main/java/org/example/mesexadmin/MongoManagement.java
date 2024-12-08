@@ -23,12 +23,12 @@ public class MongoManagement {
     public static ListView<Label> importedMessages;
     String username;
 
-    public MongoManagement(String uname, ListView<Label> m) {
+    public MongoManagement(String uname) {
         client = new MongoClient("localhost", 27017);
         database = client.getDatabase("test-msg");
         messages = database.getCollection("messages");
         username = uname;
-        importedMessages = m;
+        importedMessages = null;
     }
 
     public ArrayList<String> loadLocalMessages(){

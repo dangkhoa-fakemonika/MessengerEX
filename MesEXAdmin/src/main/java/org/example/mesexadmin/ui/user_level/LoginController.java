@@ -10,6 +10,8 @@ import javafx.scene.control.PasswordField;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.SceneManager;
 
+import java.io.IOException;
+
 public class LoginController {
     private SceneManager sceneManager;
 
@@ -20,6 +22,21 @@ public class LoginController {
 
     public LoginController() {
         sceneManager = Main.getSceneManager();
+    }
+
+
+    public void registerScene(ActionEvent actionEvent) throws IOException {
+        // root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-register.fxml")));
+        // bufferScene(actionEvent);
+        sceneManager.addScene("Register", "main-register.fxml");
+        sceneManager.switchScene("Register");
+    }
+
+    public void mainScene(ActionEvent actionEvent) throws IOException {
+        // root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
+        // bufferScene(actionEvent);
+        sceneManager.addScene("Main", "main-messaging.fxml");
+        sceneManager.switchScene("Main");
     }
 
     @FXML
@@ -43,19 +60,4 @@ public class LoginController {
         usernameField.clear();
         passwordField.clear();
     }
-
-    // public void loginScene(ActionEvent actionEvent) throws IOException {
-    //     // root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
-    //     // bufferScene(actionEvent);
-    //     sceneManager.addScene("Login", "main-login.fxml");
-    //     sceneManager.switchScene("Login");
-    // }
-
-    // public void mainScene(ActionEvent actionEvent) throws IOException {
-    //     // root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-    //     // bufferScene(actionEvent);
-    //     sceneManager.addScene("Main", "main-messaging.fxml");
-    //     sceneManager.switchScene("Main");
-    // }
-
 }

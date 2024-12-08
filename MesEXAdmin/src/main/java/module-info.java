@@ -19,5 +19,7 @@ module org.example.mesexadmin {
     exports org.example.mesexadmin.ui.admin_level;
     opens org.example.mesexadmin.ui.user_level to javafx.fxml;
     exports org.example.mesexadmin.ui.user_level;
+    exports org.example.mesexadmin.data_access;
+
 
 }
