@@ -10,6 +10,7 @@ module org.example.mesexadmin {
     requires eu.hansolo.tilesfx;
     requires mongo.java.driver;
     requires javafx.base;
+//    requires javax.mail;
 
     opens org.example.mesexadmin to javafx.fxml;
     exports org.example.mesexadmin;

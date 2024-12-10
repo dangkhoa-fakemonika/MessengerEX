@@ -54,6 +54,18 @@ public class LoginController {
                 }
             }
         });
+
+        loginButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                try {
+                    clearField();
+                    mainScene(actionEvent);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
     private void clearField() {

@@ -89,7 +89,15 @@
       <artifactId>junit-jupiter-engine</artifactId>
       <version>${junit.version}</version>
       <scope>test</scope>
-    </dependency>  </dependencies>
+    </dependency>
+
+<!--    <dependency>-->
+<!--      <groupId>1.4.3</groupId>-->
+<!--      <artifactId>javax.mail</artifactId>-->
+<!--      <scope>system</scope>-->
+<!--      <systemPath>${project.basedir}/lib/javamail-1.4.3.zip</systemPath>-->
+<!--    </dependency>-->
+  </dependencies>
 
   <build>
     <plugins>

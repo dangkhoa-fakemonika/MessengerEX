@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.data_class.ConversationData;
+import org.example.mesexadmin.ui.elements.ConversationListComponent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -33,17 +34,22 @@ public class MessagingController implements Initializable {
     ConversationData currentConversation;
 
     @FXML
-    private ListView<String> myListView;
+    private ListView<ConversationListComponent> messagingList;
     @FXML
     private ListView<Label> messages;
     @FXML
     private Label myLabel;
     @FXML
     private TextArea myTextArea;
+    @FXML
+    private MenuButton optionButton;
 
-
-    ObservableList<String> friendList = FXCollections.observableArrayList("user1", "user2", "user3");
-    String currentFriend;
+    // Load from database
+    ObservableList<ConversationListComponent> conversationList = FXCollections.observableArrayList(
+            new ConversationListComponent(new ConversationData("group 1", "1")),
+            new ConversationListComponent(new ConversationData("group 2", "2")),
+            new ConversationListComponent(new ConversationData("group 3", "3"))
+    );
 
     void bufferScene(ActionEvent actionEvent){
         stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -115,17 +121,17 @@ public class MessagingController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        optionButton.setDisable(true);
+        messagingList.getItems().addAll(conversationList);
 
-        myListView.getItems().addAll(friendList);
-
-        myListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+        messagingList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ConversationListComponent>() {
             @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                currentFriend = myListView.getSelectionModel().getSelectedItem();
-                myLabel.setText("Selected Chat: " + currentFriend);
-
+            public void changed(ObservableValue<? extends ConversationListComponent> observableValue, ConversationListComponent conversationListComponent, ConversationListComponent t1) {
+                currentConversation = messagingList.getSelectionModel().getSelectedItem().getConversation();
+                myLabel.setText("Selected Chat: " + currentConversation.getConversationName());
+                optionButton.setDisable(false);
                 // Get current conversation
-                currentConversation = Main.globalQuery.conversations().getConversation(null);
+//                currentConversation = Main.globalQuery.conversations().getConversation(null);
             }
         });
 

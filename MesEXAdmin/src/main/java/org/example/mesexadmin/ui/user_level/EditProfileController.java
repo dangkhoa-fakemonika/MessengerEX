@@ -12,8 +12,11 @@ import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
 import org.example.mesexadmin.PopUpController;
 
+//import javax.mail.Session;
+
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Properties;
 
 public class EditProfileController {
     private Stage stage;
@@ -46,6 +49,14 @@ public class EditProfileController {
         popUpController.currentDialog = dialog;
         dialog.setDialogPane(dialogPane);
         dialog.showAndWait();
+    }
+
+    public void sendEmail(){
+        String receiver = "mcfacebook911@gmail.com";
+        String sender = "amoungus69@sussy.com";
+        String host = "127.0.0.1";
+        Properties properties = System.getProperties();
+//        Session session = Session.de
     }
 
     public void resetPassword(ActionEvent actionEvent) {
