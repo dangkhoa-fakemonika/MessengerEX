@@ -118,7 +118,6 @@ public class MessagingController implements ControllerWrapper {
 
         messagingList.getItems().clear();
         messagingList.getItems().addAll(conversationList);
-
     }
 
     @Override

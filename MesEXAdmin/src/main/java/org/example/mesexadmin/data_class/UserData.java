@@ -1,31 +1,41 @@
 package org.example.mesexadmin.data_class;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.Date;
+
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 public class UserData {
+    private ObjectId userId;
+
     public SimpleStringProperty username;
     public SimpleStringProperty displayName;
     public SimpleStringProperty email;
 
     public SimpleStringProperty status;
-    public SimpleStringProperty lastLogin;
-    public SimpleStringProperty dateCreated;
+    public SimpleObjectProperty<Date> lastLogin;
+    public SimpleObjectProperty<Date> dateCreated;
     public SimpleStringProperty role;
 
-    // public SimpleListProperty<SimpleStringProperty> friend;
-    // public SimpleListProperty<SimpleStringProperty> blocked;
-    public ArrayList<SimpleStringProperty> friend;
-    public ArrayList<SimpleStringProperty> blocked;
+    
+    public ArrayList<ObjectId> friend;
+    public ArrayList<ObjectId> blocked;
 
     public SimpleStringProperty address;
     public SimpleStringProperty dateOfBirth;
     public SimpleStringProperty gender;
     public SimpleStringProperty passwordHashed;
 
+    // public SimpleListProperty<SimpleStringProperty> friend;
+    // public SimpleListProperty<SimpleStringProperty> blocked;
+
     public UserData() {
+
         username = new SimpleStringProperty("");
         email = new SimpleStringProperty("");
         passwordHashed = new SimpleStringProperty("");
@@ -33,12 +43,12 @@ public class UserData {
         displayName = new SimpleStringProperty("");
         dateOfBirth = new SimpleStringProperty("");
         address = new SimpleStringProperty("");
-        gender = new SimpleStringProperty("");
+        gender = new SimpleStringProperty("male");
         
-        status = new SimpleStringProperty("");
+        status = new SimpleStringProperty("offline");
         role = new SimpleStringProperty("admin");
-        dateCreated = new SimpleStringProperty("");
-        lastLogin = new SimpleStringProperty("");
+        dateCreated = new SimpleObjectProperty<Date>(null);
+        lastLogin = new SimpleObjectProperty<Date>(null);
         
         friend = new ArrayList<>();
         blocked = new ArrayList<>();
@@ -49,7 +59,7 @@ public class UserData {
         username = new SimpleStringProperty(newUsername);
         email = new SimpleStringProperty(newEmail);
         status = new SimpleStringProperty(currentStatus);
-        lastLogin = new SimpleStringProperty("27 years ago");
+        lastLogin = new SimpleObjectProperty<>(null);
 
         // ObservableList<SimpleStringProperty> observableList1 = FXCollections.observableArrayList(new ArrayList<>());
         // ObservableList<SimpleStringProperty> observableList2 = FXCollections.observableArrayList(new ArrayList<>());
@@ -57,7 +67,7 @@ public class UserData {
         // friend = new SimpleListProperty<>(observableList1);
         // blocked = new SimpleListProperty<>(observableList2);
 
-        dateCreated = new SimpleStringProperty("");
+        // dateCreated = new SimpleStringProperty("");
         address = new SimpleStringProperty("");
         dateOfBirth = new SimpleStringProperty("");
         gender = new SimpleStringProperty("");
@@ -70,9 +80,9 @@ public class UserData {
         username = new SimpleStringProperty("");
         email = new SimpleStringProperty("");
         status = new SimpleStringProperty("");
-        lastLogin = new SimpleStringProperty("27 years ago");
+        // lastLogin = new SimpleStringProperty("27 years ago");
 
-        dateCreated = new SimpleStringProperty("");
+        // dateCreated = new SimpleStringProperty("");
         address = new SimpleStringProperty("");
         dateOfBirth = new SimpleStringProperty("");
         gender = new SimpleStringProperty("");
@@ -106,7 +116,7 @@ public class UserData {
         this.status.set(status);
     }
 
-    public void setLastLogin(String lastLogin) {
+    public void setLastLogin(Date lastLogin) {
         this.lastLogin.set(lastLogin);
     }
 
@@ -118,7 +128,7 @@ public class UserData {
 //        this.blocked.set(blocked);
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated.set(dateCreated);
     }
 
@@ -158,32 +168,32 @@ public class UserData {
         return status.get();
     }
 
-    public String getFriend() {
-//        return friendCount.get();
-        StringBuilder res =  new StringBuilder();
-        for (SimpleStringProperty i : friend){
-            if (!i.getValueSafe().trim().isEmpty())
-                res.append(i.getValueSafe()).append(", ");
-        }
+//     public String getFriend() {
+// //        return friendCount.get();
+//         StringBuilder res =  new StringBuilder();
+//         for (SimpleStringProperty i : friend){
+//             if (!i.getValueSafe().trim().isEmpty())
+//                 res.append(i.getValueSafe()).append(", ");
+//         }
 
-        return !res.isEmpty() ? res.toString() : "No friends.";
-    }
+//         return !res.isEmpty() ? res.toString() : "No friends.";
+//     }
 
-    public String getBlocked() {
-        StringBuilder res =  new StringBuilder();
-        for (SimpleStringProperty i : blocked){
-            if (!i.getValueSafe().trim().isEmpty())
-                res.append(i.getValueSafe()).append(", ");
-        }
+    // public String getBlocked() {
+    //     StringBuilder res =  new StringBuilder();
+    //     for (SimpleStringProperty i : blocked){
+    //         if (!i.getValueSafe().trim().isEmpty())
+    //             res.append(i.getValueSafe()).append(", ");
+    //     }
 
-        return !res.isEmpty() ? res.toString() : "No blocked";
-    }
+    //     return !res.isEmpty() ? res.toString() : "No blocked";
+    // }
 
-    public String getLastLogin() {
+    public Date getLastLogin() {
         return lastLogin.get();
     }
 
-    public String getDateCreated() {
+    public Date getDateCreated() {
         return dateCreated.get();
     }
 
@@ -205,5 +215,23 @@ public class UserData {
 
     public String getPasswordHashed() {
         return passwordHashed.get();
+    }
+
+    public Document toDocument() {
+        Document doc = new Document();
+        doc.append("username", this.username.get())
+            .append("displayName", this.displayName.get())
+            .append("email", this.email.get())
+            .append("status", this.status.get())
+            .append("lastLogin", this.lastLogin.get())
+            .append("dateCreated", this.dateCreated.get())
+            .append("role", this.role.get())
+            .append("friend", this.friend)
+            .append("blocked", this.blocked)
+            .append("address", this.address.get())
+            .append("dateOfBirth", this.dateOfBirth.get())
+            .append("gender", this.gender.get())
+            .append("passwordHashed", this.passwordHashed.get());
+        return doc;
     }
 }

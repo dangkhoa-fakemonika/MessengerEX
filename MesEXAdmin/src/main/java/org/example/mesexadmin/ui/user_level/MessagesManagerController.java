@@ -82,7 +82,6 @@ public class MessagesManagerController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
-        myInitialize();
 
         chat.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MessageListComponent>() {
                 @Override

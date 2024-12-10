@@ -23,8 +23,8 @@ public class SessionUser {
         return true;
     }
 
-    public boolean registerUser(UserData userData){
-        return myQuery.users().insertUser(userData);
+    public boolean registerUser(String username, String email, String password){
+        return myQuery.users().insertUser(username, email, password);
     }
 
     public UserData getSessionUserData() {
