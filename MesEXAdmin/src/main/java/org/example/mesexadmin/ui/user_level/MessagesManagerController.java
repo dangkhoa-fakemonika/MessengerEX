@@ -1,44 +1,53 @@
 package org.example.mesexadmin.ui.user_level;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ListView;
-import javafx.stage.Stage;
+import javafx.scene.control.*;
+import org.example.mesexadmin.Main;
+import org.example.mesexadmin.SceneManager;
+import org.example.mesexadmin.data_class.ConversationData;
+import org.example.mesexadmin.data_class.MessageData;
+import org.example.mesexadmin.ui.elements.MessageListComponent;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MessagesManagerController implements Initializable {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
+    SceneManager sceneManager;
+
+    ConversationData thisConversation;
+    MessageData selectedMessage;
 
     @FXML
-    private ListView<String> chat;
+    private ListView<MessageListComponent> chat;
+    @FXML
+    private Button reportUserButton;
+    @FXML
+    private Button deleteOneButton;
+    @FXML
+    private Button deleteAllButton;
+    @FXML
+    private TextField filterField;
+    @FXML
+    private Label title;
 
-    ObservableList<String> observableList3 = FXCollections.observableArrayList("admin: hello", "user: hi", "admin: hello", "user: hi", "admin: hello", "user: hi");
-
-    void bufferScene(ActionEvent actionEvent){
-//        System.out.println(actionEvent.getSource());
-        stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+    ObservableList<MessageListComponent> observableList3 =
+            FXCollections.observableArrayList(
+                    new MessageListComponent(new MessageData("sample message 1", "a", "b")),
+                    new MessageListComponent(new MessageData("sample message 3", "a", "b")),
+                    new MessageListComponent(new MessageData("sample message 4", "a", "b")),
+                    new MessageListComponent(new MessageData("sample message 6", "a", "b"))
+                    );
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-        bufferScene(actionEvent);
+        sceneManager.addScene("Main", "main-messaging.fxml");
+        sceneManager.switchScene("Main");
     }
 
     public void reportUser(ActionEvent actionEvent) {
@@ -55,9 +64,23 @@ public class MessagesManagerController implements Initializable {
         newAlert.showAndWait();
     }
 
+//    public void
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
+        deleteOneButton.setDisable(true);
+        thisConversation = MessagingController.currentConversation;
+        title.setText(thisConversation.getConversationName());
+
         chat.getItems().addAll(observableList3);
+        chat.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MessageListComponent>() {
+                @Override
+                public void changed(ObservableValue<? extends MessageListComponent> observableValue, MessageListComponent messageListComponent, MessageListComponent t1) {
+                    selectedMessage = chat.getSelectionModel().getSelectedItem().getMessage();
+                    deleteOneButton.setDisable(false);
+                }
+            }
+        );
     }
 }

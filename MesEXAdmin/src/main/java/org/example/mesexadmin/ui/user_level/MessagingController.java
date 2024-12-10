@@ -9,17 +9,16 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
+import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.data_class.ConversationData;
+import org.example.mesexadmin.data_class.MessageData;
 import org.example.mesexadmin.ui.elements.ConversationListComponent;
+import org.example.mesexadmin.ui.elements.MessageListComponent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,16 +26,14 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MessagingController implements Initializable {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
+    private SceneManager sceneManager;
 
-    ConversationData currentConversation;
+    static ConversationData currentConversation;
 
     @FXML
     private ListView<ConversationListComponent> messagingList;
     @FXML
-    private ListView<Label> messages;
+    private ListView<MessageListComponent> messages;
     @FXML
     private Label myLabel;
     @FXML
@@ -50,13 +47,6 @@ public class MessagingController implements Initializable {
             new ConversationListComponent(new ConversationData("group 2", "2")),
             new ConversationListComponent(new ConversationData("group 3", "3"))
     );
-
-    void bufferScene(ActionEvent actionEvent){
-        stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
 
     public void addFriend(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add.fxml"));
@@ -76,18 +66,22 @@ public class MessagingController implements Initializable {
 
     public void addMessage(ActionEvent actionEvent){
         if (!myTextArea.getText().trim().isEmpty()){
-            Label newLabel = new Label();
-            newLabel.setText("admin: " + myTextArea.getText().trim());
-            messages.getItems().add(newLabel);
+            String msg = myTextArea.getText().trim();
+
+            // Add Message processing here
+
+            messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
             myTextArea.setText("");
         }
     }
 
     public void addMessage(){
         if (!myTextArea.getText().trim().isEmpty()){
-            Label newLabel = new Label();
-            newLabel.setText("admin: " + myTextArea.getText().trim());
-            messages.getItems().add(newLabel);
+            String msg = myTextArea.getText().trim();
+
+            // Add Message processing here
+
+            messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
             myTextArea.setText("");
         }
     }
@@ -112,15 +106,14 @@ public class MessagingController implements Initializable {
     }
 
     public void advanced(ActionEvent actionEvent) throws IOException{
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-all-chat-history-management.fxml")));
-        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root);
-        thisStage.setScene(scene);
-        thisStage.show();
+        sceneManager.addScene("ChatHistoryManagement", "main-all-chat-history-management.fxml");
+        sceneManager.switchScene("ChatHistoryManagement");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
+
         optionButton.setDisable(true);
         messagingList.getItems().addAll(conversationList);
 
@@ -143,8 +136,8 @@ public class MessagingController implements Initializable {
                         myTextArea.appendText("\n");
                     }
                     else {
-                        boolean res = Main.globalQuery.conversations().addMessageCon(null, null);
-                        System.out.println(res);
+//                        boolean res = Main.globalQuery.conversations().addMessageCon(null, null);
+//                        System.out.println(res);
                         addMessage();
                     }
                 }
@@ -172,75 +165,89 @@ public class MessagingController implements Initializable {
 //    }
 
     public void friendsSettingScene(ActionEvent actionEvent) throws IOException{
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-friend-config.fxml")));
-        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root);
-        thisStage.setScene(scene);
-        thisStage.show();
+        sceneManager.addScene("FriendsManagement", "main-friend-config.fxml");
+        sceneManager.switchScene("FriendsManagement");
+//
+//        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-friend-config.fxml")));
+//        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+//        scene = new Scene(root);
+//        thisStage.setScene(scene);
+//        thisStage.show();
     }
 
     public void userManagementScene(ActionEvent actionEvent) throws IOException{
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-user-manager.fxml")));
-        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root);
-        thisStage.setScene(scene);
-        thisStage.show();
+        sceneManager.addScene("AppUserManagement", "main-user-manager.fxml");
+        sceneManager.switchScene("AppUserManagement");
+//
+//        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-user-manager.fxml")));
+//        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+//        scene = new Scene(root);
+//        thisStage.setScene(scene);
+//        thisStage.show();
     }
 
     public void groupManagementScene(ActionEvent actionEvent) throws IOException{
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-group-manager.fxml")));
-        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root);
-        thisStage.setScene(scene);
-        thisStage.show();
+        sceneManager.addScene("AppGroupManagement", "main-group-manager.fxml");
+        sceneManager.switchScene("AppGroupManagement");
+
+//        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-group-manager.fxml")));
+//        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+//        scene = new Scene(root);
+//        thisStage.setScene(scene);
+//        thisStage.show();
     }
 
     public void appManagementScene(ActionEvent actionEvent) throws IOException{
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-app-manager.fxml")));
-        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root);
-        thisStage.setScene(scene);
-        thisStage.show();
+        sceneManager.addScene("AppManagement", "main-app-manager.fxml");
+        sceneManager.switchScene("AppManagement");
+
+//        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-app-manager.fxml")));
+//        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+//        scene = new Scene(root);
+//        thisStage.setScene(scene);
+//        thisStage.show();
     }
 
     public void personalGroupManagementScene(ActionEvent actionEvent) throws IOException{
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-convo-config.fxml")));
-        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root);
-        thisStage.setScene(scene);
-        thisStage.show();
+        sceneManager.addScene("MyGroupManagement", "main-convo-config.fxml");
+        sceneManager.switchScene("MyGroupManagement");
+
+//        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-convo-config.fxml")));
+//        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+//        scene = new Scene(root);
+//        thisStage.setScene(scene);
+//        thisStage.show();
     }
 
     public void profileScene(ActionEvent actionEvent) throws IOException{
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("edit-user-profile.fxml")));
-        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root);
-        thisStage.setScene(scene);
-        thisStage.show();
+        sceneManager.addScene("EditProfile", "edit-user-profile.fxml");
+        sceneManager.switchScene("EditProfile");
+
+//        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("edit-user-profile.fxml")));
+//        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+//        scene = new Scene(root);
+//        thisStage.setScene(scene);
+//        thisStage.show();
     }
 
     public void configureChatHistory(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-chat-history-management.fxml")));
-        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root);
-        thisStage.setScene(scene);
-        thisStage.show();
+        sceneManager.addScene("ChatManagement", "main-chat-history-management.fxml");
+        sceneManager.switchScene("ChatManagement");
     }
 
     public void returnLogin(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
-        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root);
-        thisStage.setScene(scene);
-        thisStage.show();
+        sceneManager.addScene("Login", "main-login.fxml");
+        sceneManager.switchScene("Login");
     }
 
     public void configureGroup(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-single-group-manager.fxml")));
-        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
-        scene = new Scene(root);
-        thisStage.setScene(scene);
-        thisStage.show();
+        sceneManager.addScene("ThisGroupManager", "main-single-group-manager.fxml");
+        sceneManager.switchScene("ThisGroupManager");
+//        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-single-group-manager.fxml")));
+//        Stage thisStage = (Stage) ((MenuItem) actionEvent.getSource()).getParentPopup().getOwnerWindow();
+//        scene = new Scene(root);
+//        thisStage.setScene(scene);
+//        thisStage.show();
     }
 
     public void blockUser(ActionEvent actionEvent) {
