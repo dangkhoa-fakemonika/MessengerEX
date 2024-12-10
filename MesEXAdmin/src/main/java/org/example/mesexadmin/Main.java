@@ -7,7 +7,7 @@ import org.example.mesexadmin.data_access.GlobalQuery;
 public class Main extends Application {
     public static GlobalQuery globalQuery;
     private static SceneManager sceneManager;
-    public static SessionUser thisUser;
+    private static SessionUser thisUser;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -18,13 +18,15 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        globalQuery = new GlobalQuery(null);
-
+        globalQuery = new GlobalQuery(new MongoManagement(""));
+        thisUser = new SessionUser(globalQuery);
         launch(args);
     }
 
     public static SceneManager getSceneManager() {
         return sceneManager;
     }
-    public static SessionUser getThisUser() {return thisUser;}
+    public static SessionUser getThisUser() { 
+        return thisUser;
+    }
 }

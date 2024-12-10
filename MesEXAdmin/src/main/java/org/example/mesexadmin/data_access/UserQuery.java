@@ -6,16 +6,19 @@ import org.example.mesexadmin.data_class.UserData;
 import java.util.ArrayList;
 
 public class UserQuery {
+    
+
     // credentials
-    public UserData login(){
+    public UserData getUserById(){
         return null;
     }
 
-    public UserData register(){
-        return null;
+    public boolean updateUser(UserData userData){
+        return true;
     }
 
-    public boolean blockUser(){
+    public boolean insertUser(UserData userData){
+
         return true;
     }
 
