@@ -100,6 +100,10 @@ public class UserData {
 //        dateCreated = new SimpleStringProperty(u.getDateCreated());
 //    }
 
+    public void setUserId(ObjectId userId) {
+        this.userId = userId;
+    }
+
     public void setEmail(String email) {
         this.email.set(email);
     }
@@ -188,6 +192,14 @@ public class UserData {
 
     //     return !res.isEmpty() ? res.toString() : "No blocked";
     // }
+
+    public void setFriend(ArrayList<ObjectId> friend) {
+        this.friend = friend;
+    }
+
+    public void setBlocked(ArrayList<ObjectId> blocked) {
+        this.friend = blocked;
+    }
 
     public Date getLastLogin() {
         return lastLogin.get();

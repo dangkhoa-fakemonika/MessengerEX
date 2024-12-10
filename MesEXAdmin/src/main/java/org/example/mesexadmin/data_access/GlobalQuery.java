@@ -32,4 +32,8 @@ public class GlobalQuery {
     public ActivityQuery activities(){
         return null;
     }
+
+    public MongoManagement getConnection() {
+        return myMongo;
+    }
 }
