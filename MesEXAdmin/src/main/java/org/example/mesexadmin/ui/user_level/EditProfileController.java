@@ -2,6 +2,7 @@ package org.example.mesexadmin.ui.user_level;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,34 +11,39 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
+import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
+import org.example.mesexadmin.SceneManager;
 
 //import javax.mail.Session;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
-public class EditProfileController {
+public class EditProfileController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
-
-    void bufferScene(ActionEvent actionEvent){
-        stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+    SceneManager sceneManager;
+//
+//    void bufferScene(ActionEvent actionEvent){
+//        stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+//        scene = new Scene(root);
+//        stage.setScene(scene);
+//        stage.show();
+//    }
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-        bufferScene(actionEvent);
+        sceneManager.addScene("Main", "main-messaging.fxml");
+        sceneManager.switchScene("Main");
     }
 
     public void changePassword(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("change-password.fxml")));
-        bufferScene(actionEvent);
+        sceneManager.addScene("ChangePassword", "change-password.fxml");
+        sceneManager.switchScene("ChangePassword");
     }
 
     public void changeUsername(ActionEvent actionEvent) throws IOException {
@@ -74,4 +80,8 @@ public class EditProfileController {
     }
 
 
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
+    }
 }

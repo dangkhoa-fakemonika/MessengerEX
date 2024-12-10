@@ -17,7 +17,7 @@ public class GlobalQuery {
         return null;
     }
 
-    public FriendQuery friends(){
+    public FriendRequestQuery friends(){
         return null;
     }
 

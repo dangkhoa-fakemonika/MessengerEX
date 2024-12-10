@@ -32,10 +32,6 @@ public class FriendsController implements Initializable {
     @FXML
     private TableView<UserData> blockedTable;
 
-    private TableColumn<UserData, String> nameCol;
-    private TableColumn<UserData, String> idCol;
-    private TableColumn<UserData, String> statusCol;
-
     public void addFriend(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
@@ -111,8 +107,8 @@ public class FriendsController implements Initializable {
             new UserData("Ryan Gosling", "him", "example@email.com", "Offline")
     );
 
-    final ObservableList<FriendRequestData> requestData = FXCollections.observableArrayList(new ArrayList<>());
-    final ObservableList<FriendRequestData> pendingData = FXCollections.observableArrayList(new ArrayList<>());
+    final ObservableList<FriendRequestData> requests = FXCollections.observableArrayList();
+    final ObservableList<FriendRequestData> pending = FXCollections.observableArrayList();
 
     public ObservableList<TableColumn<UserData, String>> generateUserColumns(){
         TableColumn<UserData, String> nameCol = new TableColumn<>("Name");
@@ -165,6 +161,5 @@ public class FriendsController implements Initializable {
         friendsTable.getColumns().addAll(generateUserColumns());
         blockedTable.setItems(blockedData);
         blockedTable.getColumns().addAll(generateUserColumns());
-
     }
 }
