@@ -2,35 +2,35 @@ package org.example.mesexadmin.ui.user_level;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import org.example.mesexadmin.Main;
+import org.example.mesexadmin.SceneManager;
+import org.example.mesexadmin.ui.ControllerWrapper;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class ChangePasswordController {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
-
-    void bufferScene(ActionEvent actionEvent){
-//        System.out.println(actionEvent.getSource());
-        stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+public class ChangePasswordController implements ControllerWrapper {
+    static SceneManager sceneManager;
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-        bufferScene(actionEvent);
+        sceneManager.addScene("Main", "main-messaging.fxml");
+        sceneManager.switchScene("Main");
     }
 
     public void returnToChange(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("edit-user-profile.fxml")));
-        bufferScene(actionEvent);
+        sceneManager.addScene("EditProfile", "edit-user-profile.fxml");
+        sceneManager.switchScene("EditProfile");
     }
 
+    @Override
+    public void myInitialize() {
+
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
+    }
 }

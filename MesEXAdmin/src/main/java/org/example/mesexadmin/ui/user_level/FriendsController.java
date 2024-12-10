@@ -13,6 +13,7 @@ import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.data_class.FriendRequestData;
 import org.example.mesexadmin.data_class.UserData;
+import org.example.mesexadmin.ui.ControllerWrapper;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class FriendsController implements Initializable {
+public class FriendsController implements ControllerWrapper {
     private SceneManager sceneManager;
 
     @FXML
@@ -33,7 +34,7 @@ public class FriendsController implements Initializable {
     private TableView<UserData> blockedTable;
 
     public void addFriend(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-add.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -88,9 +89,6 @@ public class FriendsController implements Initializable {
 
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
-//        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-//        bufferScene(actionEvent);
-
         sceneManager.addScene("Main", "main-messaging.fxml");
         sceneManager.switchScene("Main");
     }
@@ -151,15 +149,22 @@ public class FriendsController implements Initializable {
         return FXCollections.observableArrayList(nameCol, timeCol);
     }
 
-
-
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        sceneManager = Main.getSceneManager();
-
+    public void myInitialize() {
+        friendsTable.setItems(FXCollections.observableArrayList());
+        friendsTable.getColumns().clear();
+        blockedTable.setItems(FXCollections.observableArrayList());
+        blockedTable.getColumns().clear();
         friendsTable.setItems(data);
         friendsTable.getColumns().addAll(generateUserColumns());
         blockedTable.setItems(blockedData);
         blockedTable.getColumns().addAll(generateUserColumns());
+        friendsTable.refresh();
+        blockedTable.refresh();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
     }
 }

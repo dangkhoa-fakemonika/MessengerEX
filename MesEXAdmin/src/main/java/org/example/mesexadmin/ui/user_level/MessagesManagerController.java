@@ -20,10 +20,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MessagesManagerController implements ControllerWrapper {
-    SceneManager sceneManager;
+    static SceneManager sceneManager;
 
-    ConversationData thisConversation;
-    MessageData selectedMessage;
+    static ConversationData thisConversation;
+    static MessageData selectedMessage;
 
     @FXML
     private ListView<MessageListComponent> chat;
@@ -68,12 +68,21 @@ public class MessagesManagerController implements ControllerWrapper {
         title.setText(thisConversation.getConversationName());
         selectedMessage = null;
 
-        observableList3 = FXCollections.observableArrayList(
-                        new MessageListComponent(new MessageData("sample message 1", "a", "b")),
-                        new MessageListComponent(new MessageData("sample message 3", "a", "b")),
-                        new MessageListComponent(new MessageData("sample message 4", "a", "b")),
-                        new MessageListComponent(new MessageData("sample message 6", "a", "b"))
-                );
+        if (thisConversation.getConversationName().equals("group 1")){
+            observableList3 = FXCollections.observableArrayList(
+                            new MessageListComponent(new MessageData("sample message 1", "a", "b")),
+                            new MessageListComponent(new MessageData("sample message 3", "a", "b")),
+                            new MessageListComponent(new MessageData("sample message 4", "a", "b"))
+                    );
+        }
+        if (thisConversation.getConversationName().equals("group 2")){
+            observableList3 = FXCollections.observableArrayList(
+                    new MessageListComponent(new MessageData("sample message 1", "a", "b")),
+                    new MessageListComponent(new MessageData("sample message 3", "a", "b")),
+                    new MessageListComponent(new MessageData("sample message 4", "a", "b")),
+                    new MessageListComponent(new MessageData("sample message 6", "a", "b"))
+            );
+        }
 
         chat.getItems().clear();
         chat.getItems().addAll(observableList3);
@@ -82,7 +91,6 @@ public class MessagesManagerController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
-        myInitialize();
 
         chat.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<MessageListComponent>() {
                 @Override

@@ -46,7 +46,7 @@ public class MessagingController implements ControllerWrapper {
     static ObservableList<ConversationListComponent> conversationList;
 
     public void addFriend(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add.fxml"));
+        FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-add.fxml")));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -84,7 +84,7 @@ public class MessagingController implements ControllerWrapper {
     }
 
     public void addGroup(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-create-group.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-create-group.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -115,10 +115,9 @@ public class MessagingController implements ControllerWrapper {
                 new ConversationListComponent(new ConversationData("group 2", "2")),
                 new ConversationListComponent(new ConversationData("group 3", "3"))
         );
-
+        currentConversation = null;
         messagingList.getItems().clear();
         messagingList.getItems().addAll(conversationList);
-
     }
 
     @Override
@@ -128,9 +127,12 @@ public class MessagingController implements ControllerWrapper {
         messagingList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ConversationListComponent>() {
             @Override
             public void changed(ObservableValue<? extends ConversationListComponent> observableValue, ConversationListComponent conversationListComponent, ConversationListComponent t1) {
-                currentConversation = messagingList.getSelectionModel().getSelectedItem().getConversation();
-                myLabel.setText("Selected Chat: " + currentConversation.getConversationName());
-                optionButton.setDisable(false);
+                ConversationListComponent c =  messagingList.getSelectionModel().getSelectedItem();
+                if (c != null){
+                    currentConversation = c.getConversation();
+                    myLabel.setText("Selected Chat: " + currentConversation.getConversationName());
+                    optionButton.setDisable(false);
+                }
                 // Get current conversation
 //                currentConversation = Main.globalQuery.conversations().getConversation(null);
             }
