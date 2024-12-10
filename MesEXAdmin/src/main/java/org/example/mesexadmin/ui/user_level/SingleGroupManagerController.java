@@ -1,5 +1,7 @@
 package org.example.mesexadmin.ui.user_level;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -30,6 +32,8 @@ public class SingleGroupManagerController implements ControllerWrapper {
     private ListView<UserListComponent> modList;
     @FXML
     private ListView<MessageListComponent> chat;
+
+    static UserData selectedUser, selectedMod;
 
     // Replace this with new data
     ObservableList<UserListComponent> observableList1 = FXCollections.observableArrayList(
@@ -119,6 +123,28 @@ public class SingleGroupManagerController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
+
+        memberList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserListComponent>() {
+            @Override
+            public void changed(ObservableValue<? extends UserListComponent> observableValue, UserListComponent userListComponent, UserListComponent t1) {
+                UserListComponent u = memberList.getSelectionModel().getSelectedItem();
+                if (u != null){
+                    selectedUser = u.getUser();
+                }
+            }
+        });
+
+        modList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserListComponent>() {
+            @Override
+            public void changed(ObservableValue<? extends UserListComponent> observableValue, UserListComponent userListComponent, UserListComponent t1) {
+                UserListComponent u = modList.getSelectionModel().getSelectedItem();
+                if (u != null){
+                    selectedMod = u.getUser();
+                }
+            }
+        });
+
+
     }
 
 

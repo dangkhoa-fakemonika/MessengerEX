@@ -4,27 +4,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
+import org.example.mesexadmin.Main;
+import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.data_class.ActivityData;
 import org.example.mesexadmin.data_class.UserData;
+import org.example.mesexadmin.ui.ControllerWrapper;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class AppManagerController implements Initializable {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
-
+public class AppManagerController implements ControllerWrapper {
+    static SceneManager sceneManager;
 
     @FXML
     private TableView<ActivityData> userTable;
@@ -36,14 +30,6 @@ public class AppManagerController implements Initializable {
     private TableView<UserData> socialTable;
     @FXML
     private TableView<UserData> activeTable;
-
-    void bufferScene(ActionEvent actionEvent){
-//        System.out.println(actionEvent.getSource());
-        stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
 
     final ObservableList<ActivityData> data = FXCollections.observableArrayList(
             new ActivityData("user2", "12:00:00 13-11-2024", "login"),
@@ -130,12 +116,29 @@ public class AppManagerController implements Initializable {
     }
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-        bufferScene(actionEvent);
+        sceneManager.addScene("Main", "main-messaging.fxml");
+        sceneManager.switchScene("Main");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
+    }
+
+    @Override
+    public void myInitialize() {
+        userTable.setItems(FXCollections.observableArrayList());
+        loginTable.setItems(FXCollections.observableArrayList());
+        newAccountTable.setItems(FXCollections.observableArrayList());
+        socialTable.setItems(FXCollections.observableArrayList());
+        activeTable.setItems(FXCollections.observableArrayList());
+        userTable.getColumns().clear();
+        loginTable.getColumns().clear();
+        newAccountTable.getColumns().clear();
+        socialTable.getColumns().clear();
+        activeTable.getColumns().clear();
+
+
         userTable.setItems(data);
         userTable.getColumns().addAll(generateActivityColumns());
         loginTable.getColumns().addAll(generateLoginColumns());

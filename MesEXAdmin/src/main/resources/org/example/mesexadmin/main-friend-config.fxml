@@ -54,7 +54,7 @@
                            <content>
                               <AnchorPane>
                                  <children>
-                                    <TableView layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
+                                    <TableView fx:id="requestTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
                                     <Button layoutX="712.0" layoutY="13.0" mnemonicParsing="false" onAction="#blockUser" text="Block User" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />

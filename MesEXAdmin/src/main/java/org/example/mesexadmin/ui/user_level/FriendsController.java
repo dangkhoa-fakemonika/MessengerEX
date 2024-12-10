@@ -1,5 +1,7 @@
 package org.example.mesexadmin.ui.user_level;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,6 +34,9 @@ public class FriendsController implements ControllerWrapper {
     private TableView<FriendRequestData> requestTable;
     @FXML
     private TableView<UserData> blockedTable;
+
+    static UserData friend, blocked;
+    static FriendRequestData pending, request;
 
     public void addFriend(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-add.fxml"));
@@ -106,7 +111,7 @@ public class FriendsController implements ControllerWrapper {
     );
 
     final ObservableList<FriendRequestData> requests = FXCollections.observableArrayList();
-    final ObservableList<FriendRequestData> pending = FXCollections.observableArrayList();
+    final ObservableList<FriendRequestData> pendings = FXCollections.observableArrayList();
 
     public ObservableList<TableColumn<UserData, String>> generateUserColumns(){
         TableColumn<UserData, String> nameCol = new TableColumn<>("Name");
@@ -166,5 +171,32 @@ public class FriendsController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
+        friendsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
+            @Override
+            public void changed(ObservableValue<? extends UserData> observableValue, UserData userData, UserData t1) {
+                friend = friendsTable.getSelectionModel().getSelectedItem();
+            }
+        });
+
+        blockedTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
+            @Override
+            public void changed(ObservableValue<? extends UserData> observableValue, UserData userData, UserData t1) {
+                blocked = blockedTable.getSelectionModel().getSelectedItem();
+            }
+        });
+
+        pendingTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendRequestData>() {
+            @Override
+            public void changed(ObservableValue<? extends FriendRequestData> observableValue, FriendRequestData friendRequestData, FriendRequestData t1) {
+                pending = pendingTable.getSelectionModel().getSelectedItem();
+            }
+        });
+
+        requestTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendRequestData>() {
+            @Override
+            public void changed(ObservableValue<? extends FriendRequestData> observableValue, FriendRequestData friendRequestData, FriendRequestData t1) {
+                request = requestTable.getSelectionModel().getSelectedItem();
+            }
+        });
     }
 }

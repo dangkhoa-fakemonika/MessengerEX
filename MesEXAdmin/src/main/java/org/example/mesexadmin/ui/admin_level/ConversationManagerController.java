@@ -1,42 +1,34 @@
 package org.example.mesexadmin.ui.admin_level;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
+import org.example.mesexadmin.Main;
+import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.data_class.ConversationData;
+import org.example.mesexadmin.ui.ControllerWrapper;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class ConversationManagerController implements Initializable {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
-
+public class ConversationManagerController implements ControllerWrapper {
+    static SceneManager sceneManager;
     @FXML
     private TableView<ConversationData> activeGroupTable;
     @FXML
     private TableView<ConversationData> inactiveGroupTable;
+    @FXML
+    private Button deleteGroup, createGroup, addUser, details;
 
-    void bufferScene(ActionEvent actionEvent){
-//        System.out.println(actionEvent.getSource());
-        stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+    static ConversationData selectedGroup;
 
     final ObservableList<ConversationData> data = FXCollections.observableArrayList(
         new ConversationData("T1", "faker"),
@@ -74,16 +66,36 @@ public class ConversationManagerController implements Initializable {
     }
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-        bufferScene(actionEvent);
+        sceneManager.addScene("Main", "main-messaging.fxml");
+        sceneManager.switchScene("Main");
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
+        activeGroupTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ConversationData>() {
+            @Override
+            public void changed(ObservableValue<? extends ConversationData> observableValue, ConversationData conversationData, ConversationData t1) {
+                selectedGroup = activeGroupTable.getSelectionModel().getSelectedItem();
+            }
+        });
 
+        inactiveGroupTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ConversationData>() {
+            @Override
+            public void changed(ObservableValue<? extends ConversationData> observableValue, ConversationData conversationData, ConversationData t1) {
+                selectedGroup = inactiveGroupTable.getSelectionModel().getSelectedItem();
+            }
+        });
+    }
+
+    @Override
+    public void myInitialize() {
+        activeGroupTable.setItems(FXCollections.observableArrayList());
+        inactiveGroupTable.setItems(FXCollections.observableArrayList());
+        activeGroupTable.getColumns().clear();
+        inactiveGroupTable.getColumns().clear();
         activeGroupTable.setItems(data);
         activeGroupTable.getColumns().addAll(generateColumns());
-
         inactiveGroupTable.setItems(inactiveData);
         inactiveGroupTable.getColumns().addAll(generateColumns());
     }

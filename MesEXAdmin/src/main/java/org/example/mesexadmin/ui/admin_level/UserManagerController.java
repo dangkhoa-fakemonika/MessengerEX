@@ -1,5 +1,7 @@
 package org.example.mesexadmin.ui.admin_level;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,20 +14,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
+import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.data_class.SpamTicketData;
 import org.example.mesexadmin.data_class.UserData;
+import org.example.mesexadmin.ui.ControllerWrapper;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class UserManagerController implements Initializable {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
-
+public class UserManagerController implements ControllerWrapper {
+    static SceneManager sceneManager;
+    static UserData selectedUser;
+    static SpamTicketData selectedSpam;
+    static UserData selectedBanned;
 
     @FXML
     private TableView<UserData> userTable;
@@ -33,14 +38,11 @@ public class UserManagerController implements Initializable {
     private TableView<SpamTicketData> spamTable;
     @FXML
     private TableView<UserData> bannedTable;
-
-    void bufferScene(ActionEvent actionEvent){
-//        System.out.println(actionEvent.getSource());
-        stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
+    @FXML
+    private Button
+    addUser, banUser1, banUser2, deleteUser1, deleteUser2, deleteUser3, unmarkSpam, unbanUser;
+    @FXML
+    private MenuButton detail;
 
 //    ObservableList<UserData> spamData = FXCollections.observableArrayList(new ArrayList<>());
 //    ObservableList<UserData> bannedData = FXCollections.observableArrayList(new ArrayList<>());
@@ -128,8 +130,8 @@ public class UserManagerController implements Initializable {
     }
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-        bufferScene(actionEvent);
+        sceneManager.addScene("Main", "main-messaging.fxml");
+        sceneManager.switchScene("Main");
     }
 
 
@@ -162,7 +164,7 @@ public class UserManagerController implements Initializable {
     }
 
     public void editProfile(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-modify-user.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-modify-user.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -174,7 +176,7 @@ public class UserManagerController implements Initializable {
     }
 
     public void createNewProfile(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add-user.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-add-user.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -186,7 +188,7 @@ public class UserManagerController implements Initializable {
     }
 
     public void removeUser(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-delete-member.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-delete-member.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -199,7 +201,7 @@ public class UserManagerController implements Initializable {
 
 
     public void changePassword(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-reset-password.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-reset-password.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -211,6 +213,37 @@ public class UserManagerController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
+        userTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
+            @Override
+            public void changed(ObservableValue<? extends UserData> observableValue, UserData userData, UserData t1) {
+                selectedUser = userTable.getSelectionModel().getSelectedItem();
+            }
+        });
+        spamTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SpamTicketData>() {
+            @Override
+            public void changed(ObservableValue<? extends SpamTicketData> observableValue, SpamTicketData userData, SpamTicketData t1) {
+                selectedSpam = spamTable.getSelectionModel().getSelectedItem();
+            }
+        });
+        bannedTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
+            @Override
+            public void changed(ObservableValue<? extends UserData> observableValue, UserData userData, UserData t1) {
+                selectedBanned = bannedTable.getSelectionModel().getSelectedItem();
+            }
+        });
+
+    }
+
+    @Override
+    public void myInitialize() {
+        userTable.setItems(FXCollections.observableArrayList());
+        spamTable.setItems(FXCollections.observableArrayList());
+        bannedTable.setItems(FXCollections.observableArrayList());
+        userTable.getColumns().clear();
+        spamTable.getColumns().clear();
+        bannedTable.getColumns().clear();
+
 
         userTable.setItems(data);
         userTable.getColumns().addAll(generateUserColumns());
