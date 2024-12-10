@@ -5,46 +5,36 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
+import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.data_class.ConversationData;
+import org.example.mesexadmin.ui.ControllerWrapper;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class ConversationController implements Initializable {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
-
+public class ConversationController implements ControllerWrapper {
+    static SceneManager sceneManager;
     @FXML
     private TableView<ConversationData> allGroupTable;
     @FXML
     private TableView<ConversationData> myGroupTable;
 
-    void bufferScene(ActionEvent actionEvent){
-//        System.out.println(actionEvent.getSource());
-        stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    final ObservableList<ConversationData> data = FXCollections.observableArrayList(
+    static ObservableList<ConversationData> data = FXCollections.observableArrayList(
             new ConversationData("T1", "faker"),
             new ConversationData("Gen.G", "chovy"),
             new ConversationData( "GAM Esports", "levi")
     );
 
-    final ObservableList<ConversationData> inactiveData = FXCollections.observableArrayList(
+    static ObservableList<ConversationData> inactiveData = FXCollections.observableArrayList(
             new ConversationData("SKT T1", "faker?"),
             new ConversationData("Samsung Galaxy", "cuvee")
     );
@@ -74,13 +64,13 @@ public class ConversationController implements Initializable {
     }
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-        bufferScene(actionEvent);
+        sceneManager.addScene("Main", "main-messaging.fxml");
+        sceneManager.switchScene("Main");
     }
 
     public void configureGroup(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-single-group-manager.fxml")));
-        bufferScene(actionEvent);
+        sceneManager.addScene("ThisGroupManager", "main-single-group-manager.fxml");
+        sceneManager.switchScene("ThisGroupManager");
     }
 
     public void leaveGroup(ActionEvent actionEvent) {
@@ -91,7 +81,7 @@ public class ConversationController implements Initializable {
     }
 
     public void addMember(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add-member.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-add-member.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -103,7 +93,7 @@ public class ConversationController implements Initializable {
     }
 
     public void addGroup(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-create-group.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-create-group.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -115,7 +105,7 @@ public class ConversationController implements Initializable {
     }
 
     public void renameGroup(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-change-group-name.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-change-group-name.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -127,12 +117,21 @@ public class ConversationController implements Initializable {
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void myInitialize() {
+        myGroupTable.setItems(FXCollections.observableArrayList());
+        allGroupTable.setItems(FXCollections.observableArrayList());
+        myGroupTable.getColumns().clear();
+        allGroupTable.getColumns().clear();
 
         myGroupTable.setItems(data);
         myGroupTable.getColumns().addAll(generateColumns());
 
         allGroupTable.setItems(inactiveData);
         allGroupTable.getColumns().addAll(generateColumns());
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
     }
 }

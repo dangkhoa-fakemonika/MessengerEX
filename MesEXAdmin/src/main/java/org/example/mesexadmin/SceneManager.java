@@ -27,7 +27,6 @@ public class SceneManager {
         if (!sceneMap.containsKey(sceneName)) {
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource(fxml)));
             Parent root = loader.load();
-            System.out.println(root.getUserData());
             sceneMap.put(sceneName, new Scene(root));
             loaderMap.put(sceneName, loader);
         }

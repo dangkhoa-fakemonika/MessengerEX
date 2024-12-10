@@ -15,10 +15,13 @@ import org.example.mesexadmin.Main;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.UserData;
+import org.example.mesexadmin.ui.ControllerWrapper;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class RegisterController {
+public class RegisterController implements ControllerWrapper {
     private SceneManager sceneManager;
 
     @FXML private Button registerButton;
@@ -33,21 +36,17 @@ public class RegisterController {
     }
 
     public void loginScene(ActionEvent actionEvent) throws IOException {
-        // root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-login.fxml")));
-        // bufferScene(actionEvent);
         sceneManager.addScene("Login", "main-login.fxml");
         sceneManager.switchScene("Login");
     }
 
     public void mainScene(ActionEvent actionEvent) throws IOException {
-        // root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-        // bufferScene(actionEvent);
         sceneManager.addScene("Main", "main-messaging.fxml");
         sceneManager.switchScene("Main");
     }
 
-    @FXML
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         // Adding event handler using anonymous inner class (not lambda)
         switchToLoginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -129,5 +128,10 @@ public class RegisterController {
         emailField.clear();
         passwordField.clear();
         confirmPasswordField.clear();
+    }
+
+    @Override
+    public void myInitialize() {
+
     }
 }

@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
+import org.example.mesexadmin.ui.ControllerWrapper;
 
 //import javax.mail.Session;
 
@@ -23,18 +24,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
-public class EditProfileController implements Initializable {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
+public class EditProfileController implements ControllerWrapper {
     SceneManager sceneManager;
-//
-//    void bufferScene(ActionEvent actionEvent){
-//        stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-//        scene = new Scene(root);
-//        stage.setScene(scene);
-//        stage.show();
-//    }
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         sceneManager.addScene("Main", "main-messaging.fxml");
@@ -47,7 +38,7 @@ public class EditProfileController implements Initializable {
     }
 
     public void changeUsername(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-change-name.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-change-name.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -79,6 +70,11 @@ public class EditProfileController implements Initializable {
         newAlert.showAndWait();
     }
 
+
+    @Override
+    public void myInitialize() {
+
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

@@ -21,9 +21,6 @@ import java.util.ResourceBundle;
 public class PopUpController implements Initializable {
 
     public Dialog<Objects> currentDialog;
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
 
     public void closeDialog(ActionEvent actionEvent){
         currentDialog.close();

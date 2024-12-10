@@ -9,10 +9,13 @@ import javafx.scene.control.PasswordField;
 
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.SceneManager;
+import org.example.mesexadmin.ui.ControllerWrapper;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class LoginController {
+public class LoginController implements ControllerWrapper {
     private SceneManager sceneManager;
 
     @FXML private Button loginButton;
@@ -20,27 +23,29 @@ public class LoginController {
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
 
-    public LoginController() {
-        sceneManager = Main.getSceneManager();
-    }
-
-
     public void registerScene(ActionEvent actionEvent) throws IOException {
-        // root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-register.fxml")));
-        // bufferScene(actionEvent);
         sceneManager.addScene("Register", "main-register.fxml");
         sceneManager.switchScene("Register");
     }
 
     public void mainScene(ActionEvent actionEvent) throws IOException {
-        // root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-        // bufferScene(actionEvent);
         sceneManager.addScene("Main", "main-messaging.fxml");
         sceneManager.switchScene("Main");
     }
 
-    @FXML
-    public void initialize() {
+    private void clearField() {
+        usernameField.clear();
+        passwordField.clear();
+    }
+
+    @Override
+    public void myInitialize() {
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
+
         // Adding event handler using anonymous inner class (not lambda)
         switchToRegisterButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -66,10 +71,5 @@ public class LoginController {
                 }
             }
         });
-    }
-
-    private void clearField() {
-        usernameField.clear();
-        passwordField.clear();
     }
 }

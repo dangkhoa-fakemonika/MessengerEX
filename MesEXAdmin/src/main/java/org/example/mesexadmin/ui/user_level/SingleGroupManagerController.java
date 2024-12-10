@@ -7,10 +7,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.data_class.MessageData;
 import org.example.mesexadmin.data_class.UserData;
+import org.example.mesexadmin.ui.ControllerWrapper;
 import org.example.mesexadmin.ui.elements.MessageListComponent;
 import org.example.mesexadmin.ui.elements.UserListComponent;
 
@@ -19,8 +21,8 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class SingleGroupManagerController implements Initializable {
-    SceneManager sceneManager;
+public class SingleGroupManagerController implements ControllerWrapper {
+    static SceneManager sceneManager;
 
     @FXML
     private ListView<UserListComponent> memberList;
@@ -54,7 +56,7 @@ public class SingleGroupManagerController implements Initializable {
     }
 
     public void addMember(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add-member.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-add-member.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -66,7 +68,7 @@ public class SingleGroupManagerController implements Initializable {
     }
 
     public void addMod(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add-mod.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-add-mod.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -104,10 +106,19 @@ public class SingleGroupManagerController implements Initializable {
     }
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    public void myInitialize() {
+        memberList.getItems().clear();
+        modList.getItems().clear();
+        chat.getItems().clear();
+
         memberList.getItems().addAll(observableList1);
         modList.getItems().addAll(observableList2);
         chat.getItems().addAll(observableList3);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
     }
 
 
