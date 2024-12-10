@@ -201,6 +201,10 @@ public class UserData {
         this.friend = blocked;
     }
 
+    public ObjectId getUserId() {
+        return this.userId;
+    }
+
     public Date getLastLogin() {
         return lastLogin.get();
     }

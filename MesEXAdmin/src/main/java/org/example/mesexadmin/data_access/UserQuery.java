@@ -3,22 +3,14 @@ package org.example.mesexadmin.data_access;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.example.mesexadmin.MongoManagement;
-import org.example.mesexadmin.data_class.ConversationData;
 import org.example.mesexadmin.data_class.UserData;
 
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.UpdateResult;
 
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class UserQuery {
     MongoManagement mongoManagement;
@@ -28,12 +20,43 @@ public class UserQuery {
     }
 
     // credentials
-    public UserData getUserById(){
+    public UserData getUserById(ObjectId userId){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        Document user = users.find(Filters.eq("_id", userId)).first();
+        
+        if (user != null)
+            return documentToUser(user);
+
         return null;
     }
 
-    public boolean updateUser(UserData userData){
-        return true;
+    public UserData getUserByUsername(String username) {
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        Document user = users.find(Filters.eq("username", username)).first();
+
+        if (user != null)
+            return documentToUser(user);
+
+        return null;
+    }
+
+    public UserData getUserByEmail(String email) {
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        Document user = users.find(Filters.eq("email", email)).first();
+
+        if (user != null)
+            return documentToUser(user);
+
+        return null;
+    }
+
+    public boolean updateUser(UserData user){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        Document userDocument = user.toDocument();
+        Document filter = new Document("_id", user.getUserId());
+        UpdateResult result = users.updateOne(filter, new Document("$set", userDocument));
+
+        return result.getModifiedCount() > 0;
     }
 
     public boolean insertUser(UserData user){

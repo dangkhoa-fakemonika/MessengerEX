@@ -23,8 +23,29 @@ public class SessionUser {
         currentUser = new UserData();
     }
 
-    public boolean loginSession(){
-        currentUser = myQuery.users().getUserById();
+    public boolean loginSession(String username, String password){
+        
+        UserData user = myQuery.users().getUserByUsername(username);
+        
+        if (user == null) {
+            new Alert(AlertType.ERROR, "Username does not exist!").showAndWait();
+            return false;
+        }
+        
+        if (!user.getPasswordHashed().equals(hashPassword(password))) {
+            new Alert(AlertType.ERROR, "Incorrect password!").showAndWait();
+            return false;
+        }
+        
+        user.setStatus("online");
+        user.setLastLogin(new Date());
+
+        if (!myQuery.users().updateUser(user)) {
+            return false;
+        }
+
+        currentUser = user;
+
         return true;
     }
 
@@ -35,14 +56,13 @@ public class SessionUser {
     }
 
     public boolean registerUser(String username, String email, String password){
-        MongoCollection<Document> users = myQuery.getConnection().database.getCollection("users");
 
-        if (users.find(Filters.eq("email", email)).first() != null) {
+        if (myQuery.users().getUserByEmail(email) != null) {
             new Alert(AlertType.ERROR, "This email has registered!").showAndWait();
             return false;
         }
         
-        if (users.find(Filters.eq("username", username)).first() != null) {
+        if (myQuery.users().getUserByUsername(username) != null) {
             new Alert(AlertType.ERROR, "Username already exist!").showAndWait();
             return false;
         }

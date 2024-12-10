@@ -13,8 +13,6 @@ import javafx.scene.control.PasswordField;
 
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.SceneManager;
-import org.example.mesexadmin.SessionUser;
-import org.example.mesexadmin.data_class.UserData;
 import org.example.mesexadmin.ui.ControllerWrapper;
 
 import java.io.IOException;
@@ -65,7 +63,6 @@ public class RegisterController implements ControllerWrapper {
             @Override
             public void handle(ActionEvent event) {
                 if (verifyRegister()) {
-
                     Dialog<String> dialog = new Dialog<>();
                     dialog.setTitle("Success");
                     dialog.setContentText("Register successfully!");
