@@ -5,6 +5,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.PasswordField;
@@ -63,7 +65,20 @@ public class RegisterController implements ControllerWrapper {
             @Override
             public void handle(ActionEvent event) {
                 if (verifyRegister()) {
-                    System.out.println("Register successfully!");
+
+                    Dialog<String> dialog = new Dialog<>();
+                    dialog.setTitle("Success");
+                    dialog.setContentText("Register successfully!");
+                    dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+                    dialog.showAndWait();
+                    
+                    try {
+                        clearField();
+                        sceneManager.addScene("Login", "main-login.fxml");
+                        sceneManager.switchScene("Login");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -100,7 +115,12 @@ public class RegisterController implements ControllerWrapper {
             return false;
         }
 
-        return true;
+        if (!email.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
+            new Alert(AlertType.ERROR, "Email invalid!").showAndWait();
+            return false;
+        }
+
+        return Main.getThisUser().registerUser(username, email, password);
     }
 
     private void clearField() {

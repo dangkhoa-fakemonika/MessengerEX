@@ -10,7 +10,7 @@ public class GlobalQuery {
     }
 
     public UserQuery users(){
-        return null;
+        return new UserQuery(myMongo);
     }
 
     public MessageQuery messages(){
@@ -31,5 +31,9 @@ public class GlobalQuery {
 
     public ActivityQuery activities(){
         return null;
+    }
+
+    public MongoManagement getConnection() {
+        return myMongo;
     }
 }
