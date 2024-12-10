@@ -65,6 +65,21 @@ public class UserData {
         role = new SimpleStringProperty("");
     }
 
+    public UserData(String newName){
+        displayName = new SimpleStringProperty(newName);
+        username = new SimpleStringProperty("");
+        email = new SimpleStringProperty("");
+        status = new SimpleStringProperty("");
+        lastLogin = new SimpleStringProperty("27 years ago");
+
+        dateCreated = new SimpleStringProperty("");
+        address = new SimpleStringProperty("");
+        dateOfBirth = new SimpleStringProperty("");
+        gender = new SimpleStringProperty("");
+        passwordHashed = new SimpleStringProperty("");
+        role = new SimpleStringProperty("");
+    }
+
 //    public UserData(UserData u){
 //        displayName = new SimpleStringProperty(u.getDisplayName());
 //        username = new SimpleStringProperty(u.getUsername());

@@ -6,13 +6,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
+import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
+import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.data_class.FriendRequestData;
 import org.example.mesexadmin.data_class.UserData;
 
@@ -23,9 +21,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class FriendsController implements Initializable {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
+    private SceneManager sceneManager;
 
     @FXML
     private TableView<UserData> friendsTable;
@@ -39,15 +35,6 @@ public class FriendsController implements Initializable {
     private TableColumn<UserData, String> nameCol;
     private TableColumn<UserData, String> idCol;
     private TableColumn<UserData, String> statusCol;
-
-
-    void bufferScene(ActionEvent actionEvent){
-//        System.out.println(actionEvent.getSource());
-        stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
 
     public void addFriend(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("pop-up-add.fxml"));
@@ -105,8 +92,11 @@ public class FriendsController implements Initializable {
 
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
-        bufferScene(actionEvent);
+//        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("main-messaging.fxml")));
+//        bufferScene(actionEvent);
+
+        sceneManager.addScene("Main", "main-messaging.fxml");
+        sceneManager.switchScene("Main");
     }
 
     final ObservableList<UserData> data = FXCollections.observableArrayList(
@@ -123,7 +113,6 @@ public class FriendsController implements Initializable {
 
     final ObservableList<FriendRequestData> requestData = FXCollections.observableArrayList(new ArrayList<>());
     final ObservableList<FriendRequestData> pendingData = FXCollections.observableArrayList(new ArrayList<>());
-
 
     public ObservableList<TableColumn<UserData, String>> generateUserColumns(){
         TableColumn<UserData, String> nameCol = new TableColumn<>("Name");
@@ -170,7 +159,7 @@ public class FriendsController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        sceneManager = Main.getSceneManager();
 
         friendsTable.setItems(data);
         friendsTable.getColumns().addAll(generateUserColumns());
