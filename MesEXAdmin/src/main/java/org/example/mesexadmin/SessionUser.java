@@ -9,20 +9,25 @@ public class SessionUser {
 
     public SessionUser(GlobalQuery globalQuery){
         myQuery = globalQuery;
+        currentUser = new UserData();
     }
 
     public boolean loginSession(){
-        currentUser = myQuery.users().login();
+        currentUser = myQuery.users().getUserById();
         return true;
     }
 
     public boolean logoutSession(){
-        currentUser = null;
+
+        currentUser = new UserData();
         return true;
     }
 
-    public boolean registerUser(){
-        currentUser = myQuery.users().register();
-        return true;
+    public boolean registerUser(UserData userData){
+        return myQuery.users().insertUser(userData);
+    }
+
+    public UserData getSessionUserData() {
+        return this.currentUser;
     }
 }
