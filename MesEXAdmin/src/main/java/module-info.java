@@ -5,13 +5,13 @@ module org.example.mesexadmin {
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
-    // requires net.synedra.validatorfx;
+    requires net.synedra.validatorfx;
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires mongo.java.driver;
     requires javafx.base;
     requires java.naming;
-    // requires javax.mail;
+//    requires javax.mail;
 
     exports org.example.mesexadmin;
     exports org.example.mesexadmin.data_class;
