@@ -7,8 +7,8 @@ db.createCollection("activities", {
             required: ["userId"],
             properties: {
                 userId: { bsonType: "objectId" },
-                name: { bsonType: "string" },
-                loginLogs: { bsonType: "date" }
+                username: { bsonType: "string" },
+                loginDate: { bsonType: "date" },
             }
         }
     },

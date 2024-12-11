@@ -30,7 +30,7 @@ public class GlobalQuery {
     }
 
     public ActivityQuery activities(){
-        return null;
+        return new ActivityQuery(myMongo);
     }
 
     public MongoManagement getConnection() {

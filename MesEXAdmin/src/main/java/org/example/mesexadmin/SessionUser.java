@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import org.example.mesexadmin.data_access.GlobalQuery;
+import org.example.mesexadmin.data_class.ActivityData;
 import org.example.mesexadmin.data_class.UserData;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -37,6 +38,12 @@ public class SessionUser {
         if (!myQuery.users().updateUser(user)) {
             return false;
         }
+
+        ActivityData activityData = new ActivityData();
+        activityData.setUserId(user.getUserId());
+        activityData.setLoginDate(user.getLastLogin());
+        activityData.setUsername(user.getUsername());
+        myQuery.activities().insertActivity(activityData);
 
         currentUser = user;
 

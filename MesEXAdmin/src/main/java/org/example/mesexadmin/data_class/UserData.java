@@ -233,6 +233,10 @@ public class UserData {
         return passwordHashed.get();
     }
 
+    public SimpleObjectProperty<Date> getDateCreatedProperty() {
+        return this.dateCreated;
+    }
+
     public Document toDocument() {
         Document doc = new Document();
         doc.append("username", this.username.get())

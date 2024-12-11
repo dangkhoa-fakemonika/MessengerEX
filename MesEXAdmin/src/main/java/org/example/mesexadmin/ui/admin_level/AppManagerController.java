@@ -20,16 +20,11 @@ import java.util.ResourceBundle;
 public class AppManagerController implements ControllerWrapper {
     static SceneManager sceneManager;
 
-    @FXML
-    private TableView<ActivityData> userTable;
-    @FXML
-    private TableView<UserData> loginTable;
-    @FXML
-    private TableView<UserData> newAccountTable;
-    @FXML
-    private TableView<UserData> socialTable;
-    @FXML
-    private TableView<UserData> activeTable;
+    @FXML private TableView<ActivityData> userTable;
+    @FXML private TableView<UserData> loginTable;
+    @FXML private TableView<UserData> newAccountTable;
+    @FXML private TableView<UserData> socialTable;
+    @FXML private TableView<UserData> activeTable;
 
     final ObservableList<ActivityData> data = FXCollections.observableArrayList(
             new ActivityData("user2", "12:00:00 13-11-2024", "login"),
