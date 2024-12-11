@@ -3,14 +3,8 @@ package org.example.mesexadmin;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-
-import org.bson.Document;
 import org.example.mesexadmin.data_access.GlobalQuery;
 import org.example.mesexadmin.data_class.UserData;
-
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -50,7 +44,6 @@ public class SessionUser {
     }
 
     public boolean logoutSession(){
-
         currentUser = new UserData();
         return true;
     }
