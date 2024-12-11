@@ -71,4 +71,6 @@ public class SpamTicketData {
     public void setReporterName(String reporterName) {
         this.reporterName.set(reporterName);
     }
+
+
 }

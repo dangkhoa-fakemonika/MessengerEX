@@ -5,6 +5,7 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.example.mesexadmin.MongoManagement;
 import org.example.mesexadmin.data_class.MessageData;
 
@@ -18,7 +19,7 @@ public class MessageQuery {
     }
 
     // look up message
-    public ArrayList<MessageData> lookUpByUser(String id){
+    public ArrayList<MessageData> lookUpByUser(ObjectId id){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
         ArrayList<Document> results = new ArrayList<>();
         messages.find(Filters.eq("senderId", id)).into(results);
@@ -30,7 +31,7 @@ public class MessageQuery {
         return data;
     }
 
-    public ArrayList<MessageData> matchStringByUser(String key, String id){
+    public ArrayList<MessageData> matchStringByUser(String key, ObjectId id){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
         ArrayList<Document> results = new ArrayList<>();
         messages.find(
@@ -45,7 +46,7 @@ public class MessageQuery {
         return data;
     }
 
-    public ArrayList<MessageData> matchStringByConversation(String key, String id){
+    public ArrayList<MessageData> matchStringByConversation(String key, ObjectId id){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
         ArrayList<Document> results = new ArrayList<>();
         messages.find(
@@ -60,7 +61,7 @@ public class MessageQuery {
         return data;
     }
 
-    public ArrayList<MessageData> lookUpByConv(String id){
+    public ArrayList<MessageData> lookUpByConv(ObjectId id){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
         ArrayList<Document> results = new ArrayList<>();
         messages.find(Filters.eq("conversationId", id)).into(results);
@@ -72,7 +73,7 @@ public class MessageQuery {
         return data;
     }
 
-    public ArrayList<MessageData> lookUpAll(String id){
+    public ArrayList<MessageData> lookUpAll(ObjectId id){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
         ArrayList<Document> results = new ArrayList<>();
         messages.find().into(results);
@@ -109,7 +110,7 @@ public class MessageQuery {
         return true;
     }
 
-    public boolean removeAllByUser(String id){
+    public boolean removeAllByUser(ObjectId id){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
 
         try {
@@ -121,7 +122,7 @@ public class MessageQuery {
         return true;
     }
 
-    public boolean removeAllByGroup(String id){
+    public boolean removeAllByGroup(ObjectId id){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
 
         try {

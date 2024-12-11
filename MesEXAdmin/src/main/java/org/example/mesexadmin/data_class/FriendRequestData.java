@@ -2,6 +2,7 @@ package org.example.mesexadmin.data_class;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.Date;
@@ -69,4 +70,14 @@ public class FriendRequestData {
     public void setReceiverId(ObjectId receiverId) {
         this.receiverId = receiverId;
     }
+
+    public Document toDocument(){
+        Document doc = new Document();
+        doc.append("requestId",this.requestId)
+            .append("senderId",this.senderId)
+            .append("receiverId",this.receiverId)
+            .append("timeSent", this.timeSent.get());
+        return doc;
+    }
+
 }
