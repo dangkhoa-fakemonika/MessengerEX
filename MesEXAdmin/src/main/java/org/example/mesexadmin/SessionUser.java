@@ -50,8 +50,14 @@ public class SessionUser {
     }
 
     public boolean logoutSession(){
+        currentUser.setStatus("offline");
+
+        if (!myQuery.users().updateUser(currentUser)) {
+            return false;
+        }
 
         currentUser = new UserData();
+
         return true;
     }
 
