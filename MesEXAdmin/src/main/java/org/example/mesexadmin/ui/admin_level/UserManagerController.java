@@ -44,10 +44,6 @@ public class UserManagerController implements ControllerWrapper {
     @FXML
     private MenuButton detail;
 
-//    ObservableList<UserData> spamData = FXCollections.observableArrayList(new ArrayList<>());
-//    ObservableList<UserData> bannedData = FXCollections.observableArrayList(new ArrayList<>());
-
-
     final ObservableList<UserData> data = FXCollections.observableArrayList(
             new UserData("FakeMonika", "fakemonika", "example@email.com", "Active"),
             new UserData("KanCh", "kanch", "example@email.com", "Active"),

@@ -137,9 +137,9 @@ public class MessageQuery {
         MessageData msg = new MessageData();
 
         msg.setMessageId(messageDocument.getObjectId("_id"));
-        msg.setSenderId(messageDocument.getString("senderId"));
+        msg.setSenderId(messageDocument.getObjectId("senderId"));
         msg.setConversationId(messageDocument.getString("conversationId"));
-        msg.setReceiverId(messageDocument.getString("receiverId"));
+        msg.setReceiverId(messageDocument.getObjectId("receiverId"));
         msg.setTimeSent(messageDocument.getDate("timeSent"));
         msg.setContent(messageDocument.getString("content"));
 
