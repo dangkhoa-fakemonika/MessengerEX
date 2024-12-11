@@ -19,7 +19,6 @@ public class UserQuery {
         this.mongoManagement = mongoManagement;
     }
 
-    // credentials
     public UserData getUserById(ObjectId userId){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
         Document user = users.find(Filters.eq("_id", userId)).first();

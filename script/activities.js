@@ -1,6 +1,6 @@
-db = connect('mongodb://localhost/messenger-ex-app');
+db = connect('mongodb://localhost/messenger-ex');
 
-db.createCollection("activity_monitor", {
+db.createCollection("activities", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
@@ -8,10 +8,7 @@ db.createCollection("activity_monitor", {
             properties: {
                 userId: { bsonType: "objectId" },
                 name: { bsonType: "string" },
-                loginLogs: { 
-                    bsonType: "array",
-                    items: { bsonType: "date" }
-                },
+                loginLogs: { bsonType: "date" }
             }
         }
     },
