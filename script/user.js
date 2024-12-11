@@ -8,7 +8,7 @@ db.createCollection("users", {
             properties: {
                 role: { 
                     bsonType: "string",
-                    enum: ["admin, user"]
+                    enum: ["admin", "user"]
                 },
                 username: { 
                     bsonType: "string",
@@ -23,7 +23,7 @@ db.createCollection("users", {
                     bsonType: "string",
                     maxLength: 200 
                 },
-                dateOfBirth: { bsonType: "date" },
+                dateOfBirth: { bsonType: ["date", "null"] },
                 gender: { 
                     bsonType: "string",
                     enum: ["male", "female"]
@@ -45,7 +45,7 @@ db.createCollection("users", {
                     bsonType: "string",
                     enum: ["online", "offline", "locked"]
                 },
-                lastLogin: { bsonType: "date" },
+                lastLogin: { bsonType: ["date", "null"] },
                 dateCreated: { bsonType: "date" }
             }
         }

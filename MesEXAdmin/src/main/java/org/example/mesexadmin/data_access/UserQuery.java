@@ -105,9 +105,9 @@ public class UserQuery {
         user.setFriend((ArrayList<ObjectId>) userDocument.get("friend"));
         user.setBlocked((ArrayList<ObjectId>) userDocument.get("blocked"));
         user.setAddress(userDocument.getString("address"));
-        user.setDateOfBirth(userDocument.getString("dateOfBirth"));
+        user.setDateOfBirth(userDocument.getDate("dateOfBirth"));
         user.setGender(userDocument.getString("gender"));
-        user.setPasswordHashed(userDocument.getString("passwordHashed"));
+        user.setPasswordHashed(userDocument.getString("passwordHash"));
 
         return user; 
     }

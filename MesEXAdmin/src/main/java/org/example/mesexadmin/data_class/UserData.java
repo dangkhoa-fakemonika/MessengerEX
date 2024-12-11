@@ -27,7 +27,7 @@ public class UserData {
     public ArrayList<ObjectId> blocked;
 
     public SimpleStringProperty address;
-    public SimpleStringProperty dateOfBirth;
+    public SimpleObjectProperty<Date> dateOfBirth;
     public SimpleStringProperty gender;
     public SimpleStringProperty passwordHashed;
 
@@ -41,7 +41,7 @@ public class UserData {
         passwordHashed = new SimpleStringProperty("");
         
         displayName = new SimpleStringProperty("");
-        dateOfBirth = new SimpleStringProperty("");
+        dateOfBirth = new SimpleObjectProperty<Date>(null);
         address = new SimpleStringProperty("");
         gender = new SimpleStringProperty("male");
         
@@ -69,7 +69,7 @@ public class UserData {
 
         // dateCreated = new SimpleStringProperty("");
         address = new SimpleStringProperty("");
-        dateOfBirth = new SimpleStringProperty("");
+        dateOfBirth = new SimpleObjectProperty<Date>(null);
         gender = new SimpleStringProperty("");
         passwordHashed = new SimpleStringProperty("");
         role = new SimpleStringProperty("");
@@ -84,7 +84,7 @@ public class UserData {
 
         // dateCreated = new SimpleStringProperty("");
         address = new SimpleStringProperty("");
-        dateOfBirth = new SimpleStringProperty("");
+        dateOfBirth = new SimpleObjectProperty<Date>(null);
         gender = new SimpleStringProperty("");
         passwordHashed = new SimpleStringProperty("");
         role = new SimpleStringProperty("");
@@ -144,7 +144,7 @@ public class UserData {
         this.role.set(role);
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth.set(dateOfBirth);
     }
 
@@ -217,7 +217,7 @@ public class UserData {
         return address.get();
     }
 
-    public String getDateOfBirth() {
+    public Date getDateOfBirth() {
         return dateOfBirth.get();
     }
 
@@ -247,7 +247,7 @@ public class UserData {
             .append("address", this.address.get())
             .append("dateOfBirth", this.dateOfBirth.get())
             .append("gender", this.gender.get())
-            .append("passwordHashed", this.passwordHashed.get());
+            .append("passwordHash", this.passwordHashed.get());
         return doc;
     }
 }
