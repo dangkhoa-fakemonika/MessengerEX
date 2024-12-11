@@ -168,6 +168,10 @@ public class UserData {
         return username.get();
     }
 
+    public SimpleStringProperty getUsernameProperty() {
+        return this.username;
+    }
+
     public String getStatus() {
         return status.get();
     }
@@ -215,6 +219,9 @@ public class UserData {
 
     public String getAddress() {
         return address.get();
+    }
+    public SimpleStringProperty getAddressProperty() {
+        return this.address;
     }
 
     public Date getDateOfBirth() {

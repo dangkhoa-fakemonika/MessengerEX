@@ -53,9 +53,14 @@ public class UserQuery {
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
         Document userDocument = user.toDocument();
         Document filter = new Document("_id", user.getUserId());
-        UpdateResult result = users.updateOne(filter, new Document("$set", userDocument));
-
-        return result.getModifiedCount() > 0;
+        
+        try {
+            UpdateResult result = users.updateOne(filter, new Document("$set", userDocument));
+            return result.getModifiedCount() > 0;
+        } catch (MongoWriteException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public boolean insertUser(UserData user){
