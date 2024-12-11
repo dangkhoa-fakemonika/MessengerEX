@@ -3,6 +3,7 @@ package org.example.mesexadmin.data_access;
 import java.util.Arrays;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.example.mesexadmin.MongoManagement;
 
 import com.mongodb.client.AggregateIterable;
@@ -37,5 +38,8 @@ public class SpamTicketQuery {
             )
         );
     }
- 
+
+    public void removeSpamTicket(ObjectId id){
+
+    }
 }

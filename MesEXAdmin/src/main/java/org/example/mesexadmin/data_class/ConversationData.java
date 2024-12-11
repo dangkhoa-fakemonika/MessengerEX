@@ -1,49 +1,47 @@
 package org.example.mesexadmin.data_class;
 
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 
 public class ConversationData {
 
-    public SimpleStringProperty dateCreated;
-    public SimpleStringProperty conversationName;
-    public SimpleListProperty<SimpleStringProperty> membersId;
-    public SimpleListProperty<SimpleStringProperty> moderatorsId;
-    public SimpleStringProperty lastMessageId;
-    public SimpleStringProperty type;
+    ObjectId conversationId;
+    SimpleObjectProperty<Date> dateCreated;
+    SimpleStringProperty conversationName;
+    ArrayList<ObjectId> membersId;
+    ArrayList<ObjectId> moderatorsId;
+    ArrayList<SimpleStringProperty> membersName;
+    ArrayList<SimpleStringProperty> moderatorsName;
+    ObjectId lastMessageId;
+    SimpleStringProperty type;
+
+    public ConversationData() {}
 
     public ConversationData(String newGroupName, String newHostID){
-        dateCreated = new SimpleStringProperty("b");
+        dateCreated = new SimpleObjectProperty<Date>(null);
         conversationName = new SimpleStringProperty(newGroupName);
         ObservableList<SimpleStringProperty> observableList = FXCollections.observableArrayList(new ArrayList<>());
-        membersId = new SimpleListProperty<>(observableList);
-        membersId.add(new SimpleStringProperty(newHostID));
+        membersId = null;
         ObservableList<SimpleStringProperty> observableList1 = FXCollections.observableArrayList(new ArrayList<>());
-        moderatorsId = new SimpleListProperty<>(observableList1);
-        lastMessageId = new SimpleStringProperty("a");
+        moderatorsId = null;
         type = new SimpleStringProperty("chat");
     }
 
-    public String getMembersId() {
-        StringBuilder res =  new StringBuilder();
-        for (SimpleStringProperty i : membersId){
-            if (!i.getValueSafe().trim().isEmpty())
-                res.append(i.getValueSafe()).append(", ");
-        }
-
-        return !res.isEmpty() ? res.toString() : "Empty Group";
+    public ObjectId getConversationId() {
+        return conversationId;
     }
 
-    public String getDateCreated() {
+    public Date getDateCreated() {
         return dateCreated.get();
     }
 
-    public String getLastMessageId() {
+    public ObjectId getLastMessageId() {
         return lastMessageId.get();
     }
 
@@ -51,42 +49,60 @@ public class ConversationData {
         return conversationName.get();
     }
 
-    public String getModeratorsId() {
-        StringBuilder res =  new StringBuilder();
-        for (SimpleStringProperty i : moderatorsId){
-            if (!i.getValueSafe().trim().isEmpty())
-                res.append(i.getValueSafe()).append(", ");
-        }
+    public String getMembersId() {
+        return "za placeholda";
+    }
 
-        return !res.isEmpty() ? res.toString() : "No Admin";
+    public String getModeratorsId() {
+        return "za placeholda";
+    }
+
+    public String getMembersName() {
+        return "za placeholda";
+    }
+
+    public String getModeratorsName() {
+        return "za placeholda";
+    }
+
+    public void setConversationId(ObjectId conversationId) {
+        this.conversationId = conversationId;
     }
 
     public String getType() {
         return type.get();
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated.set(dateCreated);
     }
 
-    public void setModeratorsId(String moderatorsId) {
+    public void setModeratorsId(ArrayList<ObjectId>  moderatorsId) {
 //        this.hostsId.set(hostsId);
     }
 
-    public void setMembersId(String membersId) {
+    public void setMembersId(ArrayList<ObjectId> membersId) {
 //        this.participantIDs.set(participantIDs);
     }
 
+    public void setMembersName(ArrayList<SimpleStringProperty> membersName) {
+        this.membersName = membersName;
+    }
+
+    public void setModeratorsName(ArrayList<SimpleStringProperty> moderatorsName) {
+        this.moderatorsName = moderatorsName;
+    }
+
     public void addIDs(SimpleStringProperty[] newIDs){
-        membersId.addAll(Arrays.asList(newIDs));
+
     }
 
     public void removeID(String id){
-        membersId.remove(new SimpleStringProperty(id));
+
     }
 
-    public void setLastMessageId(String lastMessageId) {
-        this.lastMessageId.set(lastMessageId);
+    public void setLastMessageId(ObjectId lastMessageId) {
+        this.lastMessageId = lastMessageId;
     }
 
     public void setType(String type) {

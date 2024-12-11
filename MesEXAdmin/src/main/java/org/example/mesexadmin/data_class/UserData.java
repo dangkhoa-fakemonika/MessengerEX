@@ -13,23 +13,23 @@ import org.bson.types.ObjectId;
 public class UserData {
     private ObjectId userId;
 
-    public SimpleStringProperty username;
-    public SimpleStringProperty displayName;
-    public SimpleStringProperty email;
+    SimpleStringProperty username;
+    SimpleStringProperty displayName;
+    SimpleStringProperty email;
 
-    public SimpleStringProperty status;
-    public SimpleObjectProperty<Date> lastLogin;
-    public SimpleObjectProperty<Date> dateCreated;
-    public SimpleStringProperty role;
+    SimpleStringProperty status;
+    SimpleObjectProperty<Date> lastLogin;
+    SimpleObjectProperty<Date> dateCreated;
+    SimpleStringProperty role;
 
     
-    public ArrayList<ObjectId> friend;
-    public ArrayList<ObjectId> blocked;
+    ArrayList<ObjectId> friend;
+    ArrayList<ObjectId> blocked;
 
-    public SimpleStringProperty address;
-    public SimpleObjectProperty<Date> dateOfBirth;
-    public SimpleStringProperty gender;
-    public SimpleStringProperty passwordHashed;
+    SimpleStringProperty address;
+    SimpleObjectProperty<Date> dateOfBirth;
+    SimpleStringProperty gender;
+    SimpleStringProperty passwordHashed;
 
     // public SimpleListProperty<SimpleStringProperty> friend;
     // public SimpleListProperty<SimpleStringProperty> blocked;
