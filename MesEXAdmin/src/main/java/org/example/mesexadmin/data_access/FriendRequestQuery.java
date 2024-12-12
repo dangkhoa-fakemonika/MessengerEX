@@ -20,22 +20,16 @@ public class FriendRequestQuery {
     }
 
     // create friend request
-    public boolean sendRequest(ObjectId idSrc, ObjectId idTarget){
-        MongoCollection<Document> requests = mongoManagement.database.getCollection("requests");
-
-        FriendRequestData request = new FriendRequestData();
-        request.setTimeSent(new Date());
-        request.setSenderId(idSrc);
-        request.setReceiverId(idTarget);
+    public boolean insertFriendRequest(FriendRequestData request){
+        MongoCollection<Document> requests = mongoManagement.database.getCollection("friend_requests");
 
         try {
             requests.insertOne(request.toDocument());
+            return true;
         }
         catch (MongoWriteException e){
             return false;
         }
-
-        return false;
     }
 
     // unsend friend request
@@ -52,6 +46,19 @@ public class FriendRequestQuery {
         }
 
         return false;
+    }
+
+    public FriendRequestData getSingleRequest(ObjectId senderId, ObjectId receiverId) {
+        MongoCollection<Document> requests = mongoManagement.database.getCollection("friend_requests");
+
+        Document request = requests.find(Filters.and(
+            Filters.eq("senderId", senderId),
+            Filters.eq("receiverId", receiverId))).first();
+
+        if (request != null) 
+            return documentToRequest(request);
+
+        return null;
     }
 
     public ArrayList<FriendRequestData> getAllRequest(ObjectId idSrc){

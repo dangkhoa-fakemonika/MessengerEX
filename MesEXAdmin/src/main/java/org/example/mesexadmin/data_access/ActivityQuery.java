@@ -7,7 +7,6 @@ import org.example.mesexadmin.data_class.ActivityData;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 
-import java.lang.annotation.Documented;
 import java.util.ArrayList;
 
 public class ActivityQuery {

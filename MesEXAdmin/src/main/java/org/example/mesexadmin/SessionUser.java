@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import org.example.mesexadmin.data_access.GlobalQuery;
 import org.example.mesexadmin.data_class.ActivityData;
+import org.example.mesexadmin.data_class.FriendRequestData;
 import org.example.mesexadmin.data_class.UserData;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -85,6 +86,34 @@ public class SessionUser {
 
     public UserData getSessionUserData() {
         return this.currentUser;
+    }
+
+    public boolean sendFriendRequest(String receiverUsername) {
+        UserData receiverUserData = myQuery.users().getUserByUsername(receiverUsername);
+
+        if (receiverUserData == null) {
+            new Alert(AlertType.ERROR, "User does not exist!").showAndWait();
+            return false;
+        }
+
+        FriendRequestData request = myQuery.requests().getSingleRequest(currentUser.getUserId(), receiverUserData.getUserId());
+        if (request != null) {
+            new Alert(AlertType.ERROR, "You have already sent request to this user!").showAndWait();
+            return false;
+        }
+
+        request = myQuery.requests().getSingleRequest(receiverUserData.getUserId(), currentUser.getUserId());
+        if (request != null) {
+            new Alert(AlertType.ERROR, "This user have already sent request to you!").showAndWait();
+            return false;
+        }
+
+        request = new FriendRequestData();
+        request.setTimeSent(new Date());
+        request.setSenderId(currentUser.getUserId());
+        request.setReceiverId(receiverUserData.getUserId());
+
+        return myQuery.requests().insertFriendRequest(request);
     }
 
     public boolean changePassword(String oldPassword, String newPassword, String confirmPassword) {

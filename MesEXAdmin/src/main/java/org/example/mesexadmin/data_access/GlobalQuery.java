@@ -17,8 +17,8 @@ public class GlobalQuery {
         return null;
     }
 
-    public FriendRequestQuery friends(){
-        return null;
+    public FriendRequestQuery requests(){
+        return new FriendRequestQuery(myMongo);
     }
 
     public ConversationQuery conversations(){

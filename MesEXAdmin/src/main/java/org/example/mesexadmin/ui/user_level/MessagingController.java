@@ -9,6 +9,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.example.mesexadmin.Main;
@@ -21,43 +23,30 @@ import org.example.mesexadmin.ui.ControllerWrapper;
 import org.example.mesexadmin.ui.elements.ConversationListComponent;
 import org.example.mesexadmin.ui.elements.MessageListComponent;
 
+import jakarta.mail.Session;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MessagingController implements ControllerWrapper {
     private SceneManager sceneManager;
-    static ConversationData currentConversation;
     private SessionUser currentUser;
+    static ConversationData currentConversation;
 
-    @FXML
-    private ListView<ConversationListComponent> messagingList;
-    @FXML
-    private ListView<MessageListComponent> messages;
-    @FXML
-    private Label myLabel;
-    @FXML
-    private TextArea myTextArea;
-    @FXML
-    private MenuButton optionButton;
+    @FXML private ListView<ConversationListComponent> messagingList;
+    @FXML private ListView<MessageListComponent> messages;
+    @FXML private Label myLabel;
+    @FXML private TextArea myTextArea;
+    @FXML private MenuButton optionButton;
+    @FXML private MenuItem addFriendButton;
 
     // Load from database
     static ObservableList<ConversationListComponent> conversationList;
-
-    public void addFriend(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-add.fxml")));
-        Dialog<Objects> dialog = new Dialog<>();
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        DialogPane dialogPane = loader.load();
-        PopUpController popUpController = loader.getController();
-        popUpController.currentDialog = dialog;
-        dialog.setDialogPane(dialogPane);
-        dialog.showAndWait();
-        dialog.close();
-    }
 
     public void updateMessageBuffer(ActionEvent actionEvent){
 //        if (actionEvent.getEventType())
@@ -121,6 +110,8 @@ public class MessagingController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
+        currentUser = Main.getThisUser();
+
         optionButton.setDisable(true);
 //        ArrayList<ConversationData> conversationQuery = currentUser.myQuery.conversations().getUserAllConversation(currentUser.getSessionUserData().getUserId());
 //        conversationList = FXCollections.observableArrayList();
@@ -163,6 +154,45 @@ public class MessagingController implements ControllerWrapper {
                 }
             }
         });
+
+        addFriendButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-add.fxml")));
+                Dialog<Objects> dialog = new Dialog<>();
+
+                try {
+                    DialogPane dialogPane = loader.load();
+                    dialog.setDialogPane(dialogPane);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                PopUpController popUpController = loader.getController();
+        
+                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                confirmButton.addEventFilter(ActionEvent.ACTION, event -> {
+        
+                    String username = popUpController.getUsernameField();
+                    if (username.isEmpty()) {
+                        new Alert(AlertType.ERROR, "The field must not be empty!").showAndWait();
+                        event.consume();
+                    } else if (currentUser.sendFriendRequest(username)) {
+                        new Alert(AlertType.INFORMATION, "Friend request sent!").showAndWait();
+                    } else {
+                        event.consume();
+                    }
+        
+                    popUpController.clearAllFields();
+                });
+        
+                dialog.showAndWait();
+                dialog.close();
+            }
+        });
+
+//        Thread thread = getThread();
+//        thread.start();
 
     }
 

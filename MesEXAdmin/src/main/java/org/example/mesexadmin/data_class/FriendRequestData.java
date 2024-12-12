@@ -17,7 +17,7 @@ public class FriendRequestData {
     SimpleObjectProperty<Date> timeSent;
 
     public FriendRequestData(){
-        requestId = null;
+        requestId = new ObjectId();
         senderName = new SimpleStringProperty("reportID");
         receiverName = new SimpleStringProperty("reporter");
         timeSent = new SimpleObjectProperty<Date>(null);
@@ -73,7 +73,7 @@ public class FriendRequestData {
 
     public Document toDocument(){
         Document doc = new Document();
-        doc.append("requestId",this.requestId)
+        doc.append("_id",this.requestId)
             .append("senderId",this.senderId)
             .append("receiverId",this.receiverId)
             .append("timeSent", this.timeSent.get());

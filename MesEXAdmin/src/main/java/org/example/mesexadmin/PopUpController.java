@@ -8,6 +8,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.bson.types.ObjectId;
 
@@ -19,8 +24,8 @@ import java.util.ResourceBundle;
 public class PopUpController implements Initializable {
     SessionUser currentUser;
 
-    @FXML
-    private TextField singleTextField;
+    @FXML private TextField singleTextField;
+    @FXML private TextField usernameField;
 
     public Dialog<Objects> currentDialog;
 
@@ -55,5 +60,14 @@ public class PopUpController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         currentUser = Main.getThisUser();
+    }
+    public String getUsernameField() {
+        return usernameField.getText();
+    }
+
+    public void clearAllFields() {
+        if (usernameField != null) {
+            usernameField.clear();
+        }
     }
 }

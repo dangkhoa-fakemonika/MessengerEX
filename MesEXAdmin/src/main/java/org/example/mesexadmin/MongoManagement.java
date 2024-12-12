@@ -24,8 +24,8 @@ public class MongoManagement {
     String username;
 
     public MongoManagement(String uname) {
-        client = new MongoClient("localhost", 27017);
-        database = client.getDatabase("test-msg");
+        client = new MongoClient("localhost", 27017); 
+        database = client.getDatabase("messenger-ex");
         messages = database.getCollection("messages");
         username = uname;
         importedMessages = null;

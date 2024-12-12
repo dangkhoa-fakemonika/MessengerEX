@@ -1,13 +1,13 @@
 db = connect('mongodb://localhost/messenger-ex-app');
 
-db.createCollection("friend_request", {
+db.createCollection("spam_tickets", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["senderId", "receiverId", "timeSent"],
+            required: ["reporterId", "reportedUserId", "timeSent"],
             properties: {
-                senderId: { bsonType: "objectId" },
-                receiverId: { bsonType: "objectId" },
+                reporterId: { bsonType: "objectId" },
+                reportedUserId: { bsonType: "objectId" },
                 timeSent: { bsonType: "date" }
             }
         }
