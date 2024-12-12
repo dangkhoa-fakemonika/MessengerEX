@@ -14,6 +14,7 @@ import javafx.scene.input.KeyEvent;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
+import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.ConversationData;
 import org.example.mesexadmin.data_class.MessageData;
 import org.example.mesexadmin.ui.ControllerWrapper;
@@ -22,13 +23,15 @@ import org.example.mesexadmin.ui.elements.MessageListComponent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class MessagingController implements ControllerWrapper {
     private SceneManager sceneManager;
-
     static ConversationData currentConversation;
+    private SessionUser currentUser;
 
     @FXML
     private ListView<ConversationListComponent> messagingList;
@@ -76,6 +79,8 @@ public class MessagingController implements ControllerWrapper {
             String msg = myTextArea.getText().trim();
 
             // Add Message processing here
+            boolean res = currentUser.myQuery.messages().postMessage(msg, currentUser.getSessionUserData().getUserId(), currentConversation.getConversationId());
+            if (res) System.out.println("Message sent");
 
             messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
             myTextArea.setText("");
@@ -101,22 +106,32 @@ public class MessagingController implements ControllerWrapper {
         newAlert.showAndWait();
     }
 
-    public void advanced(ActionEvent actionEvent) throws IOException{
-        sceneManager.addScene("ChatHistoryManagement", "main-all-chat-history-management.fxml");
-        sceneManager.switchScene("ChatHistoryManagement");
+    void chatSelection(){
+
     }
+
+    void refresh(){
+        ArrayList<ConversationData> conversationQuery = currentUser.myQuery.conversations().getUserAllConversation(currentUser.getSessionUserData().getUserId());
+        conversationList = FXCollections.observableArrayList();
+        for (ConversationData cQuery : conversationQuery){
+            conversationList.add(new ConversationListComponent(cQuery));
+        }
+    }
+
 
     @Override
     public void myInitialize() {
         optionButton.setDisable(true);
-        conversationList = FXCollections.observableArrayList(
-                new ConversationListComponent(new ConversationData("group 1", "1")),
-                new ConversationListComponent(new ConversationData("group 2", "2")),
-                new ConversationListComponent(new ConversationData("group 3", "3"))
-        );
+//        ArrayList<ConversationData> conversationQuery = currentUser.myQuery.conversations().getUserAllConversation(currentUser.getSessionUserData().getUserId());
+//        conversationList = FXCollections.observableArrayList();
+//        for (ConversationData cQuery : conversationQuery){
+//            conversationList.add(new ConversationListComponent(cQuery));
+//        }
+
         currentConversation = null;
         messagingList.getItems().clear();
         messagingList.getItems().addAll(conversationList);
+        currentUser = Main.getThisUser();
     }
 
     @Override
@@ -132,8 +147,6 @@ public class MessagingController implements ControllerWrapper {
                     myLabel.setText("Selected Chat: " + currentConversation.getConversationName());
                     optionButton.setDisable(false);
                 }
-                // Get current conversation
-//                currentConversation = Main.globalQuery.conversations().getConversation(null);
             }
         });
 
@@ -145,33 +158,18 @@ public class MessagingController implements ControllerWrapper {
                         myTextArea.appendText("\n");
                     }
                     else {
-//                        boolean res = Main.globalQuery.conversations().addMessageCon(null, null);
-//                        System.out.println(res);
                         addMessage();
                     }
                 }
             }
         });
 
-//        Thread thread = getThread();
-//        thread.start();
-
     }
 
-//    private Thread getThread() {
-//        Task<Void> task = new Task<Void>() {
-//            @Override
-//            protected Void call() throws Exception {
-//                ChangeStreamIterable<Document> changeStream = Main.myMongo.messages.watch();
-//                changeStream.forEach((Consumer<? super ChangeStreamDocument<Document>>) (n) -> Platform.runLater(() -> MongoManagement.processPushMongo(n, messages)));
-//                return null;
-//            }
-//        };
-//
-//        Thread thread = new Thread(task);
-//        thread.setDaemon(true);
-//        return thread;
-//    }
+    public void advanced(ActionEvent actionEvent) throws IOException{
+        sceneManager.addScene("ChatHistoryManagement", "main-all-chat-history-management.fxml");
+        sceneManager.switchScene("ChatHistoryManagement");
+    }
 
     public void friendsSettingScene(ActionEvent actionEvent) throws IOException{
         sceneManager.addScene("FriendsManagement", "main-friend-config.fxml");

@@ -2,7 +2,6 @@ package org.example.mesexadmin.data_class;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -11,25 +10,23 @@ import java.util.Date;
 public class MessageData {
     ObjectId messageId;
     ObjectId senderId;
-    ObjectId receiverId;
-    StringProperty content;
+    SimpleStringProperty senderName;
+    SimpleStringProperty content;
     SimpleObjectProperty<Date> timeSent;
-    SimpleStringProperty conversationId;
+    ObjectId conversationId;
 
     public MessageData(){
         senderId = null;
-        receiverId = null;
         content = new SimpleStringProperty("");
         timeSent = new SimpleObjectProperty<>(null);
-        conversationId = new SimpleStringProperty("null");
+        conversationId = null;
     }
 
     public MessageData(String message, String sender, String receiver){
         senderId = null;
-        receiverId = null;
         content = new SimpleStringProperty(message);
         timeSent = new SimpleObjectProperty<>(null);
-        conversationId = new SimpleStringProperty("null");
+        conversationId = null;
     }
 
     public ObjectId getMessageId() {
@@ -44,12 +41,12 @@ public class MessageData {
         return content.get();
     }
 
-    public String getConversationId() {
-        return conversationId.get();
+    public ObjectId getConversationId() {
+        return conversationId;
     }
 
-    public ObjectId getReceiverId() {
-        return receiverId;
+    public String getSenderName() {
+        return senderName.get();
     }
 
     public Date getTimeSent() {
@@ -60,10 +57,6 @@ public class MessageData {
         this.messageId = messageId;
     }
 
-    public void setReceiverId(ObjectId receiverId) {
-        this.receiverId = receiverId;
-    }
-
     public void setSenderId(ObjectId senderId) {
         this.senderId = senderId;
     }
@@ -72,21 +65,25 @@ public class MessageData {
         this.content.set(content);
     }
 
-    public void setConversationId(String conversationId) {
-        this.conversationId.set(conversationId);
+    public void setConversationId(ObjectId conversationId) {
+        this.conversationId = conversationId;
     }
 
     public void setTimeSent(Date timeSent) {
         this.timeSent.set(timeSent);
     }
 
+    public void setSenderName(String senderName) {
+        this.senderName.set(senderName);
+    }
+
     public Document toDocument(){
         Document doc = new Document();
         doc.append("senderId",this.senderId)
-            .append("receiverId",this.receiverId)
+            .append("senderName", this.senderName.get())
             .append("content",this.content.get())
             .append("timeSent",this.timeSent.get())
-            .append("conversationId",this.conversationId.get());
+            .append("conversationId",this.conversationId);
         return doc;
     }
 }

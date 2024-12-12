@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -26,9 +27,7 @@ public class ConversationData {
     public ConversationData(String newGroupName, String newHostID){
         dateCreated = new SimpleObjectProperty<Date>(null);
         conversationName = new SimpleStringProperty(newGroupName);
-        ObservableList<SimpleStringProperty> observableList = FXCollections.observableArrayList(new ArrayList<>());
         membersId = null;
-        ObservableList<SimpleStringProperty> observableList1 = FXCollections.observableArrayList(new ArrayList<>());
         moderatorsId = null;
         type = new SimpleStringProperty("chat");
     }
@@ -111,5 +110,20 @@ public class ConversationData {
 
     public void setConversationName(String conversationName) {
         this.conversationName.set(conversationName);
+    }
+
+    public Document toDocument(){
+        Document doc = new Document();
+        doc.append("conversationId", this.conversationId)
+        .append("dateCreated", this.dateCreated.get())
+        .append("conversationName", this.conversationName.get())
+        .append("membersId", this.membersId)
+        .append("moderatorsId", this.moderatorsId)
+        .append("membersName", this.membersName)
+        .append("moderatorsName", this.moderatorsName)
+        .append("lastMessageId", this.lastMessageId)
+        .append("type", this.type);
+
+        return doc;
     }
 }

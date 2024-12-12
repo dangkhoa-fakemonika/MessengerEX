@@ -18,7 +18,6 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-//        javafx.util.
         globalQuery = new GlobalQuery(new MongoManagement(""));
         thisUser = new SessionUser(globalQuery);
         launch(args);

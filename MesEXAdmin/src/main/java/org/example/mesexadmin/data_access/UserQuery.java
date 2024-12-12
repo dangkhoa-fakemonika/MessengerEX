@@ -1,5 +1,6 @@
 package org.example.mesexadmin.data_access;
 
+import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.example.mesexadmin.MongoManagement;
@@ -81,13 +82,52 @@ public class UserQuery {
     }
 
     // add friend
-    public boolean addFriend(String id1, String id2){
-        return false;
+    public boolean addFriend(ObjectId id1, ObjectId id2){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+
+        try {
+            users.updateOne(Filters.eq("_id", id1), Updates.addToSet("friends", id2));
+            users.updateOne(Filters.eq("_id", id2), Updates.addToSet("friends", id1));
+        } catch (MongoWriteException e) {
+            return false;
+        }
+
+        return true;
     }
 
     // remove friend
-    public boolean removeFriend(String id1, String id2){
-        return false;
+    public boolean removeFriend(ObjectId id1, ObjectId id2){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+
+        try {
+            users.updateOne(Filters.eq("_id", id1), Updates.pull("friends", id2));
+            users.updateOne(Filters.eq("_id", id2), Updates.pull("friends", id1));
+        } catch (MongoWriteException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean removeUserFromSystem(ObjectId id){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");
+        MongoCollection<Document> activities = mongoManagement.database.getCollection("activities");
+        MongoCollection<Document> requests = mongoManagement.database.getCollection("requests");
+
+
+        try {
+            users.deleteOne(Filters.eq("_id", id));
+//            conversations.deleteMany(Filters.eq("_id", id));
+//            activities.deleteMany(Filters.eq("_id", id));
+//            requests.deleteMany(Filters.eq("_id", id));
+
+
+        } catch (MongoWriteException e) {
+            return false;
+        }
+
+        return true;
     }
 
     // get friend list
