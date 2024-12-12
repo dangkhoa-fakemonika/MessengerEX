@@ -36,23 +36,23 @@ public class PopUpController implements Initializable {
         Stage stage = (Stage) currentDialog.getDialogPane().getScene().getWindow();
         stage.close();
     }
-
-    public void acceptCreateGroup(ActionEvent actionEvent){
-        boolean res = currentUser.myQuery.conversations().createConversation(currentUser.getSessionUserData().getUserId(), "dummy dummy");
-        if (res){
-            System.out.println("New conversation created");
-            closeDialog(actionEvent);
-        }
-
-    }
-
-    public void acceptAddFriend(ActionEvent actionEvent){
-        boolean res = currentUser.myQuery.users().addFriend(currentUser.getSessionUserData().getUserId(), new ObjectId());
-        if (res){
-            System.out.println("New conversation created");
-            closeDialog(actionEvent);
-        }
-    }
+//
+//    public void acceptCreateGroup(ActionEvent actionEvent){
+//        boolean res = currentUser.myQuery.conversations().createConversation(currentUser.getSessionUserData().getUserId(), "dummy dummy");
+//        if (res){
+//            System.out.println("New conversation created");
+//            closeDialog(actionEvent);
+//        }
+//
+//    }
+//
+//    public void acceptAddFriend(ActionEvent actionEvent){
+//        boolean res = currentUser.myQuery.users().addFriend(currentUser.getSessionUserData().getUserId(), new ObjectId());
+//        if (res){
+//            System.out.println("New conversation created");
+//            closeDialog(actionEvent);
+//        }
+//    }
 
     public void deleteAccount(ActionEvent actionEvent){
 

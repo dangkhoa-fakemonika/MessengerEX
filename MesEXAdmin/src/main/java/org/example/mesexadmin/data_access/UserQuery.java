@@ -1,5 +1,6 @@
 package org.example.mesexadmin.data_access;
 
+import com.mongodb.Mongo;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -11,6 +12,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.UpdateResult;
 
+import javax.print.Doc;
 import java.util.ArrayList;
 
 public class UserQuery {
@@ -77,13 +79,10 @@ public class UserQuery {
         return true;
     }
 
-    public ArrayList<UserData> findUser(){
-        return null;
-    }
-
     // add friend
     public boolean addFriend(ObjectId id1, ObjectId id2){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        MongoCollection<Document> requests = mongoManagement.database.getCollection("request");
 
         try {
             users.updateOne(Filters.eq("_id", id1), Updates.addToSet("friends", id2));
@@ -130,10 +129,31 @@ public class UserQuery {
         return true;
     }
 
-    // get friend list
-    public ArrayList<UserData> getFriends(String id){
-        return null;
+    public boolean changeUserStatus(ObjectId id, String newStatus){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+
+        try {
+            users.updateOne(Filters.eq("_id", id), Updates.set("status", newStatus));
+        } catch (MongoWriteException e){
+            return false;
+        }
+
+        return true;
     }
+
+    // get friend/ban list
+    public ArrayList<UserData> getUserLists(ArrayList<ObjectId> idList){
+        ArrayList<UserData> data = new ArrayList<>();
+
+        for (ObjectId uid : idList){
+            data.add(getUserById(uid));
+        }
+
+        return data;
+    }
+
+
+//    public ArrayList
 
     private UserData documentToUser(Document userDocument) {
         UserData user = new UserData();

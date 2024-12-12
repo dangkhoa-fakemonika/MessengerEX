@@ -2,6 +2,7 @@ package org.example.mesexadmin.data_class;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.bson.Document;
 import org.bson.types.ObjectId;
 
 import java.util.Date;
@@ -72,5 +73,9 @@ public class SpamTicketData {
         this.reporterName.set(reporterName);
     }
 
-
+    public Document toDocument(){
+        Document doc = new Document();
+        doc.append("reportedId", this.reportedId).append("reporterId", this.reporterId).append("timeSent", this.timeSent.get());
+        return doc;
+    }
 }

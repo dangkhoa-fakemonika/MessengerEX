@@ -93,7 +93,7 @@
                                                 <AnchorPane minHeight="100.0" minWidth="160.0" prefHeight="100.0" prefWidth="160.0">
                                                     <children>
                                                         <Button layoutX="478.0" layoutY="21.0" mnemonicParsing="false" onAction="#addMessage" text="Send" />
-                                                        <TextArea fx:id="myTextArea" layoutX="24.0" layoutY="14.0" onInputMethodTextChanged="#updateMessageBuffer" prefHeight="39.0" prefWidth="440.0" />
+                                                        <TextArea fx:id="myTextArea" layoutX="24.0" layoutY="14.0" prefHeight="39.0" prefWidth="440.0" />
                                                     </children>
                                                 </AnchorPane>
                                             </items>

@@ -63,12 +63,12 @@
                            <content>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                  <children>
-                                    <BarChart layoutX="29.0" layoutY="52.0" prefHeight="430.0" prefWidth="798.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0">
+                                    <BarChart fx:id="yearlyRegister" layoutX="29.0" layoutY="52.0" prefHeight="430.0" prefWidth="798.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0">
                                       <xAxis>
-                                        <CategoryAxis side="BOTTOM" />
+                                        <CategoryAxis side="BOTTOM" fx:id="xRegisterAxis" />
                                       </xAxis>
                                       <yAxis>
-                                        <NumberAxis side="LEFT" />
+                                        <NumberAxis fx:id="yRegisterAxis" side="LEFT" />
                                       </yAxis>
                                     </BarChart>
                                     <TextField layoutX="31.0" layoutY="25.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter" />
@@ -79,7 +79,7 @@
                            <content>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                  <children>
-                                    <BarChart layoutX="29.0" layoutY="52.0" prefHeight="430.0" prefWidth="798.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0">
+                                    <BarChart fx:id="yearlyActive" layoutX="29.0" layoutY="52.0" prefHeight="430.0" prefWidth="798.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0">
                                        <xAxis>
                                           <CategoryAxis side="BOTTOM" />
                                        </xAxis>

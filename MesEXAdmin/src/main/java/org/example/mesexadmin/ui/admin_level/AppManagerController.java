@@ -4,7 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.mesexadmin.Main;
@@ -25,14 +28,15 @@ public class AppManagerController implements ControllerWrapper {
     @FXML private TableView<UserData> newAccountTable;
     @FXML private TableView<UserData> socialTable;
     @FXML private TableView<UserData> activeTable;
+    @FXML private BarChart<String, Number> yearlyRegister;
+    @FXML private CategoryAxis xRegisterAxis;
+    @FXML private NumberAxis yRegisterAxis;
 
-    final ObservableList<ActivityData> data = FXCollections.observableArrayList(
-            new ActivityData("user2", "12:00:00 13-11-2024", "login"),
-            new ActivityData("user2", "12:00:00 12-11-2024", "reset_password"),
-            new ActivityData("user1", "12:00:00 11-11-2024", "login"),
-            new ActivityData("user2", "12:00:00 10-11-2024", "register"),
-            new ActivityData("user1", "12:00:00 9-11-2024", "register")
-    );
+    @FXML private BarChart<String, Number> yearlyActive;
+    @FXML private CategoryAxis xActiveAxis;
+    @FXML private NumberAxis yActiveAxis;
+
+    static ObservableList<ActivityData> activityData;
 
 
     ObservableList<TableColumn<ActivityData, String>> generateActivityColumns(){
@@ -110,6 +114,22 @@ public class AppManagerController implements ControllerWrapper {
         return FXCollections.observableArrayList(idCol, timeCol, actionCol, directFriendCol, indirectFriendCol);
     }
 
+    void setUpRegisterBarChart(){
+        xRegisterAxis.setLabel("Month");
+        yRegisterAxis.setLabel("Numbers of new accounts");
+        yearlyRegister.setTitle("New account this year");
+
+        XYChart.Series<String, Number> year = new XYChart.Series<>();
+        year.setName("No. new accounts");
+        for (int i = 0; i < 6; i++){
+            year.getData().add(new XYChart.Data<>("Month " + i , 10 + i * 2));
+        }
+
+        yearlyRegister.getData().add(year);
+    }
+
+
+
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         sceneManager.addScene("Main", "main-messaging.fxml");
         sceneManager.switchScene("Main");
@@ -118,27 +138,29 @@ public class AppManagerController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
-    }
+        setUpRegisterBarChart();
 
-    @Override
-    public void myInitialize() {
-        userTable.setItems(FXCollections.observableArrayList());
-        loginTable.setItems(FXCollections.observableArrayList());
-        newAccountTable.setItems(FXCollections.observableArrayList());
-        socialTable.setItems(FXCollections.observableArrayList());
-        activeTable.setItems(FXCollections.observableArrayList());
-        userTable.getColumns().clear();
-        loginTable.getColumns().clear();
-        newAccountTable.getColumns().clear();
-        socialTable.getColumns().clear();
-        activeTable.getColumns().clear();
-
-
-        userTable.setItems(data);
         userTable.getColumns().addAll(generateActivityColumns());
         loginTable.getColumns().addAll(generateLoginColumns());
         newAccountTable.getColumns().addAll(generateNewUsersColumns());
         socialTable.getColumns().addAll(generateFriendColumns());
         activeTable.getColumns().addAll(generatePersonalActiveColumns());
+    }
+
+    @Override
+    public void myInitialize() {
+//        userTable.setItems(FXCollections.observableArrayList());
+//        loginTable.setItems(FXCollections.observableArrayList());
+//        newAccountTable.setItems(FXCollections.observableArrayList());
+//        socialTable.setItems(FXCollections.observableArrayList());
+//        activeTable.setItems(FXCollections.observableArrayList());
+//        userTable.getColumns().clear();
+//        loginTable.getColumns().clear();
+//        newAccountTable.getColumns().clear();
+//        socialTable.getColumns().clear();
+//        activeTable.getColumns().clear();
+
+
+        userTable.setItems(activityData);
     }
 }

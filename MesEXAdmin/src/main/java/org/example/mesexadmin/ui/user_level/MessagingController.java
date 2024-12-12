@@ -10,7 +10,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.example.mesexadmin.Main;
@@ -23,14 +22,10 @@ import org.example.mesexadmin.ui.ControllerWrapper;
 import org.example.mesexadmin.ui.elements.ConversationListComponent;
 import org.example.mesexadmin.ui.elements.MessageListComponent;
 
-import jakarta.mail.Session;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MessagingController implements ControllerWrapper {
@@ -47,16 +42,15 @@ public class MessagingController implements ControllerWrapper {
 
     // Load from database
     static ObservableList<ConversationListComponent> conversationList;
-
-    public void updateMessageBuffer(ActionEvent actionEvent){
-//        if (actionEvent.getEventType())
-    }
+    static ObservableList<MessageListComponent> messagesList;
 
     public void addMessage(ActionEvent actionEvent){
         if (!myTextArea.getText().trim().isEmpty()){
             String msg = myTextArea.getText().trim();
 
             // Add Message processing here
+            boolean res = currentUser.myQuery.messages().postMessage(msg, currentUser.getSessionUserData().getUserId(), currentConversation.getConversationId());
+            if (res) System.out.println("Message sent");
 
             messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
             myTextArea.setText("");
@@ -96,7 +90,14 @@ public class MessagingController implements ControllerWrapper {
     }
 
     void chatSelection(){
+        ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByConv(currentConversation.getConversationId());
+        messagesList = FXCollections.observableArrayList();
+        for (MessageData mQuery : messageQuery){
+            messagesList.add(new MessageListComponent(mQuery));
+        }
 
+        messages.getItems().clear();
+        messages.getItems().addAll(messagesList);
     }
 
     void refresh(){
@@ -105,6 +106,9 @@ public class MessagingController implements ControllerWrapper {
         for (ConversationData cQuery : conversationQuery){
             conversationList.add(new ConversationListComponent(cQuery));
         }
+
+        messagingList.getItems().clear();
+        messagingList.getItems().addAll(conversationList);
     }
 
 
