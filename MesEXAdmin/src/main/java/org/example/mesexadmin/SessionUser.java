@@ -2,11 +2,25 @@ package org.example.mesexadmin;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
+
 import org.example.mesexadmin.data_access.GlobalQuery;
 import org.example.mesexadmin.data_class.ActivityData;
 import org.example.mesexadmin.data_class.FriendRequestData;
 import org.example.mesexadmin.data_class.UserData;
+
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -143,6 +157,72 @@ public class SessionUser {
         currentUser = userData;
 
         return true;
+    }
+
+    public boolean resetPassword(String email) {
+        UserData userData = myQuery.users().getUserByEmail(email);
+
+        if (userData == null) {
+            new Alert(AlertType.ERROR, "Account with this email does not exist!").showAndWait();
+            return false;
+        }
+
+        String newPassword = generatePassword();
+
+        if (sendResetPasswordEmail(email, newPassword)) {
+            userData.setPasswordHashed(hashPassword(newPassword));
+            return myQuery.users().updateUser(userData);
+        }
+
+        return false;
+    }
+
+    private boolean sendResetPasswordEmail(String emailTo, String newPassword) {
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+
+        String emailFrom = null;
+        String subject = "Reset password for account with email: " + emailTo;
+        String body = newPassword;
+
+        Session session = Session.getInstance(props, new Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(emailFrom, "");
+            }
+        });
+
+        try {
+            MimeMessage msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(emailFrom, "NoReply-JD"));
+            msg.setReplyTo(null);
+            msg.setReplyTo(InternetAddress.parse(emailFrom, false));
+            msg.setSubject(subject, "UTF-8");
+            msg.setText(body, "UTF-8");
+            msg.setSentDate(new Date());
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo, false));
+            Transport.send(msg);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String generatePassword() {
+        final String charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+        
+        for (int i = 0; i < 10; i++) {
+            int index = random.nextInt(charSet.length());
+            password.append(charSet.charAt(index));
+        }
+
+        return password.toString();
     }
 
     private String hashPassword(String password) {

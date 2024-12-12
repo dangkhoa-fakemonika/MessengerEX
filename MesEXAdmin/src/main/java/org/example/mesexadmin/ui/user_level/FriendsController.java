@@ -24,14 +24,10 @@ import java.util.ResourceBundle;
 public class FriendsController implements ControllerWrapper {
     private SceneManager sceneManager;
 
-    @FXML
-    private TableView<UserData> friendsTable;
-    @FXML
-    private TableView<FriendRequestData> pendingTable;
-    @FXML
-    private TableView<FriendRequestData> requestTable;
-    @FXML
-    private TableView<UserData> blockedTable;
+    @FXML private TableView<UserData> friendsTable;
+    @FXML private TableView<FriendRequestData> pendingTable;
+    @FXML private TableView<FriendRequestData> requestTable;
+    @FXML private TableView<UserData> blockedTable;
 
     static UserData friend, blocked;
     static FriendRequestData pending, request;
@@ -89,7 +85,6 @@ public class FriendsController implements ControllerWrapper {
         newAlert.setHeaderText("Unblock User");
         newAlert.showAndWait();
     }
-
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         sceneManager.addScene("Main", "main-messaging.fxml");

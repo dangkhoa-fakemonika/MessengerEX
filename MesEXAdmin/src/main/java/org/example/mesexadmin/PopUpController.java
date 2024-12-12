@@ -26,6 +26,7 @@ public class PopUpController implements Initializable {
 
     @FXML private TextField singleTextField;
     @FXML private TextField usernameField;
+    @FXML private TextField emailField;
 
     public Dialog<Objects> currentDialog;
 
@@ -61,13 +62,21 @@ public class PopUpController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         currentUser = Main.getThisUser();
     }
+    
     public String getUsernameField() {
         return usernameField.getText();
+    }
+
+    public String getEmailField() {
+        return emailField.getText();
     }
 
     public void clearAllFields() {
         if (usernameField != null) {
             usernameField.clear();
+        }
+        if (emailField != null) {
+            emailField.clear();
         }
     }
 }

@@ -6,11 +6,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
+import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.ui.ControllerWrapper;
+
+import jakarta.mail.Session;
 
 import java.net.URL;
 import java.util.Objects;
@@ -18,12 +22,13 @@ import java.util.ResourceBundle;
 
 public class LoginController implements ControllerWrapper {
     private SceneManager sceneManager;
+    private SessionUser currentUser;
 
     @FXML private Button loginButton;
     @FXML private Button switchToRegisterButton;
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
-    @FXML private Button forgotAccount;
+    @FXML private Button resetPasswordButton;
 
     // public void registerScene(ActionEvent actionEvent) throws IOException {
     //     sceneManager.addScene("Register", "main-register.fxml");
@@ -42,6 +47,7 @@ public class LoginController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
+        currentUser = Main.getThisUser();
     }
 
     @Override
@@ -83,22 +89,43 @@ public class LoginController implements ControllerWrapper {
             }
         });
 
-        forgotAccount.setOnAction(new EventHandler<ActionEvent>() {
+        resetPasswordButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent actionEvent) {
+            public void handle(ActionEvent arg0) {
+                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-reset-password.fxml")));
+                Dialog<Objects> dialog = new Dialog<>();
+                
                 try {
-                    FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-forgot-password.fxml"));
-                    Dialog<Objects> dialog = new Dialog<>();
-                    dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
                     DialogPane dialogPane = loader.load();
-                    PopUpController popUpController = loader.getController();
-                    popUpController.currentDialog = dialog;
                     dialog.setDialogPane(dialogPane);
-                    dialog.showAndWait();
-                    dialog.close();
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
+                
+                PopUpController popUpController = loader.getController();
+                ButtonType confirmButtonType = new ButtonType("Confirm", ButtonData.YES);
+                ButtonType cancelButtonType = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+                
+                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+                confirmButton.addEventFilter(ActionEvent.ACTION, event -> {
+                    String email = popUpController.getEmailField();
+                    if (email.isEmpty()) {
+                        new Alert(AlertType.ERROR, "The field must not be empty!").showAndWait();
+                        event.consume();
+                    } else if (true
+                        // currentUser.resetPassword(email)
+                        ) {
+                        new Alert(AlertType.INFORMATION, "Password reset success!").showAndWait();
+                    } else {
+                        event.consume();
+                    }
+        
+                    popUpController.clearAllFields();
+                });
+        
+                dialog.showAndWait();
+                dialog.close();
             }
         });
     }
@@ -117,6 +144,6 @@ public class LoginController implements ControllerWrapper {
             return false;
         }
 
-        return Main.getThisUser().loginSession(username, password);
+        return currentUser.loginSession(username, password);
     }
 }

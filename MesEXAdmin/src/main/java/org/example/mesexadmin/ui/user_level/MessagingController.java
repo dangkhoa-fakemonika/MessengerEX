@@ -160,19 +160,21 @@ public class MessagingController implements ControllerWrapper {
             public void handle(ActionEvent arg0) {
                 FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-add.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
-
+                
                 try {
                     DialogPane dialogPane = loader.load();
                     dialog.setDialogPane(dialogPane);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
+                
                 PopUpController popUpController = loader.getController();
-        
-                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+                ButtonType confirmButtonType = new ButtonType("Confirm", ButtonData.YES);
+                ButtonType cancelButtonType = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+
+                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
                 confirmButton.addEventFilter(ActionEvent.ACTION, event -> {
-        
                     String username = popUpController.getUsernameField();
                     if (username.isEmpty()) {
                         new Alert(AlertType.ERROR, "The field must not be empty!").showAndWait();

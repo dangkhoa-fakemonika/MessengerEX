@@ -20,8 +20,8 @@
       </Pane>
       <Label layoutX="188.0" layoutY="385.0" text="Don't have an account?" />
       <Button fx:id="switchToRegisterButton" layoutX="322.0" layoutY="381.0" mnemonicParsing="false" text="Register" />
-      <Label layoutX="366.0" layoutY="191.0" text="Admin Login" />
-      <Label layoutX="446.0" layoutY="385.0" text="Forgot your account?" />
-      <Button fx:id="forgotAccount" layoutX="576.0" layoutY="381.0" mnemonicParsing="false" text="Reclaim" />
+      <Label layoutX="366.0" layoutY="205.0" text="Admin Login" />
+      <Label layoutX="446.0" layoutY="385.0" text="Forgot your password?" />
+      <Button fx:id="resetPasswordButton" layoutX="576.0" layoutY="381.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="45.0" text="Reset" />
    </children>
 </AnchorPane>
