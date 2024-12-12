@@ -53,11 +53,13 @@ public class EditProfileController implements ControllerWrapper {
     @FXML private TextField emailField;
     @FXML private Button returnToMainButton;
     @FXML private Button confirmButton;
-    @FXML private Button changeEmailButton;
     @FXML private Button changePasswordButton;
     @FXML private Button resetPasswordButton;
     @FXML private Text usernameText;
-    @FXML private TextField usernameField;
+    @FXML private Label nameLabel;
+    @FXML private TextField nameField;
+    @FXML private Button cancelButton;
+    @FXML private Text passwordText;
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         sceneManager.addScene("Main", "main-messaging.fxml");
@@ -95,12 +97,12 @@ public class EditProfileController implements ControllerWrapper {
         newAlert.showAndWait();
     }
 
-    public void changeEmail(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Send email change request to user's email?");
-        newAlert.setHeaderText("Change Email");
-        newAlert.showAndWait();
-    }
+    // public void changeEmail(ActionEvent actionEvent) {
+    //     Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+    //     newAlert.setContentText("Send email change request to user's email?");
+    //     newAlert.setHeaderText("Change Email");
+    //     newAlert.showAndWait();
+    // }
 
     @Override
     public void myInitialize() {
@@ -114,6 +116,12 @@ public class EditProfileController implements ControllerWrapper {
 
         localDate = currentUser.getDateCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         dateJoinedPicker.setValue(localDate);
+
+        String name = currentUser.getDisplayName();
+        if (!name.isEmpty()) {
+            nameLabel.setText(name);
+            nameField.setText(currentUser.getDisplayName());
+        }
         
         String gender = currentUser.getGender();
         if (gender.equals("male")) {
@@ -150,15 +158,42 @@ public class EditProfileController implements ControllerWrapper {
         editProfileButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                usernameText.setVisible(false);
+                nameLabel.setVisible(false);
+                nameField.setVisible(true);
+
                 returnToMainButton.setVisible(false);
-                usernameField.setVisible(true);
+                editProfileButton.setVisible(false);
                 confirmButton.setVisible(true);
+                cancelButton.setVisible(true);
                 
                 addressField.setDisable(false);
                 maleRadioButton.setDisable(false);
                 femaleRadioButton.setDisable(false);
                 dateOfBirthPicker.setDisable(false);
+                changePasswordButton.setDisable(false);
+                resetPasswordButton.setDisable(false);
+            }
+        });
+
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                usernameText.setVisible(true);
+                nameLabel.setVisible(true);
+                nameField.setVisible(false);
+
+                editProfileButton.setVisible(true);
+                returnToMainButton.setVisible(true);
+                confirmButton.setVisible(false);
+                cancelButton.setVisible(false);
+                
+                addressField.setDisable(true);
+                maleRadioButton.setDisable(true);
+                femaleRadioButton.setDisable(true);
+                dateOfBirthPicker.setDisable(true);
+
+                changePasswordButton.setDisable(true);
+                resetPasswordButton.setDisable(true);
             }
         });
 
@@ -168,19 +203,10 @@ public class EditProfileController implements ControllerWrapper {
                 UserData currentUser = sessionUser.getSessionUserData();
                 String address = addressField.getText();
                 String gender = maleRadioButton.isSelected() ? "male" : "female";
-                String username = usernameField.getText();
+                String name = nameField.getText();
                 LocalDate date = dateOfBirthPicker.getValue();
                 Date dob;
-
-                if (username.length() < 5) {
-                    new Alert(AlertType.ERROR, "Username can not be too short! (At least 5 characters)").showAndWait();
-                    return;
-                }
-
-                if (sessionUser.myQuery.users().getUserByUsername(username) != null) {
-                    new Alert(AlertType.ERROR, "This username is taken!").showAndWait();
-                    return;
-                }
+                boolean isChanged = false;
 
                 if (date != null) {
                     if (date.isAfter(LocalDate.now())) {
@@ -191,27 +217,58 @@ public class EditProfileController implements ControllerWrapper {
                 } else {
                     dob = null;
                 }
+
+                if (!address.equals(currentUser.getAddress())) {
+                    currentUser.setAddress(address);
+                    isChanged = true;
+                }
+
+                if (!gender.equals(currentUser.getGender())) {
+                    currentUser.setGender(gender);
+                    isChanged = true;
+                }
+
+                if (!dob.equals(currentUser.getDateOfBirth())) {
+                    currentUser.setDateOfBirth(dob);
+                    isChanged = true;
+                }
+
+                if (!name.equals(currentUser.getDisplayName())) {
+                    currentUser.setDisplayName(name);
+                    isChanged = true;
+                }
+
+                if (isChanged) {
+                    if (sessionUser.myQuery.users().updateUser(currentUser)) {
+                        new Alert(AlertType.INFORMATION, "Update profile success!").showAndWait();
+                        nameField.setText(name);
+                        nameLabel.setText(name);
+                    }
+                }
+
+                nameField.setVisible(false);
+                nameLabel.setVisible(true);
+
+                returnToMainButton.setVisible(true);
+                confirmButton.setVisible(false);
+                cancelButton.setVisible(false);
                 
-                currentUser.setAddress(address);
-                currentUser.setGender(gender);
-                currentUser.setDateOfBirth(dob);
-                currentUser.setUsername(username);
+                addressField.setDisable(true);
+                maleRadioButton.setDisable(true);
+                femaleRadioButton.setDisable(true);
+                dateOfBirthPicker.setDisable(true);
+                editProfileButton.setVisible(true);
+            }
+        });
 
-                if (sessionUser.myQuery.users().updateUser(currentUser)) {
-                    new Alert(AlertType.INFORMATION, "Update profile success!").showAndWait();
-
-                    usernameField.setText(username);
-                    usernameText.setText(username);
-                    usernameField.setVisible(false);
-                    usernameText.setVisible(true);
-
-                    returnToMainButton.setVisible(true);
-                    confirmButton.setVisible(false);
-                    
-                    addressField.setDisable(true);
-                    maleRadioButton.setDisable(true);
-                    femaleRadioButton.setDisable(true);
-                    dateOfBirthPicker.setDisable(true);
+        changePasswordButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                try {
+                    sceneManager.addScene("ChangePassword", "change-password.fxml");
+                    sceneManager.switchScene("ChangePassword");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

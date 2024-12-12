@@ -92,6 +92,11 @@ public class RegisterController implements ControllerWrapper {
             return false;
         }
 
+        if (username.length() < 5) {
+            new Alert(AlertType.ERROR, "Username can not be too short (at least 5 characters)").showAndWait();
+            return false;
+        }
+
         if (email.isEmpty()) {
             new Alert(AlertType.ERROR, "Email is required!").showAndWait();
             return false;

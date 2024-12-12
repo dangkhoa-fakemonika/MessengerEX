@@ -20,32 +20,32 @@ public class SessionUser {
 
     public boolean loginSession(String username, String password){
         
-        UserData user = myQuery.users().getUserByUsername(username);
+        UserData userData = myQuery.users().getUserByUsername(username);
         
-        if (user == null) {
+        if (userData == null) {
             new Alert(AlertType.ERROR, "Username does not exist!").showAndWait();
             return false;
         }
         
-        if (!user.getPasswordHashed().equals(hashPassword(password))) {
+        if (!userData.getPasswordHashed().equals(hashPassword(password))) {
             new Alert(AlertType.ERROR, "Incorrect password!").showAndWait();
             return false;
         }
         
-        user.setStatus("online");
-        user.setLastLogin(new Date());
+        userData.setStatus("online");
+        userData.setLastLogin(new Date());
 
-        if (!myQuery.users().updateUser(user)) {
+        if (!myQuery.users().updateUser(userData)) {
             return false;
         }
 
         ActivityData activityData = new ActivityData();
-        activityData.setUserId(user.getUserId());
-        activityData.setLoginDate(user.getLastLogin());
-        activityData.setUsername(user.getUsername());
+        activityData.setUserId(userData.getUserId());
+        activityData.setLoginDate(userData.getLastLogin());
+        activityData.setUsername(userData.getUsername());
         myQuery.activities().insertActivity(activityData);
 
-        currentUser = user;
+        currentUser = userData;
 
         return true;
     }
@@ -85,6 +85,35 @@ public class SessionUser {
 
     public UserData getSessionUserData() {
         return this.currentUser;
+    }
+
+    public boolean changePassword(String oldPassword, String newPassword, String confirmPassword) {
+        UserData userData = myQuery.users().getUserById(currentUser.getUserId());
+
+        if (!hashPassword(oldPassword).equals(userData.getPasswordHashed())) {
+            new Alert(AlertType.ERROR, "Old password incorrect!").showAndWait();
+            return false;
+        }
+
+        if (hashPassword(newPassword).equals(hashPassword(oldPassword))) {
+            new Alert(AlertType.ERROR, "New password must be different!").showAndWait();
+            return false;
+        }
+
+        if (!hashPassword(confirmPassword).equals(hashPassword(newPassword))) {
+            new Alert(AlertType.ERROR, "Confirm password does not match!").showAndWait();
+            return false;
+        }
+
+        userData.setPasswordHashed(hashPassword(newPassword));
+
+        if (!myQuery.users().updateUser(userData)) {
+            return false;
+        }
+
+        currentUser = userData;
+
+        return true;
     }
 
     private String hashPassword(String password) {
