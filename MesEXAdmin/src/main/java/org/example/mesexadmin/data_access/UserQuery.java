@@ -80,14 +80,14 @@ public class UserQuery {
     }
 
     // add friend
-    public boolean addFriend(ObjectId id1, ObjectId id2){
+    public boolean addFriend(ObjectId userId1, ObjectId userId2){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
-        MongoCollection<Document> requests = mongoManagement.database.getCollection("request");
 
         try {
-            users.updateOne(Filters.eq("_id", id1), Updates.addToSet("friends", id2));
-            users.updateOne(Filters.eq("_id", id2), Updates.addToSet("friends", id1));
+            users.updateOne(Filters.eq("_id", userId1), Updates.addToSet("friend", userId2));
+            users.updateOne(Filters.eq("_id", userId2), Updates.addToSet("friend", userId1));
         } catch (MongoWriteException e) {
+            e.printStackTrace();
             return false;
         }
 

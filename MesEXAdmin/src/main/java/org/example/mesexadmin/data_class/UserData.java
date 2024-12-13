@@ -201,8 +201,8 @@ public class UserData {
 
 
     public ArrayList<ObjectId> getFriend() {
-        System.out.println("testing: " + this.friend.size());
-        System.out.println("testing: " + this.friend2.size());
+        // System.out.println("testing: " + this.friend.size());
+        // System.out.println("testing: " + this.friend2.size());
         return this.friend;
     }
 

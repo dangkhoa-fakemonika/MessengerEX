@@ -132,6 +132,19 @@ public class SessionUser {
         return myQuery.requests().insertFriendRequest(request);
     }
 
+    public boolean acceptFriendRequest(FriendRequestData request) {
+        
+        if (myQuery.users().addFriend(request.getSenderId(), request.getReceiverId())) {
+            return myQuery.requests().removeRequest(request.getRequestId());
+        }
+
+        return false;
+    }
+
+    public boolean rejectFriendRequest(FriendRequestData request) {
+        return myQuery.requests().removeRequest(request.getRequestId());
+    }
+
     public boolean changePassword(String oldPassword, String newPassword, String confirmPassword) {
         UserData userData = myQuery.users().getUserById(currentUser.getUserId());
 

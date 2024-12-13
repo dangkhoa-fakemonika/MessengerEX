@@ -32,27 +32,26 @@ public class FriendRequestQuery {
 
         try {
             requests.insertOne(request.toDocument());
-            return true;
         }
         catch (MongoWriteException e){
             return false;
         }
+
+        return true;
     }
 
     // unsend friend request
-    public boolean removeRequest(ObjectId idSrc, ObjectId idTarget){
-        MongoCollection<Document> requests = mongoManagement.database.getCollection("requests");
+    public boolean removeRequest(ObjectId requestId){
+        MongoCollection<Document> requests = mongoManagement.database.getCollection("friend_requests");
 
         try {
-            requests.deleteOne(
-                    Filters.and(Filters.eq("senderId", idSrc), Filters.eq("receiverId", idTarget))
-            );
+            requests.deleteOne(Filters.eq("_id", requestId));
         }
         catch (MongoWriteException e){
             return false;
         }
 
-        return false;
+        return true;
     }
 
     public FriendRequestData getSingleRequest(ObjectId senderId, ObjectId receiverId) {

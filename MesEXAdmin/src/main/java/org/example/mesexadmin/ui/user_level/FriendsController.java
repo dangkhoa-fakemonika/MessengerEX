@@ -5,9 +5,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
@@ -42,12 +44,13 @@ public class FriendsController implements ControllerWrapper {
     @FXML private TableView<FriendRequestData> receivedRequestsTable;
     @FXML private TableColumn<FriendRequestData, String> receivedRequestsUsernameColumn;
     @FXML private TableColumn<FriendRequestData, Date> receivedRequestsDateColumn;
+    @FXML private Button acceptRequestButton;
 
     @FXML private TableView<UserData> blockedTable;
 
 
     static UserData friend, blocked;
-    static FriendRequestData pending, request;
+    static FriendRequestData currentSentRequest, currentReceivedRequest;
 
     static ObservableList<UserData> data = FXCollections.observableArrayList();
     static ObservableList<UserData> blockedData = FXCollections.observableArrayList();
@@ -225,17 +228,37 @@ public class FriendsController implements ControllerWrapper {
         sentRequestsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendRequestData>() {
             @Override
             public void changed(ObservableValue<? extends FriendRequestData> observableValue, FriendRequestData friendRequestData, FriendRequestData t1) {
-                pending = sentRequestsTable.getSelectionModel().getSelectedItem();
+                currentSentRequest = sentRequestsTable.getSelectionModel().getSelectedItem();
             }
         });
 
         receivedRequestsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendRequestData>() {
             @Override
             public void changed(ObservableValue<? extends FriendRequestData> observableValue, FriendRequestData friendRequestData, FriendRequestData t1) {
-                request = receivedRequestsTable.getSelectionModel().getSelectedItem();
+                currentReceivedRequest = receivedRequestsTable.getSelectionModel().getSelectedItem();
             }
         });
 
+        acceptRequestButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setContentText("Accept friend request?");
+                alert.setHeaderText("Accept Friend");
 
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        if (acceptFriendRequest()) {
+                            new Alert(AlertType.INFORMATION, "You have accepted a friend request!").showAndWait();
+                            receivedRequests.remove(currentReceivedRequest);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    private boolean acceptFriendRequest() {
+        return currentUser.acceptFriendRequest(currentReceivedRequest);
     }
 }
