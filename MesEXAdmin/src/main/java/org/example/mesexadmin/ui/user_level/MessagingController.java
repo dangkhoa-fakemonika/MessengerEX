@@ -22,6 +22,7 @@ import org.example.mesexadmin.data_class.MessageData;
 import org.example.mesexadmin.ui.ControllerWrapper;
 import org.example.mesexadmin.ui.elements.ConversationListComponent;
 import org.example.mesexadmin.ui.elements.MessageListComponent;
+import javafx.scene.control.ButtonBar.ButtonData;
 
 import java.io.IOException;
 import java.net.URL;
@@ -126,7 +127,8 @@ public class MessagingController implements ControllerWrapper {
 
         currentConversation = null;
         messagingList.getItems().clear();
-        messagingList.getItems().addAll(conversationList);
+        if (currentConversation != null)
+            messagingList.getItems().addAll(conversationList);
         currentUser = Main.getThisUser();
     }
 

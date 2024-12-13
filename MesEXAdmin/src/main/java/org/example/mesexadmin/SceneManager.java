@@ -40,7 +40,8 @@ public class SceneManager {
                 ((ControllerWrapper) loader.getController()).myInitialize();
             }
             catch (Exception e){
-                System.out.println("super idol dexiaozong");
+                e.printStackTrace();
+//                System.out.println("super idol dexiaozong");
             }
             stage.setScene(scene);
             stage.show();

@@ -25,6 +25,7 @@ public class UserData {
     
     ArrayList<ObjectId> friend;
     ArrayList<ObjectId> blocked;
+    ArrayList<ObjectId> friend2;
 
     SimpleStringProperty address;
     SimpleObjectProperty<Date> dateOfBirth;
@@ -52,6 +53,7 @@ public class UserData {
         
         friend = new ArrayList<>();
         blocked = new ArrayList<>();
+        friend2 = new ArrayList<>();
     }
 
     public UserData(String newName, String newUsername, String newEmail, String currentStatus){
@@ -124,13 +126,13 @@ public class UserData {
         this.lastLogin.set(lastLogin);
     }
 
-    public void setFriend(String friendCount) {
-//        this.friendCount.set(friendCount);
-    }
+//    public void setFriend(String friendCount) {
+////        this.friendCount.set(friendCount);
+//    }
 
-    public void setBlocked(ObservableList<SimpleStringProperty> blocked) {
-//        this.blocked.set(blocked);
-    }
+//    public void setBlocked(ObservableList<SimpleStringProperty> blocked) {
+////        this.blocked.set(blocked);
+//    }
 
     public void setDateCreated(Date dateCreated) {
         this.dateCreated.set(dateCreated);
@@ -197,12 +199,33 @@ public class UserData {
     //     return !res.isEmpty() ? res.toString() : "No blocked";
     // }
 
+
+    public ArrayList<ObjectId> getFriend() {
+        System.out.println("testing: " + this.friend.size());
+        System.out.println("testing: " + this.friend2.size());
+        return this.friend;
+    }
+
+    public ArrayList<ObjectId> getDummyValue(){
+        return this.friend2;
+    }
+
+    public ArrayList<ObjectId> getBlocked() {
+        return this.blocked;
+    }
+
     public void setFriend(ArrayList<ObjectId> friend) {
-        this.friend = friend;
+        System.out.println("before adding: " + friend.size());
+
+        this.friend.clear();
+        this.friend.addAll(friend);
+        this.friend2.addAll(friend);
+        System.out.println("after adding: " + this.friend.size());
+        System.out.println("after adding: " + this.friend2.size());
     }
 
     public void setBlocked(ArrayList<ObjectId> blocked) {
-        this.friend = blocked;
+        this.blocked = blocked;
     }
 
     public ObjectId getUserId() {
@@ -220,6 +243,7 @@ public class UserData {
     public String getAddress() {
         return address.get();
     }
+
     public SimpleStringProperty getAddressProperty() {
         return this.address;
     }

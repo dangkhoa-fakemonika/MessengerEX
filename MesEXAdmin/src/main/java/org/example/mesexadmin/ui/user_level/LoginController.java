@@ -14,8 +14,6 @@ import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.ui.ControllerWrapper;
 
-import jakarta.mail.Session;
-
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;

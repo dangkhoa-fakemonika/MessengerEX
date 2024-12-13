@@ -97,17 +97,9 @@ public class FriendsController implements ControllerWrapper {
         sceneManager.switchScene("Main");
     }
 
-    final ObservableList<UserData> data = FXCollections.observableArrayList(
-            new UserData("FakeMonika", "fakemonika", "example@email.com", "Active"),
-            new UserData("KanCh", "kanch", "example@email.com", "Active"),
-            new UserData("Ryan Gosling", "him", "example@email.com", "Offline")
-    );
+    static ObservableList<UserData> data = FXCollections.observableArrayList();
 
-    final ObservableList<UserData> blockedData = FXCollections.observableArrayList(
-            new UserData("FakeMonika", "fakemonika", "example@email.com", "Active"),
-            new UserData("KanCh", "kanch", "example@email.com", "Active"),
-            new UserData("Ryan Gosling", "him", "example@email.com", "Offline")
-    );
+    static ObservableList<UserData> blockedData = FXCollections.observableArrayList();
 
     final ObservableList<FriendRequestData> requests = FXCollections.observableArrayList();
     final ObservableList<FriendRequestData> pendings = FXCollections.observableArrayList();
@@ -161,13 +153,21 @@ public class FriendsController implements ControllerWrapper {
         ArrayList<FriendRequestData> requestReceived = currentUser.myQuery.requests().getAllPending(userData.getUserId());
 
         friendsTable.setItems(FXCollections.observableArrayList());
-        friendsTable.getColumns().clear();
+//        friendsTable.getColumns().clear();
         blockedTable.setItems(FXCollections.observableArrayList());
-        blockedTable.getColumns().clear();
+//        blockedTable.getColumns().clear();
+
+        if (data != null){
+            data.clear();
+            System.out.println(currentUser.getSessionUserData().getFriend().size());
+            ArrayList<UserData> ud = currentUser.myQuery.users().getUserLists(currentUser.getSessionUserData().getFriend());
+            System.out.println(ud.size());
+            data.addAll(ud);
+        }
+
+
         friendsTable.setItems(data);
-        friendsTable.getColumns().addAll(generateUserColumns());
         blockedTable.setItems(blockedData);
-        blockedTable.getColumns().addAll(generateUserColumns());
         friendsTable.refresh();
         blockedTable.refresh();
     }
@@ -175,6 +175,11 @@ public class FriendsController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
+        friendsTable.getColumns().addAll(generateUserColumns());
+        blockedTable.getColumns().addAll(generateUserColumns());
+        currentUser = Main.getThisUser();
+
+
         friendsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
             @Override
             public void changed(ObservableValue<? extends UserData> observableValue, UserData userData, UserData t1) {
@@ -202,5 +207,7 @@ public class FriendsController implements ControllerWrapper {
                 request = requestTable.getSelectionModel().getSelectedItem();
             }
         });
+
+
     }
 }

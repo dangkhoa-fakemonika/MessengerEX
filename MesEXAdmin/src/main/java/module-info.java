@@ -6,6 +6,7 @@ module org.example.mesexadmin {
     requires mongo.java.driver;
     requires jakarta.mail;
     
+    requires java.desktop;
     // requires javafx.web;
     
     // requires org.controlsfx.controls;

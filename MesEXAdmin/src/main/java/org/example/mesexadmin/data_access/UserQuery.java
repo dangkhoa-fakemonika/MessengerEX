@@ -1,6 +1,5 @@
 package org.example.mesexadmin.data_access;
 
-import com.mongodb.Mongo;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -12,7 +11,6 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.UpdateResult;
 
-import javax.print.Doc;
 import java.util.ArrayList;
 
 public class UserQuery {
@@ -36,8 +34,10 @@ public class UserQuery {
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
         Document user = users.find(Filters.eq("username", username)).first();
 
-        if (user != null)
+        if (user != null){
+//            UserData createdUser = documentToUser(user);
             return documentToUser(user);
+        }
 
         return null;
     }
@@ -166,13 +166,18 @@ public class UserQuery {
         user.setLastLogin(userDocument.getDate("lastLogin"));
         user.setDateCreated(userDocument.getDate("dateCreated"));
         user.setRole(userDocument.getString("role"));
-        user.setFriend((ArrayList<ObjectId>) userDocument.get("friend"));
-        user.setBlocked((ArrayList<ObjectId>) userDocument.get("blocked"));
+        ArrayList<ObjectId> fr = new ArrayList<>(userDocument.getList("friend", ObjectId.class));
+        fr.forEach(System.out::println);
+        user.setFriend(new ArrayList<>(userDocument.getList("friend", ObjectId.class)));
+        System.out.println(user.getFriend().size());
+        System.out.println(user.getDummyValue().size());
+
+        user.setBlocked(new ArrayList<>(userDocument.getList("blocked", ObjectId.class)));
         user.setAddress(userDocument.getString("address"));
         user.setDateOfBirth(userDocument.getDate("dateOfBirth"));
         user.setGender(userDocument.getString("gender"));
         user.setPasswordHashed(userDocument.getString("passwordHash"));
 
-        return user; 
+        return user;
     }
 }

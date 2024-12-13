@@ -13,10 +13,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         sceneManager = new SceneManager(primaryStage);
-//        sceneManager.addScene("Login", "main-login.fxml");
-//        sceneManager.switchScene("Login");
-        sceneManager.addScene("Main", "main-messaging.fxml");
-        sceneManager.switchScene("Main");
+        sceneManager.addScene("Login", "main-login.fxml");
+        sceneManager.switchScene("Login");
+//        sceneManager.addScene("Main", "main-messaging.fxml");
+//        sceneManager.switchScene("Main");
     }
 
     public static void main(String[] args) {
