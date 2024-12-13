@@ -4,7 +4,8 @@ module org.example.mesexadmin {
     requires javafx.base;
     requires java.naming;
     requires mongo.java.driver;
-    requires java.desktop;
+    requires jakarta.mail;
+    
     // requires javafx.web;
     
     // requires org.controlsfx.controls;

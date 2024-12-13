@@ -113,9 +113,7 @@ public class LoginController implements ControllerWrapper {
                     if (email.isEmpty()) {
                         new Alert(AlertType.ERROR, "The field must not be empty!").showAndWait();
                         event.consume();
-                    } else if (true
-                        // currentUser.resetPassword(email)
-                        ) {
+                    } else if (currentUser.resetPassword(email)) {
                         new Alert(AlertType.INFORMATION, "Password reset success!").showAndWait();
                     } else {
                         event.consume();

@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.example.mesexadmin.Main;
@@ -111,7 +112,7 @@ public class MessagingController implements ControllerWrapper {
         messagingList.getItems().addAll(conversationList);
     }
 
-
+    
     @Override
     public void myInitialize() {
         currentUser = Main.getThisUser();

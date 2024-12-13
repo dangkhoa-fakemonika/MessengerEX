@@ -12,17 +12,23 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
+import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.FriendRequestData;
 import org.example.mesexadmin.data_class.UserData;
 import org.example.mesexadmin.ui.ControllerWrapper;
+import org.bson.Document;
+
+import com.mongodb.client.MongoCollection;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class FriendsController implements ControllerWrapper {
     private SceneManager sceneManager;
+    private SessionUser currentUser;
 
     @FXML private TableView<UserData> friendsTable;
     @FXML private TableView<FriendRequestData> pendingTable;
@@ -149,6 +155,11 @@ public class FriendsController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
+        currentUser = Main.getThisUser();
+        UserData userData = currentUser.getSessionUserData();
+        ArrayList<FriendRequestData> requestSent = currentUser.myQuery.requests().getAllRequest(userData.getUserId());
+        ArrayList<FriendRequestData> requestReceived = currentUser.myQuery.requests().getAllPending(userData.getUserId());
+
         friendsTable.setItems(FXCollections.observableArrayList());
         friendsTable.getColumns().clear();
         blockedTable.setItems(FXCollections.observableArrayList());

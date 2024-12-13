@@ -3,7 +3,6 @@ package org.example.mesexadmin;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
@@ -19,8 +18,6 @@ import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -32,7 +29,7 @@ public class SessionUser {
         myQuery = globalQuery;
         currentUser = new UserData();
     }
-
+                
     public boolean loginSession(String username, String password){
         
         UserData userData = myQuery.users().getUserByUsername(username);
@@ -101,7 +98,7 @@ public class SessionUser {
     public UserData getSessionUserData() {
         return this.currentUser;
     }
-
+                
     public boolean sendFriendRequest(String receiverUsername) {
         UserData receiverUserData = myQuery.users().getUserByUsername(receiverUsername);
 
@@ -176,29 +173,32 @@ public class SessionUser {
 
         return false;
     }
-
-    private boolean sendResetPasswordEmail(String emailTo, String newPassword) {
+                
+    private static boolean sendResetPasswordEmail(String emailTo, String newPassword) {
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
-        String emailFrom = null;
+        final String emailFrom = null; // Email goes here
+        final String appPassword = null; // App password goes 
+
         String subject = "Reset password for account with email: " + emailTo;
         String body = newPassword;
 
         Session session = Session.getInstance(props, new Authenticator() {
+            @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailFrom, "");
+                return new PasswordAuthentication(emailFrom, appPassword);
             }
         });
 
         try {
             MimeMessage msg = new MimeMessage(session);
-            msg.setFrom(new InternetAddress(emailFrom, "NoReply-JD"));
-            msg.setReplyTo(null);
+            msg.setFrom(new InternetAddress(emailFrom));
             msg.setReplyTo(InternetAddress.parse(emailFrom, false));
             msg.setSubject(subject, "UTF-8");
             msg.setText(body, "UTF-8");
@@ -212,7 +212,7 @@ public class SessionUser {
         }
     }
 
-    private String generatePassword() {
+    private static String generatePassword() {
         final String charSet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
         SecureRandom random = new SecureRandom();
         StringBuilder password = new StringBuilder();
