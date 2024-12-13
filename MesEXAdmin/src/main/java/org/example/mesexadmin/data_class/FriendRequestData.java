@@ -12,14 +12,14 @@ public class FriendRequestData {
     ObjectId senderId;
     ObjectId receiverId;
 
-    SimpleStringProperty senderName;
-    SimpleStringProperty receiverName;
+    SimpleStringProperty senderUsername;
+    SimpleStringProperty receiverUsername;
     SimpleObjectProperty<Date> timeSent;
 
     public FriendRequestData(){
         requestId = new ObjectId();
-        senderName = new SimpleStringProperty("reportID");
-        receiverName = new SimpleStringProperty("reporter");
+        senderUsername = new SimpleStringProperty("");
+        receiverUsername = new SimpleStringProperty("");
         timeSent = new SimpleObjectProperty<Date>(null);
     }
 
@@ -27,16 +27,16 @@ public class FriendRequestData {
         return requestId;
     }
 
-    public String getSenderName() {
-        return senderName.get();
+    public String getSenderUsername() {
+        return senderUsername.get();
     }
 
     public Date getTimeSent() {
         return timeSent.get();
     }
 
-    public String getReceiverName() {
-        return receiverName.get();
+    public String getReceiverUsername() {
+        return receiverUsername.get();
     }
 
     public ObjectId getReceiverId() {
@@ -51,16 +51,16 @@ public class FriendRequestData {
         this.requestId = requestId;
     }
 
-    public void setSenderName(String senderName) {
-        this.senderName.set(senderName);
+    public void setSenderUserame(String senderName) {
+        this.senderUsername.set(senderName);
     }
 
     public void setTimeSent(Date timeSent) {
         this.timeSent.set(timeSent);
     }
 
-    public void setReceiverName(String receiverName) {
-        this.receiverName.set(receiverName);
+    public void setReceiverUserame(String receiverName) {
+        this.receiverUsername.set(receiverName);
     }
 
     public void setSenderId(ObjectId senderId) {
@@ -71,6 +71,14 @@ public class FriendRequestData {
         this.receiverId = receiverId;
     }
 
+    public SimpleStringProperty getSenderUsernameProperty() {
+        return this.senderUsername;
+    }
+
+    public SimpleStringProperty getReceiverUsernameProperty() {
+        return this.receiverUsername;
+    }
+
     public Document toDocument(){
         Document doc = new Document();
         doc.append("_id",this.requestId)
@@ -79,5 +87,4 @@ public class FriendRequestData {
             .append("timeSent", this.timeSent.get());
         return doc;
     }
-
 }

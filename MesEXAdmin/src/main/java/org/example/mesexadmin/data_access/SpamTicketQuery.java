@@ -30,7 +30,6 @@ public class SpamTicketQuery {
         MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_ticket");
         ArrayList<Document> results = new ArrayList<>();
         tickets.aggregate(
-
             Arrays.asList(
 
                 Aggregates.lookup("users", "reporterId", "_id", "reporterDetails"),

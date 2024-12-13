@@ -5,6 +5,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -22,7 +23,7 @@
                <children>
                   <TabPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <tabs>
-                        <Tab closable="false" text="Current">
+                        <Tab closable="false" text="Friend List">
                            <content>
                               <AnchorPane>
                                  <children>
@@ -36,11 +37,15 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="Pending">
+                        <Tab closable="false" text="Sent Requests">
                            <content>
                               <AnchorPane>
                                  <children>
-                                    <TableView fx:id="pendingTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
+                                    <TableView fx:id="sentRequestsTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0">
+                                       <columns>
+                                          <TableColumn fx:id="sentRequestsUsernameColumn" editable="false" prefWidth="400.0" resizable="false" text="To User" />
+                                          <TableColumn fx:id="sentRequestsDateColumn" editable="false" prefWidth="400.0" resizable="false" text="Date" />
+                                       </columns></TableView>
                                     <Button layoutX="712.0" layoutY="14.0" mnemonicParsing="false" onAction="#blockUser" text="Block User" />
                                     <Button layoutX="599.0" layoutY="14.0" mnemonicParsing="false" onAction="#removeRequest" text="Remove Request" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
@@ -50,11 +55,15 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="Requests">
+                        <Tab closable="false" text="Received Requests">
                            <content>
                               <AnchorPane>
                                  <children>
-                                    <TableView fx:id="requestTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
+                                    <TableView fx:id="receivedRequestsTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0">
+                                       <columns>
+                                          <TableColumn fx:id="receivedRequestsUsernameColumn" editable="false" prefWidth="400.0" resizable="false" text="From User" />
+                                          <TableColumn fx:id="receivedRequestsDateColumn" editable="false" prefWidth="400.0" resizable="false" text="Date" />
+                                       </columns></TableView>
                                     <Button layoutX="712.0" layoutY="13.0" mnemonicParsing="false" onAction="#blockUser" text="Block User" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
@@ -64,7 +73,7 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="Blocked">
+                        <Tab closable="false" text="Blocked Users">
                            <content>
                               <AnchorPane>
                                  <children>

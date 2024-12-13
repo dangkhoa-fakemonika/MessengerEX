@@ -23,6 +23,7 @@ import com.mongodb.client.MongoCollection;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -31,12 +32,28 @@ public class FriendsController implements ControllerWrapper {
     private SessionUser currentUser;
 
     @FXML private TableView<UserData> friendsTable;
-    @FXML private TableView<FriendRequestData> pendingTable;
-    @FXML private TableView<FriendRequestData> requestTable;
+
+    // Sent request table
+    @FXML private TableView<FriendRequestData> sentRequestsTable;
+    @FXML private TableColumn<FriendRequestData, String> sentRequestsUsernameColumn;
+    @FXML private TableColumn<FriendRequestData, Date> sentRequestsDateColumn;
+
+    // Received request table
+    @FXML private TableView<FriendRequestData> receivedRequestsTable;
+    @FXML private TableColumn<FriendRequestData, String> receivedRequestsUsernameColumn;
+    @FXML private TableColumn<FriendRequestData, Date> receivedRequestsDateColumn;
+
     @FXML private TableView<UserData> blockedTable;
+
 
     static UserData friend, blocked;
     static FriendRequestData pending, request;
+
+    static ObservableList<UserData> data = FXCollections.observableArrayList();
+    static ObservableList<UserData> blockedData = FXCollections.observableArrayList();
+
+    final ObservableList<FriendRequestData> receivedRequests = FXCollections.observableArrayList();
+    final ObservableList<FriendRequestData> sentRequests = FXCollections.observableArrayList();
 
     public void addFriend(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-add.fxml"));
@@ -97,13 +114,6 @@ public class FriendsController implements ControllerWrapper {
         sceneManager.switchScene("Main");
     }
 
-    static ObservableList<UserData> data = FXCollections.observableArrayList();
-
-    static ObservableList<UserData> blockedData = FXCollections.observableArrayList();
-
-    final ObservableList<FriendRequestData> requests = FXCollections.observableArrayList();
-    final ObservableList<FriendRequestData> pendings = FXCollections.observableArrayList();
-
     public ObservableList<TableColumn<UserData, String>> generateUserColumns(){
         TableColumn<UserData, String> nameCol = new TableColumn<>("Name");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("displayName"));
@@ -149,13 +159,24 @@ public class FriendsController implements ControllerWrapper {
     public void myInitialize() {
         currentUser = Main.getThisUser();
         UserData userData = currentUser.getSessionUserData();
-        ArrayList<FriendRequestData> requestSent = currentUser.myQuery.requests().getAllRequest(userData.getUserId());
-        ArrayList<FriendRequestData> requestReceived = currentUser.myQuery.requests().getAllPending(userData.getUserId());
+
+        // Sent requests table
+        ArrayList<FriendRequestData> requestSent = currentUser.myQuery.requests().getAllRequestsDetails(userData.getUserId(), null);
+        sentRequests.clear();
+        sentRequests.addAll(requestSent);
+        sentRequestsTable.setItems(FXCollections.observableArrayList(sentRequests));
+
+        // Received requests table
+        ArrayList<FriendRequestData> requestReceived = currentUser.myQuery.requests().getAllRequestsDetails(null, userData.getUserId());
+        receivedRequests.clear();
+        receivedRequests.addAll(requestReceived);
+        receivedRequestsTable.setItems(FXCollections.observableArrayList(receivedRequests));
 
         friendsTable.setItems(FXCollections.observableArrayList());
 //        friendsTable.getColumns().clear();
         blockedTable.setItems(FXCollections.observableArrayList());
 //        blockedTable.getColumns().clear();
+        
 
         if (data != null){
             data.clear();
@@ -175,10 +196,17 @@ public class FriendsController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
+        currentUser = Main.getThisUser();
         friendsTable.getColumns().addAll(generateUserColumns());
         blockedTable.getColumns().addAll(generateUserColumns());
-        currentUser = Main.getThisUser();
 
+        // Sent requests table
+        sentRequestsUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("receiverUsername"));
+        sentRequestsDateColumn.setCellValueFactory(new PropertyValueFactory<>("timeSent"));
+
+        // Received requests table
+        receivedRequestsUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("senderUsername"));
+        receivedRequestsDateColumn.setCellValueFactory(new PropertyValueFactory<>("timeSent"));
 
         friendsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
             @Override
@@ -194,17 +222,17 @@ public class FriendsController implements ControllerWrapper {
             }
         });
 
-        pendingTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendRequestData>() {
+        sentRequestsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendRequestData>() {
             @Override
             public void changed(ObservableValue<? extends FriendRequestData> observableValue, FriendRequestData friendRequestData, FriendRequestData t1) {
-                pending = pendingTable.getSelectionModel().getSelectedItem();
+                pending = sentRequestsTable.getSelectionModel().getSelectedItem();
             }
         });
 
-        requestTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendRequestData>() {
+        receivedRequestsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<FriendRequestData>() {
             @Override
             public void changed(ObservableValue<? extends FriendRequestData> observableValue, FriendRequestData friendRequestData, FriendRequestData t1) {
-                request = requestTable.getSelectionModel().getSelectedItem();
+                request = receivedRequestsTable.getSelectionModel().getSelectedItem();
             }
         });
 

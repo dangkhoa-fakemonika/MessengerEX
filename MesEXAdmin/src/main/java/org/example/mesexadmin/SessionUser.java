@@ -107,15 +107,20 @@ public class SessionUser {
             return false;
         }
 
+        if (currentUser.getUserId().equals(receiverUserData.getUserId())) {
+            new Alert(AlertType.INFORMATION, "You can not send request to yourself!").showAndWait();
+            return false;
+        }
+
         FriendRequestData request = myQuery.requests().getSingleRequest(currentUser.getUserId(), receiverUserData.getUserId());
         if (request != null) {
-            new Alert(AlertType.ERROR, "You have already sent request to this user!").showAndWait();
+            new Alert(AlertType.INFORMATION, "You have already sent request to this user!").showAndWait();
             return false;
         }
 
         request = myQuery.requests().getSingleRequest(receiverUserData.getUserId(), currentUser.getUserId());
         if (request != null) {
-            new Alert(AlertType.ERROR, "This user have already sent request to you!").showAndWait();
+            new Alert(AlertType.INFORMATION, "This user have already sent request to you!").showAndWait();
             return false;
         }
 
