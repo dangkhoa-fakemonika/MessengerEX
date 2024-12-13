@@ -65,8 +65,8 @@
                                     <Button layoutX="712.0" layoutY="13.0" mnemonicParsing="false" onAction="#blockUser" text="Block User" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
-                                    <Button layoutX="658.0" layoutY="13.0" mnemonicParsing="false" onAction="#denyFriend" text="Reject" />
-                                    <Button fx:id="acceptRequestButton" layoutX="597.0" layoutY="13.0" mnemonicParsing="false" onAction="#acceptFriend" text="Accept" />
+                                    <Button fx:id="rejectFriendRequestButton" layoutX="658.0" layoutY="13.0" mnemonicParsing="false" text="Reject" />
+                                    <Button fx:id="acceptRequestButton" layoutX="597.0" layoutY="13.0" mnemonicParsing="false" text="Accept" />
                                  </children>
                               </AnchorPane>
                            </content>

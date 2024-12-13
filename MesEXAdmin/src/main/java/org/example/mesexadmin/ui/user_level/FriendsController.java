@@ -45,6 +45,7 @@ public class FriendsController implements ControllerWrapper {
     @FXML private TableColumn<FriendRequestData, String> receivedRequestsUsernameColumn;
     @FXML private TableColumn<FriendRequestData, Date> receivedRequestsDateColumn;
     @FXML private Button acceptRequestButton;
+    @FXML private Button rejectFriendRequestButton;
 
     @FXML private TableView<UserData> blockedTable;
 
@@ -85,28 +86,28 @@ public class FriendsController implements ControllerWrapper {
     }
 
     public void removeRequest(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert newAlert = new Alert(AlertType.CONFIRMATION);
         newAlert.setContentText("Un-send friend request to this user?");
         newAlert.setHeaderText("Remove Request");
         newAlert.showAndWait();
     }
 
-    public void acceptFriend(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Accept friend request?");
-        newAlert.setHeaderText("Accept Friend");
-        newAlert.showAndWait();
-    }
+    // public void acceptFriend(ActionEvent actionEvent) {
+    //     Alert newAlert = new Alert(AlertType.CONFIRMATION);
+    //     newAlert.setContentText("Accept friend request?");
+    //     newAlert.setHeaderText("Accept Friend");
+    //     newAlert.showAndWait();
+    // }
 
-    public void denyFriend(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Deny friend request?");
-        newAlert.setHeaderText("Deny Friend");
-        newAlert.showAndWait();
-    }
+    // public void denyFriend(ActionEvent actionEvent) {
+    //     Alert newAlert = new Alert(AlertType.CONFIRMATION);
+    //     newAlert.setContentText("Deny friend request?");
+    //     newAlert.setHeaderText("Deny Friend");
+    //     newAlert.showAndWait();
+    // }
 
     public void unblockUser(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        Alert newAlert = new Alert(AlertType.CONFIRMATION);
         newAlert.setContentText("Remove block on this user?");
         newAlert.setHeaderText("Unblock User");
         newAlert.showAndWait();
@@ -164,15 +165,20 @@ public class FriendsController implements ControllerWrapper {
         UserData userData = currentUser.getSessionUserData();
 
         // Sent requests table
-        ArrayList<FriendRequestData> requestSent = currentUser.myQuery.requests().getAllRequestsDetails(userData.getUserId(), null);
+        
         sentRequests.clear();
-        sentRequests.addAll(requestSent);
+        sentRequests.addAll(
+            // Get sent requests from database
+            currentUser.myQuery.requests().getAllRequestsDetails(userData.getUserId(), null)
+        );
         sentRequestsTable.setItems(FXCollections.observableArrayList(sentRequests));
 
         // Received requests table
-        ArrayList<FriendRequestData> requestReceived = currentUser.myQuery.requests().getAllRequestsDetails(null, userData.getUserId());
         receivedRequests.clear();
-        receivedRequests.addAll(requestReceived);
+        receivedRequests.addAll(
+            // Get received requests from database
+            currentUser.myQuery.requests().getAllRequestsDetails(null, userData.getUserId())
+        );
         receivedRequestsTable.setItems(FXCollections.observableArrayList(receivedRequests));
 
         friendsTable.setItems(FXCollections.observableArrayList());
@@ -200,6 +206,7 @@ public class FriendsController implements ControllerWrapper {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
         currentUser = Main.getThisUser();
+
         friendsTable.getColumns().addAll(generateUserColumns());
         blockedTable.getColumns().addAll(generateUserColumns());
 
@@ -251,6 +258,26 @@ public class FriendsController implements ControllerWrapper {
                         if (acceptFriendRequest()) {
                             new Alert(AlertType.INFORMATION, "You have accepted a friend request!").showAndWait();
                             receivedRequests.remove(currentReceivedRequest);
+                            receivedRequestsTable.refresh();
+                        }
+                    }
+                });
+            }
+        });
+
+        rejectFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setContentText("Reject friend request?");
+                alert.setHeaderText("Reject Friend");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        if (rejectFriendRequest()) {
+                            new Alert(AlertType.INFORMATION, "You have rejected a friend request!").showAndWait();
+                            receivedRequests.remove(currentReceivedRequest);
+                            receivedRequestsTable.refresh();
                         }
                     }
                 });
@@ -260,5 +287,9 @@ public class FriendsController implements ControllerWrapper {
 
     private boolean acceptFriendRequest() {
         return currentUser.acceptFriendRequest(currentReceivedRequest);
+    }
+
+    private boolean rejectFriendRequest() {
+        return currentUser.rejectFriendRequest(currentReceivedRequest);
     }
 }
