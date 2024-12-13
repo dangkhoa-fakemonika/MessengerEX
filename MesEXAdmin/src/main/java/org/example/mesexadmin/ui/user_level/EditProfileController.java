@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
@@ -41,7 +42,7 @@ import java.util.ResourceBundle;
 
 public class EditProfileController implements ControllerWrapper {
     SceneManager sceneManager;
-    SessionUser sessionUser;
+    SessionUser currentUser;
 
     @FXML private Button editProfileButton;
     @FXML private TextField addressField;
@@ -106,31 +107,31 @@ public class EditProfileController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        sessionUser = Main.getThisUser();
-        UserData currentUser = sessionUser.getSessionUserData();
+        currentUser = Main.getThisUser();
+        UserData userData = currentUser.getSessionUserData();
         LocalDate localDate;
 
-        usernameText.setText(currentUser.getUsername());
-        addressField.setText(currentUser.getAddress());
-        emailField.setText(currentUser.getEmail());
+        usernameText.setText(userData.getUsername());
+        addressField.setText(userData.getAddress());
+        emailField.setText(userData.getEmail());
 
-        localDate = currentUser.getDateCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        localDate = userData.getDateCreated().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         dateJoinedPicker.setValue(localDate);
 
-        String name = currentUser.getDisplayName();
+        String name = userData.getDisplayName();
         if (!name.isEmpty()) {
             nameLabel.setText(name);
-            nameField.setText(currentUser.getDisplayName());
+            nameField.setText(userData.getDisplayName());
         }
         
-        String gender = currentUser.getGender();
+        String gender = userData.getGender();
         if (gender.equals("male")) {
             maleRadioButton.setSelected(true);
         } else {
             femaleRadioButton.setSelected(true);
         }
 
-        Date dob = currentUser.getDateOfBirth();
+        Date dob = userData.getDateOfBirth();
         if (dob != null) {
             localDate = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             dateOfBirthPicker.setValue(localDate);
@@ -200,7 +201,7 @@ public class EditProfileController implements ControllerWrapper {
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                UserData currentUser = sessionUser.getSessionUserData();
+                UserData userData = currentUser.getSessionUserData();
                 String address = addressField.getText();
                 String gender = maleRadioButton.isSelected() ? "male" : "female";
                 String name = nameField.getText();
@@ -218,28 +219,28 @@ public class EditProfileController implements ControllerWrapper {
                     dob = null;
                 }
 
-                if (!address.equals(currentUser.getAddress())) {
-                    currentUser.setAddress(address);
+                if (!address.equals(userData.getAddress())) {
+                    userData.setAddress(address);
                     isChanged = true;
                 }
 
-                if (!gender.equals(currentUser.getGender())) {
-                    currentUser.setGender(gender);
+                if (!gender.equals(userData.getGender())) {
+                    userData.setGender(gender);
                     isChanged = true;
                 }
 
-                if (!dob.equals(currentUser.getDateOfBirth())) {
-                    currentUser.setDateOfBirth(dob);
+                if (dob != null && !dob.equals(userData.getDateOfBirth())) {
+                    userData.setDateOfBirth(dob);
                     isChanged = true;
                 }
 
-                if (!name.equals(currentUser.getDisplayName())) {
-                    currentUser.setDisplayName(name);
+                if (!name.equals(userData.getDisplayName())) {
+                    userData.setDisplayName(name);
                     isChanged = true;
                 }
 
                 if (isChanged) {
-                    if (sessionUser.myQuery.users().updateUser(currentUser)) {
+                    if (currentUser.myQuery.users().updateUser(userData)) {
                         new Alert(AlertType.INFORMATION, "Update profile success!").showAndWait();
                         nameField.setText(name);
                         nameLabel.setText(name);
@@ -269,6 +270,16 @@ public class EditProfileController implements ControllerWrapper {
                     sceneManager.switchScene("ChangePassword");
                 } catch (Exception e) {
                     e.printStackTrace();
+                }
+            }
+        });
+
+        resetPasswordButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                UserData userData = currentUser.getSessionUserData();
+                if (currentUser.resetPassword(userData.getEmail())) {
+                    new Alert(AlertType.INFORMATION, "Password reset success!").showAndWait();
                 }
             }
         });
