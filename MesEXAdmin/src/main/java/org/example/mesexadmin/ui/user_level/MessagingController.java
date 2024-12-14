@@ -188,6 +188,7 @@ public class MessagingController implements ControllerWrapper {
                         event.consume();
                     } else if (currentUser.sendFriendRequest(username)) {
                         new Alert(AlertType.INFORMATION, "Friend request sent!").showAndWait();
+                        event.consume();
                     } else {
                         event.consume();
                     }

@@ -112,6 +112,11 @@ public class SessionUser {
             return false;
         }
 
+        if (currentUser.getFriend().contains(receiverUserData.getUserId())) {
+            new Alert(AlertType.INFORMATION, "This user is your friend!").showAndWait();
+            return false;
+        }
+
         FriendRequestData request = myQuery.requests().getSingleRequest(currentUser.getUserId(), receiverUserData.getUserId());
         if (request != null) {
             new Alert(AlertType.INFORMATION, "You have already sent request to this user!").showAndWait();
