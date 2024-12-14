@@ -1,5 +1,7 @@
 package org.example.mesexadmin.ui.user_level;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -38,12 +40,12 @@ public class FriendsController implements ControllerWrapper {
     // Sent request table
     @FXML private TableView<FriendRequestData> sentRequestsTable;
     @FXML private TableColumn<FriendRequestData, String> sentRequestsUsernameColumn;
-    @FXML private TableColumn<FriendRequestData, Date> sentRequestsDateColumn;
+    @FXML private TableColumn<FriendRequestData, String> sentRequestsDateColumn;
 
     // Received request table
     @FXML private TableView<FriendRequestData> receivedRequestsTable;
     @FXML private TableColumn<FriendRequestData, String> receivedRequestsUsernameColumn;
-    @FXML private TableColumn<FriendRequestData, Date> receivedRequestsDateColumn;
+    @FXML private TableColumn<FriendRequestData, String> receivedRequestsDateColumn;
     @FXML private Button acceptRequestButton;
     @FXML private Button rejectFriendRequestButton;
 
@@ -171,7 +173,7 @@ public class FriendsController implements ControllerWrapper {
             // Get sent requests from database
             currentUser.myQuery.requests().getAllRequestsDetails(userData.getUserId(), null)
         );
-        sentRequestsTable.setItems(FXCollections.observableArrayList(sentRequests));
+        sentRequestsTable.setItems(sentRequests);
 
         // Received requests table
         receivedRequests.clear();
@@ -179,7 +181,7 @@ public class FriendsController implements ControllerWrapper {
             // Get received requests from database
             currentUser.myQuery.requests().getAllRequestsDetails(null, userData.getUserId())
         );
-        receivedRequestsTable.setItems(FXCollections.observableArrayList(receivedRequests));
+        receivedRequestsTable.setItems(receivedRequests);
 
         friendsTable.setItems(FXCollections.observableArrayList());
 //        friendsTable.getColumns().clear();
@@ -212,11 +214,11 @@ public class FriendsController implements ControllerWrapper {
 
         // Sent requests table
         sentRequestsUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("receiverUsername"));
-        sentRequestsDateColumn.setCellValueFactory(new PropertyValueFactory<>("timeSent"));
+        sentRequestsDateColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getFormattedTimeSent()));
 
         // Received requests table
         receivedRequestsUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("senderUsername"));
-        receivedRequestsDateColumn.setCellValueFactory(new PropertyValueFactory<>("timeSent"));
+        receivedRequestsUsernameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getFormattedTimeSent()));
 
         friendsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
             @Override

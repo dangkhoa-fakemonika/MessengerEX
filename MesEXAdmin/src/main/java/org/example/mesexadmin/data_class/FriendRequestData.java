@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FriendRequestData {
@@ -31,8 +33,15 @@ public class FriendRequestData {
         return senderUsername.get();
     }
 
-    public Date getTimeSent() {
-        return timeSent.get();
+    // public Date getTimeSent() {
+    //     return timeSent.get();
+    // }
+
+    public String getFormattedTimeSent() {
+        String pattern = "MM/dd/yyyy HH:mm:ss";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+
+        return dateFormat.format(this.timeSent.get()); 
     }
 
     public String getReceiverUsername() {
