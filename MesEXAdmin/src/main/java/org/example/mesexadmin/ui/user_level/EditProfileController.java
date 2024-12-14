@@ -234,7 +234,7 @@ public class EditProfileController implements ControllerWrapper {
                     isChanged = true;
                 }
 
-                if (!name.equals(userData.getDisplayName())) {
+                if (!name.equals(userData.getDisplayName()) && !name.isEmpty()) {
                     userData.setDisplayName(name);
                     isChanged = true;
                 }
