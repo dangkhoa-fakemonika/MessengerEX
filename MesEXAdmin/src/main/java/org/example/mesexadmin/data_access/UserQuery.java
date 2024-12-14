@@ -12,6 +12,7 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.UpdateResult;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class UserQuery {
     MongoManagement mongoManagement;
@@ -150,6 +151,19 @@ public class UserQuery {
         }
 
         return data;
+    }
+
+    public ArrayList<UserData> getNewUsers(){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        ArrayList<Document> results = new ArrayList<>();
+        Date twoMonthsBack = new Date();
+        twoMonthsBack.setTime(new Date().getTime() - 5259492000L);
+        users.find(Filters.gt("dateCreated", twoMonthsBack)).into(results);
+
+        ArrayList<UserData> userData = new ArrayList<>();
+        results.forEach((res) -> userData.add(documentToUser(res)));
+
+        return userData;
     }
 
 

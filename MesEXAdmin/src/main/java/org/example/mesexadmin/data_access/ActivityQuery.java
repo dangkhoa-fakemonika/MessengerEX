@@ -1,6 +1,7 @@
 package org.example.mesexadmin.data_access;
 
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import org.bson.Document;
 import org.example.mesexadmin.MongoManagement;
@@ -18,18 +19,6 @@ public class ActivityQuery {
 
     ActivityQuery(MongoManagement mongoManagement) {
         this.mongoManagement = mongoManagement;
-    }
-
-    public ArrayList<ActivityData> getLoginLog(){
-        return null;
-    }
-
-    public ArrayList<ActivityData> getRegisterLog(){
-        return null;
-    }
-
-    public ArrayList<ActivityData> getReportLog(){
-        return null;
     }
 
     public boolean insertActivity(ActivityData activityData) {
@@ -51,9 +40,11 @@ public class ActivityQuery {
 
         activities.aggregate(Arrays.asList(
                 Aggregates.lookup("users", "userId","_id","userDetails"),
+                Aggregates.unwind("$userDetails"),
                 Aggregates.project(Projections.fields(
                         Projections.include("userId"),
-                        Projections.computed("username","$userDetails.username"),
+                        Projections.computed("username", "$userDetails.username"),
+                        Projections.computed("displayName", "$userDetails.displayName"),
                         Projections.include("loginDate")
                 ))
         )).into(results);
@@ -70,6 +61,7 @@ public class ActivityQuery {
         ActivityData act = new ActivityData();
         act.setActivityId(activityDoc.getObjectId("_id"));
         act.setUsername(activityDoc.getString("username"));
+        act.setDisplayName(activityDoc.getString("displayName"));
         act.setUserId(activityDoc.getObjectId("userId"));
         act.setLoginDate(activityDoc.getDate("loginDate"));
         return act;

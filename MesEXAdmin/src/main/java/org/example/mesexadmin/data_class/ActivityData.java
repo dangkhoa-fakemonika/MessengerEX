@@ -11,6 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class ActivityData {
 
     private SimpleStringProperty username;
+    private SimpleStringProperty displayName;
     private ObjectId activityId;
     private ObjectId userId;
     private SimpleObjectProperty<Date> loginDate;
@@ -22,9 +23,10 @@ public class ActivityData {
     // }
 
     public ActivityData() {
+        displayName = new SimpleStringProperty();
         activityId = new ObjectId();
         loginDate = new SimpleObjectProperty<Date>(null);
-        username = new SimpleStringProperty("");
+        username = new SimpleStringProperty();
     }
 
     public ObjectId getActivityId() {
@@ -37,6 +39,14 @@ public class ActivityData {
 
     public ObjectId getUserId() {
         return this.userId;
+    }
+
+    public String getDisplayName() {
+        return displayName.get();
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName.set(displayName);
     }
 
     public void setUserId(ObjectId userId) {

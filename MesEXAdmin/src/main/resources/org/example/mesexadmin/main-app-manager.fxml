@@ -9,6 +9,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -40,7 +41,12 @@
                            <content>
                               <AnchorPane>
                                  <children>
-                                    <TableView fx:id="loginTable" layoutY="49.0" prefHeight="433.0" prefWidth="798.0" />
+                                    <TableView fx:id="loginTable" layoutY="49.0" prefHeight="433.0" prefWidth="798.0">
+                                       <columns>
+                                          <TableColumn fx:id="loginDateCol" prefWidth="324.80003052949905" text="Logged in When" />
+                                          <TableColumn fx:id="loginUsernameCol" prefWidth="180.79998779296875" text="Username" />
+                                          <TableColumn fx:id="loginDisplayNameCol" prefWidth="292.800048828125" text="Display Name" />
+                                       </columns></TableView>
                                     <TextField layoutX="6.0" layoutY="14.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter" />
                                     <ChoiceBox layoutX="151.0" layoutY="14.0" prefHeight="26.0" prefWidth="96.0" />
                                  </children>
@@ -51,7 +57,11 @@
                            <content>
                               <AnchorPane>
                                  <children>
-                                    <TableView fx:id="newAccountTable" layoutY="49.0" prefHeight="433.0" prefWidth="798.0" />
+                                    <TableView fx:id="newAccountTable" layoutY="49.0" prefHeight="433.0" prefWidth="798.0">
+                                       <columns>
+                                          <TableColumn fx:id="newAccountUsernameCol" prefWidth="292.80003052949905" text="Username" />
+                                          <TableColumn fx:id="newAccountDateCreatedCol" prefWidth="505.5999755859375" text="Date Created" />
+                                       </columns></TableView>
                                     <TextField layoutX="6.0" layoutY="14.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter Name" />
                                     <ChoiceBox layoutX="296.0" layoutY="14.0" prefHeight="26.0" prefWidth="96.0" />
                                     <Label layoutX="219.0" layoutY="18.0" text="Time Span" />
