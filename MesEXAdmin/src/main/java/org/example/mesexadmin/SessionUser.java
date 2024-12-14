@@ -3,11 +3,14 @@ package org.example.mesexadmin;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
+import javafx.beans.property.SimpleStringProperty;
 import org.example.mesexadmin.data_access.GlobalQuery;
 import org.example.mesexadmin.data_class.ActivityData;
+import org.example.mesexadmin.data_class.ConversationData;
 import org.example.mesexadmin.data_class.FriendRequestData;
 import org.example.mesexadmin.data_class.UserData;
 
@@ -22,7 +25,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 public class SessionUser {
-    public UserData currentUser;
+    private UserData currentUser;
     public GlobalQuery myQuery;
 
     public SessionUser(GlobalQuery globalQuery){
@@ -140,6 +143,12 @@ public class SessionUser {
     public boolean acceptFriendRequest(FriendRequestData request) {
         
         if (myQuery.users().addFriend(request.getSenderId(), request.getReceiverId())) {
+            ConversationData newConvo = new ConversationData();
+            newConvo.setType("private");
+            newConvo.getMembersId().add(request.getSenderId());
+            newConvo.getMembersId().add(request.getReceiverId());
+            myQuery.conversations().createConversation(newConvo);
+
             return myQuery.requests().removeRequest(request.getRequestId());
         }
 
@@ -195,6 +204,39 @@ public class SessionUser {
         }
 
         return false;
+    }
+
+    public ArrayList<ConversationData> loadAllConversations(){
+        ArrayList<ConversationData> convData = myQuery.conversations().getUserAllConversation(currentUser.getUserId());
+        convData.forEach((conv) -> {
+            conv.getMembersId().forEach((id) ->
+                    conv.getMembersName().add(new SimpleStringProperty(myQuery.users().getUserById(id).getUsername())));
+            conv.getModeratorsId().forEach((id) ->
+                    conv.getModeratorsName().add(new SimpleStringProperty(myQuery.users().getUserById(id).getUsername())));
+        });
+        return convData;
+    }
+
+    public ArrayList<ConversationData> loadPrivateConversations(){
+        ArrayList<ConversationData> convData = myQuery.conversations().getUserPrivateConversation(currentUser.getUserId());
+        convData.forEach((conv) -> {
+            conv.getMembersId().forEach((id) ->
+                    conv.getMembersName().add(new SimpleStringProperty(myQuery.users().getUserById(id).getUsername())));
+            conv.getModeratorsId().forEach((id) ->
+                    conv.getModeratorsName().add(new SimpleStringProperty(myQuery.users().getUserById(id).getUsername())));
+        });
+        return convData;
+    }
+
+    public ArrayList<ConversationData> loadGroupConversations(){
+        ArrayList<ConversationData> convData = myQuery.conversations().getUserGroupConversation(currentUser.getUserId());
+        convData.forEach((conv) -> {
+            conv.getMembersId().forEach((id) ->
+                    conv.getMembersName().add(new SimpleStringProperty(myQuery.users().getUserById(id).getUsername())));
+            conv.getModeratorsId().forEach((id) ->
+                    conv.getModeratorsName().add(new SimpleStringProperty(myQuery.users().getUserById(id).getUsername())));
+        });
+        return convData;
     }
                 
     private static boolean sendResetPasswordEmail(String emailTo, String newPassword) {

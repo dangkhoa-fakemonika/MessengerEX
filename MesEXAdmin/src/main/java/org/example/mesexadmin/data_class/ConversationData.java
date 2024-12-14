@@ -2,8 +2,6 @@ package org.example.mesexadmin.data_class;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -15,14 +13,26 @@ public class ConversationData {
     ObjectId conversationId;
     SimpleObjectProperty<Date> dateCreated;
     SimpleStringProperty conversationName;
+
     ArrayList<ObjectId> membersId;
     ArrayList<ObjectId> moderatorsId;
     ArrayList<SimpleStringProperty> membersName;
     ArrayList<SimpleStringProperty> moderatorsName;
+
     ObjectId lastMessageId;
     SimpleStringProperty type;
 
-    public ConversationData() {}
+    public ConversationData() {
+        conversationId = new ObjectId();
+        dateCreated = new SimpleObjectProperty<>();
+        conversationName = new SimpleStringProperty();
+        membersId = new ArrayList<>();
+        moderatorsId = new ArrayList<>();
+        membersName = new ArrayList<>();
+        moderatorsName = new ArrayList<>();
+        lastMessageId = null;
+        type = new SimpleStringProperty();
+    }
 
     public ConversationData(String newGroupName, String newHostID){
         dateCreated = new SimpleObjectProperty<Date>(null);
@@ -48,20 +58,20 @@ public class ConversationData {
         return conversationName.get();
     }
 
-    public String getMembersId() {
-        return "za placeholda";
+    public ArrayList<SimpleStringProperty> getModeratorsName() {
+        return moderatorsName;
     }
 
-    public String getModeratorsId() {
-        return "za placeholda";
+    public ArrayList<SimpleStringProperty> getMembersName() {
+        return membersName;
     }
 
-    public String getMembersName() {
-        return "za placeholda";
+    public ArrayList<ObjectId> getMembersId() {
+        return membersId;
     }
 
-    public String getModeratorsName() {
-        return "za placeholda";
+    public ArrayList<ObjectId> getModeratorsId() {
+        return moderatorsId;
     }
 
     public void setConversationId(ObjectId conversationId) {
@@ -78,10 +88,12 @@ public class ConversationData {
 
     public void setModeratorsId(ArrayList<ObjectId>  moderatorsId) {
 //        this.hostsId.set(hostsId);
+        this.moderatorsId = moderatorsId;
     }
 
     public void setMembersId(ArrayList<ObjectId> membersId) {
 //        this.participantIDs.set(participantIDs);
+        this.membersId = membersId;
     }
 
     public void setMembersName(ArrayList<SimpleStringProperty> membersName) {
@@ -114,15 +126,13 @@ public class ConversationData {
 
     public Document toDocument(){
         Document doc = new Document();
-        doc.append("conversationId", this.conversationId)
+        doc.append("_id", this.conversationId)
         .append("dateCreated", this.dateCreated.get())
         .append("conversationName", this.conversationName.get())
         .append("membersId", this.membersId)
         .append("moderatorsId", this.moderatorsId)
-        .append("membersName", this.membersName)
-        .append("moderatorsName", this.moderatorsName)
         .append("lastMessageId", this.lastMessageId)
-        .append("type", this.type);
+        .append("type", this.type.get());
 
         return doc;
     }

@@ -201,8 +201,6 @@ public class UserData {
 
 
     public ArrayList<ObjectId> getFriend() {
-        // System.out.println("testing: " + this.friend.size());
-        // System.out.println("testing: " + this.friend2.size());
         return this.friend;
     }
 
@@ -215,13 +213,9 @@ public class UserData {
     }
 
     public void setFriend(ArrayList<ObjectId> friend) {
-        System.out.println("before adding: " + friend.size());
-
         this.friend.clear();
         this.friend.addAll(friend);
         this.friend2.addAll(friend);
-        System.out.println("after adding: " + this.friend.size());
-        System.out.println("after adding: " + this.friend2.size());
     }
 
     public void setBlocked(ArrayList<ObjectId> blocked) {

@@ -10,7 +10,7 @@ public class MessageListComponent extends HBox {
     public MessageListComponent(MessageData message){
         data = message;
 
-        this.getChildren().add( new Label(data.getSenderName() + " " + data.getContent()));
+        this.getChildren().add( new Label( "[" + data.getTimeSent().toString() + " | " + data.getSenderName() + "]: " + data.getContent()));
     }
 
     public MessageData getMessage(){

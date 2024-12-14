@@ -14,7 +14,7 @@ public class GlobalQuery {
     }
 
     public MessageQuery messages(){
-        return null;
+        return new MessageQuery(myMongo);
     }
 
     public FriendRequestQuery requests(){
@@ -22,7 +22,7 @@ public class GlobalQuery {
     }
 
     public ConversationQuery conversations(){
-        return null;
+        return new ConversationQuery(myMongo);
     }
 
     public SpamTicketQuery spams(){

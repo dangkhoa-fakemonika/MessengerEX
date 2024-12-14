@@ -35,7 +35,8 @@ public class MessagingController implements ControllerWrapper {
     private SessionUser currentUser;
     static ConversationData currentConversation;
 
-    @FXML private ListView<ConversationListComponent> messagingList;
+    @FXML private ListView<ConversationListComponent> privateList;
+    @FXML private ListView<ConversationListComponent> groupList;
     @FXML private ListView<MessageListComponent> messages;
     @FXML private Label myLabel;
     @FXML private TextArea myTextArea;
@@ -43,7 +44,8 @@ public class MessagingController implements ControllerWrapper {
     @FXML private MenuItem addFriendButton;
 
     // Load from database
-    static ObservableList<ConversationListComponent> conversationList;
+    static ObservableList<ConversationListComponent> privateItems;
+    static ObservableList<ConversationListComponent> groupItems;
     static ObservableList<MessageListComponent> messagesList;
 
     public void addMessage(ActionEvent actionEvent){
@@ -103,14 +105,26 @@ public class MessagingController implements ControllerWrapper {
     }
 
     void refresh(){
-        ArrayList<ConversationData> conversationQuery = currentUser.myQuery.conversations().getUserAllConversation(currentUser.getSessionUserData().getUserId());
-        conversationList = FXCollections.observableArrayList();
-        for (ConversationData cQuery : conversationQuery){
-            conversationList.add(new ConversationListComponent(cQuery));
+        ArrayList<ConversationData> privateQuery = currentUser.loadPrivateConversations();
+        privateItems = FXCollections.observableArrayList();
+        for (ConversationData cQuery : privateQuery){
+            privateItems.add(new ConversationListComponent(cQuery));
         }
 
-        messagingList.getItems().clear();
-        messagingList.getItems().addAll(conversationList);
+        privateList.getItems().clear();
+        privateList.getItems().addAll(privateItems);
+
+        ArrayList<ConversationData> groupQuery = currentUser.loadGroupConversations();
+        groupItems = FXCollections.observableArrayList();
+        for (ConversationData cQuery : groupQuery){
+            groupItems.add(new ConversationListComponent(cQuery));
+        }
+
+        groupList.getItems().clear();
+        groupList.getItems().addAll(groupItems);
+
+        groupList.refresh();
+        privateList.refresh();
     }
 
     
@@ -119,16 +133,8 @@ public class MessagingController implements ControllerWrapper {
         currentUser = Main.getThisUser();
 
         optionButton.setDisable(true);
-//        ArrayList<ConversationData> conversationQuery = currentUser.myQuery.conversations().getUserAllConversation(currentUser.getSessionUserData().getUserId());
-//        conversationList = FXCollections.observableArrayList();
-//        for (ConversationData cQuery : conversationQuery){
-//            conversationList.add(new ConversationListComponent(cQuery));
-//        }
 
-        currentConversation = null;
-        messagingList.getItems().clear();
-        if (currentConversation != null)
-            messagingList.getItems().addAll(conversationList);
+        refresh();
         currentUser = Main.getThisUser();
     }
 
@@ -136,10 +142,10 @@ public class MessagingController implements ControllerWrapper {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
 
-        messagingList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ConversationListComponent>() {
+        privateList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ConversationListComponent>() {
             @Override
             public void changed(ObservableValue<? extends ConversationListComponent> observableValue, ConversationListComponent conversationListComponent, ConversationListComponent t1) {
-                ConversationListComponent c =  messagingList.getSelectionModel().getSelectedItem();
+                ConversationListComponent c =  privateList.getSelectionModel().getSelectedItem();
                 if (c != null){
                     currentConversation = c.getConversation();
                     myLabel.setText("Selected Chat: " + currentConversation.getConversationName());
@@ -147,6 +153,19 @@ public class MessagingController implements ControllerWrapper {
                 }
             }
         });
+
+        groupList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ConversationListComponent>() {
+            @Override
+            public void changed(ObservableValue<? extends ConversationListComponent> observableValue, ConversationListComponent conversationListComponent, ConversationListComponent t1) {
+                ConversationListComponent c =  groupList.getSelectionModel().getSelectedItem();
+                if (c != null){
+                    currentConversation = c.getConversation();
+                    myLabel.setText("Selected Chat: " + currentConversation.getConversationName());
+                    optionButton.setDisable(false);
+                }
+            }
+        });
+
 
         myTextArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override

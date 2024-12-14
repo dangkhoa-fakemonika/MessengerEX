@@ -166,12 +166,7 @@ public class UserQuery {
         user.setLastLogin(userDocument.getDate("lastLogin"));
         user.setDateCreated(userDocument.getDate("dateCreated"));
         user.setRole(userDocument.getString("role"));
-        ArrayList<ObjectId> fr = new ArrayList<>(userDocument.getList("friend", ObjectId.class));
-        fr.forEach(System.out::println);
         user.setFriend(new ArrayList<>(userDocument.getList("friend", ObjectId.class)));
-        System.out.println(user.getFriend().size());
-        System.out.println(user.getDummyValue().size());
-
         user.setBlocked(new ArrayList<>(userDocument.getList("blocked", ObjectId.class)));
         user.setAddress(userDocument.getString("address"));
         user.setDateOfBirth(userDocument.getDate("dateOfBirth"));

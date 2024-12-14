@@ -219,7 +219,7 @@ public class FriendsController implements ControllerWrapper {
 
         // Received requests table
         receivedRequestsUsernameColumn.setCellValueFactory(new PropertyValueFactory<>("senderUsername"));
-        receivedRequestsUsernameColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getFormattedTimeSent()));
+        receivedRequestsDateColumn.setCellValueFactory(cell -> new SimpleStringProperty(cell.getValue().getFormattedTimeSent()));
 
         friendsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
             @Override
