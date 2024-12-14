@@ -41,6 +41,7 @@ public class FriendsController implements ControllerWrapper {
     @FXML private TableView<FriendRequestData> sentRequestsTable;
     @FXML private TableColumn<FriendRequestData, String> sentRequestsUsernameColumn;
     @FXML private TableColumn<FriendRequestData, String> sentRequestsDateColumn;
+    @FXML private Button removeFriendRequestButton;
 
     // Received request table
     @FXML private TableView<FriendRequestData> receivedRequestsTable;
@@ -250,10 +251,10 @@ public class FriendsController implements ControllerWrapper {
 
         acceptRequestButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent arg0) {
+            public void handle(ActionEvent event) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setContentText("Accept friend request?");
-                alert.setHeaderText("Accept Friend");
+                alert.setContentText("Accept this friend request?");
+                alert.setHeaderText("Accept Friend Request");
 
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
@@ -269,17 +270,36 @@ public class FriendsController implements ControllerWrapper {
 
         rejectFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent arg0) {
+            public void handle(ActionEvent event) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setContentText("Reject friend request?");
-                alert.setHeaderText("Reject Friend");
+                alert.setContentText("Reject this friend request?");
+                alert.setHeaderText("Reject Friend Request");
 
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
-                        if (rejectFriendRequest()) {
+                        if (removeFriendRequest()) {
                             new Alert(AlertType.INFORMATION, "You have rejected a friend request!").showAndWait();
                             receivedRequests.remove(currentReceivedRequest);
                             receivedRequestsTable.refresh();
+                        }
+                    }
+                });
+            }
+        });
+
+        removeFriendRequestButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setContentText("Remove this friend request?");
+                alert.setHeaderText("Remove Friend Request");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        if (removeFriendRequest()) {
+                            new Alert(AlertType.INFORMATION, "You have removed your request!").showAndWait();
+                            sentRequests.remove(currentSentRequest);
+                            sentRequestsTable.refresh();
                         }
                     }
                 });
@@ -291,7 +311,7 @@ public class FriendsController implements ControllerWrapper {
         return currentUser.acceptFriendRequest(currentReceivedRequest);
     }
 
-    private boolean rejectFriendRequest() {
-        return currentUser.rejectFriendRequest(currentReceivedRequest);
+    private boolean removeFriendRequest() {
+        return currentUser.removeFriendRequest(currentReceivedRequest);
     }
 }

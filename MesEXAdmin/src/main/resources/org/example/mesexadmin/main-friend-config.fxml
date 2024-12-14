@@ -46,7 +46,7 @@
                                           <TableColumn fx:id="sentRequestsUsernameColumn" editable="false" prefWidth="400.0" resizable="false" text="To User" />
                                           <TableColumn fx:id="sentRequestsDateColumn" editable="false" prefWidth="400.0" resizable="false" text="Date" />
                                        </columns></TableView>
-                                    <Button layoutX="599.0" layoutY="14.0" mnemonicParsing="false" onAction="#removeRequest" text="Remove Request" />
+                                    <Button fx:id="removeFriendRequestButton" layoutX="678.0" layoutY="13.0" mnemonicParsing="false" text="Remove Request" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
                                  </children>

@@ -141,7 +141,7 @@ public class SessionUser {
         return false;
     }
 
-    public boolean rejectFriendRequest(FriendRequestData request) {
+    public boolean removeFriendRequest(FriendRequestData request) {
         return myQuery.requests().removeRequest(request.getRequestId());
     }
 
