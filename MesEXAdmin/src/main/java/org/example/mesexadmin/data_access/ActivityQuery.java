@@ -57,6 +57,32 @@ public class ActivityQuery {
         return loginLogs;
     }
 
+    public ArrayList<ActivityData> viewLoginHistoryWithFilters(String key, String token){
+        MongoCollection<Document> activities = mongoManagement.database.getCollection("activities");
+        ArrayList<Document> results = new ArrayList<>();
+
+        activities.aggregate(Arrays.asList(
+                Aggregates.lookup("users", "userId","_id","userDetails"),
+                Aggregates.unwind("$userDetails"),
+                Aggregates.project(Projections.fields(
+                        Projections.include("userId"),
+                        Projections.computed("username", "$userDetails.username"),
+                        Projections.computed("displayName", "$userDetails.displayName"),
+                        Projections.include("loginDate")
+                )),
+                Aggregates.match(Filters.regex(key, token))
+        )).into(results);
+
+        ArrayList<ActivityData> loginLogs = new ArrayList<>();
+        for (Document res : results){
+            loginLogs.add(documentToActivity(res));
+        }
+
+        return loginLogs;
+    }
+
+
+
     public ActivityData documentToActivity(Document activityDoc){
         ActivityData act = new ActivityData();
         act.setActivityId(activityDoc.getObjectId("_id"));

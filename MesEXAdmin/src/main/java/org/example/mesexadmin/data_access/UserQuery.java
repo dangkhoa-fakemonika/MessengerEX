@@ -153,12 +153,46 @@ public class UserQuery {
         return data;
     }
 
+
     public ArrayList<UserData> getNewUsers(){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
         ArrayList<Document> results = new ArrayList<>();
-        Date twoMonthsBack = new Date();
-        twoMonthsBack.setTime(new Date().getTime() - 5259492000L);
-        users.find(Filters.gt("dateCreated", twoMonthsBack)).into(results);
+        users.find().into(results);
+
+        ArrayList<UserData> userData = new ArrayList<>();
+        results.forEach((res) -> userData.add(documentToUser(res)));
+
+        return userData;
+    }
+
+    public ArrayList<UserData> getNewUsers(Date startDate, Date endDate){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        ArrayList<Document> results = new ArrayList<>();
+        users.find(Filters.and(Filters.lte("dateCreated", endDate), Filters.gte("dateCreated", startDate))).into(results);
+
+        ArrayList<UserData> userData = new ArrayList<>();
+        results.forEach((res) -> userData.add(documentToUser(res)));
+
+        return userData;
+    }
+
+    public ArrayList<UserData> getNewUsersWithFilters(String key, String token){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        ArrayList<Document> results = new ArrayList<>();
+
+        users.find(Filters.regex(key, token)).into(results);
+
+        ArrayList<UserData> userData = new ArrayList<>();
+        results.forEach((res) -> userData.add(documentToUser(res)));
+
+        return userData;
+    }
+
+    public ArrayList<UserData> getNewUsersWithFilters(String key, String token, Date startDate, Date endDate){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        ArrayList<Document> results = new ArrayList<>();
+
+        users.find(Filters.and(Filters.regex(key, token), Filters.lte("dateCreated", endDate), Filters.gte("dateCreated", startDate))).into(results);
 
         ArrayList<UserData> userData = new ArrayList<>();
         results.forEach((res) -> userData.add(documentToUser(res)));
