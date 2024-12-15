@@ -29,7 +29,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class FriendsController implements ControllerWrapper {
     private SceneManager sceneManager;
@@ -92,40 +94,55 @@ public class FriendsController implements ControllerWrapper {
         dialog.close();
     }
 
-    public void blockUser(ActionEvent actionEvent) throws IOException {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Block this user?");
-        newAlert.setHeaderText("Block User");
-        newAlert.showAndWait();
+    public void blockUser(ActionEvent event) throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Block this user?");
+        alert.setHeaderText("Block User");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            String buttonId = ((Button) event.getSource()).getId();
+            UserData removeTarget;
+
+            if (buttonId.equals("onlineBlockButton")) {
+                removeTarget = currentOnline;
+            } else {
+                removeTarget = currentFriend;
+            }
+
+            if (currentUser.blockUser(removeTarget.getUserId())) {
+                onlineData.remove(removeTarget);
+                friendData.remove(removeTarget);
+                new Alert(AlertType.INFORMATION, "You have blocked this user and removed them from your friendlist").showAndWait();
+            }
+        }
     }
 
-    public void unFriend(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Remove this user from your friend list?");
-        newAlert.setHeaderText("Unfriend");
-        newAlert.showAndWait();
+    public void unfriend(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText("Remove this user from your friend list?");
+        alert.setHeaderText("Unfriend User");
+
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            String buttonId = ((Button) event.getSource()).getId();
+            UserData removeTarget;
+
+            if (buttonId.equals("onlineUnfriendButton")) {
+                removeTarget = currentOnline;
+            } else {
+                removeTarget = currentFriend;
+            }
+
+            if (currentUser.unfriendUser(removeTarget.getUserId())) {
+                onlineData.remove(removeTarget);
+                friendData.remove(removeTarget);
+                new Alert(AlertType.INFORMATION, "You have removed this user from your friendlist").showAndWait();
+            }
+        }
     }
-
-    public void removeRequest(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(AlertType.CONFIRMATION);
-        newAlert.setContentText("Un-send friend request to this user?");
-        newAlert.setHeaderText("Remove Request");
-        newAlert.showAndWait();
-    }
-
-    // public void acceptFriend(ActionEvent actionEvent) {
-    //     Alert newAlert = new Alert(AlertType.CONFIRMATION);
-    //     newAlert.setContentText("Accept friend request?");
-    //     newAlert.setHeaderText("Accept Friend");
-    //     newAlert.showAndWait();
-    // }
-
-    // public void denyFriend(ActionEvent actionEvent) {
-    //     Alert newAlert = new Alert(AlertType.CONFIRMATION);
-    //     newAlert.setContentText("Deny friend request?");
-    //     newAlert.setHeaderText("Deny Friend");
-    //     newAlert.showAndWait();
-    // }
 
     public void unblockUser(ActionEvent actionEvent) {
         Alert newAlert = new Alert(AlertType.CONFIRMATION);
@@ -139,47 +156,6 @@ public class FriendsController implements ControllerWrapper {
         sceneManager.switchScene("Main");
     }
 
-    // public ObservableList<TableColumn<UserData, String>> generateUserColumns(){
-    //     TableColumn<UserData, String> nameCol = new TableColumn<>("Name");
-    //     nameCol.setCellValueFactory(new PropertyValueFactory<>("displayName"));
-    //     nameCol.setMinWidth(100);
-
-    //     TableColumn<UserData, String> usernameCol = new TableColumn<>("Username");
-    //     usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
-    //     usernameCol.setMinWidth(100);
-
-    //     TableColumn<UserData, String> genderCol = new TableColumn<>("Gender");
-    //     genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
-    //     genderCol.setMinWidth(100);
-
-    //     return FXCollections.observableArrayList(nameCol, usernameCol, genderCol);
-    // }
-
-
-    // public ObservableList<TableColumn<FriendRequestData, String>> generateRequestColumns(){
-    //     TableColumn<FriendRequestData, String> nameCol = new TableColumn<>("ID");
-    //     nameCol.setCellValueFactory(new PropertyValueFactory<>("senderId"));
-    //     nameCol.setMinWidth(100);
-
-    //     TableColumn<FriendRequestData, String> timeCol = new TableColumn<>("Time Sent");
-    //     timeCol.setCellValueFactory(new PropertyValueFactory<>("timeSent"));
-    //     timeCol.setMinWidth(100);
-
-    //     return FXCollections.observableArrayList(nameCol, timeCol);
-    // }
-
-    // public ObservableList<TableColumn<FriendRequestData, String>> generatePendingColumns(){
-    //     TableColumn<FriendRequestData, String> nameCol = new TableColumn<>("ID");
-    //     nameCol.setCellValueFactory(new PropertyValueFactory<>("receiverId"));
-    //     nameCol.setMinWidth(100);
-
-    //     TableColumn<FriendRequestData, String> timeCol = new TableColumn<>("Time Sent");
-    //     timeCol.setCellValueFactory(new PropertyValueFactory<>("timeSent"));
-    //     timeCol.setMinWidth(100);
-
-    //     return FXCollections.observableArrayList(nameCol, timeCol);
-    // }
-
     @Override
     public void myInitialize() {
         currentUser = Main.getThisUser();
@@ -189,7 +165,7 @@ public class FriendsController implements ControllerWrapper {
         onlineData.clear();
         onlineData.addAll(
             // Get currently online users from database
-            currentUser.myQuery.users().getOnlineFriend(userData.getFriend())
+            currentUser.getOnlineFriendList()
         );
         onlineFriendTable.setItems(onlineData);
 
@@ -197,7 +173,7 @@ public class FriendsController implements ControllerWrapper {
         friendData.clear();
         friendData.addAll(
             // Get all friend of current user from database
-            currentUser.myQuery.users().getUserList(userData.getFriend())
+            currentUser.getFriendList()
         );
         friendsTable.setItems(friendData);
 
@@ -216,25 +192,6 @@ public class FriendsController implements ControllerWrapper {
             currentUser.myQuery.requests().getAllRequestsDetails(null, userData.getUserId())
         );
         receivedRequestsTable.setItems(receivedRequests);
-
-        // friendsTable.setItems(FXCollections.observableArrayList());
-        // friendsTable.getColumns().clear();
-        // blockedTable.setItems(FXCollections.observableArrayList());
-        // dateJoinedblockedTable.getColumns().clear();
-
-        // if (friendData != null){
-        //     friendData.clear();
-        //     System.out.println(currentUser.getSessionUserData().getFriend().size());
-        //     ArrayList<UserData> ud = currentUser.myQuery.users().getUserLists(currentUser.getSessionUserData().getFriend());
-        //     System.out.println(ud.size());
-        //     friendData.addAll(ud);
-        // }
-
-
-        // friendsTable.setItems(friendData);
-        // blockedTable.setItems(blockedData);
-        // friendsTable.refresh();
-        // blockedTable.refresh();
     }
 
     @Override

@@ -100,8 +100,33 @@ public class UserQuery {
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
 
         try {
-            users.updateOne(Filters.eq("_id", id1), Updates.pull("friends", id2));
-            users.updateOne(Filters.eq("_id", id2), Updates.pull("friends", id1));
+            users.updateOne(Filters.eq("_id", id1), Updates.pull("friend", id2));
+            users.updateOne(Filters.eq("_id", id2), Updates.pull("friend", id1));
+        } catch (MongoWriteException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean addBlock(ObjectId blocker, ObjectId blocked){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+
+        try {
+            users.updateOne(Filters.eq("_id", blocker), Updates.addToSet("blocked", blocked));
+        } catch (MongoWriteException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean removeBlock(ObjectId blocker, ObjectId blocked){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+
+        try {
+            users.updateOne(Filters.eq("_id", blocker), Updates.pull("blocked", blocked));
         } catch (MongoWriteException e) {
             return false;
         }
@@ -158,7 +183,7 @@ public class UserQuery {
         return data;
     }
 
-    public ArrayList<UserData> getOnlineFriend(ArrayList<ObjectId> idList) {
+    public ArrayList<UserData> getOnlineUserList(ArrayList<ObjectId> idList) {
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
         ArrayList<UserData> data = new ArrayList<>();
 

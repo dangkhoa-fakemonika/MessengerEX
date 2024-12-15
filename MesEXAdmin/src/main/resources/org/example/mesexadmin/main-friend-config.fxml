@@ -36,7 +36,7 @@
                                        </columns>
                                     </TableView>
                                     <Button fx:id="onlineBlockButton" layoutX="739.0" layoutY="14.0" mnemonicParsing="false" onAction="#blockUser" text="Block" />
-                                    <Button fx:id="onlineUnfriendButton" layoutX="667.0" layoutY="14.0" mnemonicParsing="false" onAction="#unFriend" text="Unfriend" />
+                                    <Button fx:id="onlineUnfriendButton" layoutX="667.0" layoutY="14.0" mnemonicParsing="false" onAction="#unfriend" text="Unfriend" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
                                  </children>
@@ -57,8 +57,8 @@
                                           <TableColumn fx:id="friendsLastLoginColumn" editable="false" prefWidth="125.0" resizable="false" text="Last Login" />
                                           <TableColumn fx:id="friendsJoinedDateColumn" editable="false" prefWidth="100.0" resizable="false" text="Joined Date" />
                                        </columns></TableView>
-                                    <Button layoutX="739.0" layoutY="14.0" mnemonicParsing="false" onAction="#blockUser" text="Block" />
-                                    <Button layoutX="667.0" layoutY="14.0" mnemonicParsing="false" onAction="#unFriend" text="Unfriend" />
+                                    <Button fx:id="friendsBlockButton" layoutX="739.0" layoutY="14.0" mnemonicParsing="false" onAction="#blockUser" text="Block" />
+                                    <Button fx:id="friendsUnfriendButton" layoutX="667.0" layoutY="14.0" mnemonicParsing="false" onAction="#unfriend" text="Unfriend" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
                                  </children>
@@ -90,11 +90,10 @@
                                           <TableColumn fx:id="receivedRequestsUsernameColumn" editable="false" prefWidth="400.0" resizable="false" text="From User" />
                                           <TableColumn fx:id="receivedRequestsDateColumn" editable="false" prefWidth="400.0" resizable="false" text="Date" />
                                        </columns></TableView>
-                                    <Button layoutX="712.0" layoutY="13.0" mnemonicParsing="false" onAction="#blockUser" text="Block User" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
-                                    <Button fx:id="rejectFriendRequestButton" layoutX="658.0" layoutY="13.0" mnemonicParsing="false" text="Reject" />
-                                    <Button fx:id="acceptRequestButton" layoutX="597.0" layoutY="13.0" mnemonicParsing="false" text="Accept" />
+                                    <Button fx:id="rejectFriendRequestButton" layoutX="735.0" layoutY="13.0" mnemonicParsing="false" text="Reject" />
+                                    <Button fx:id="acceptRequestButton" layoutX="673.0" layoutY="13.0" mnemonicParsing="false" text="Accept" />
                                  </children>
                               </AnchorPane>
                            </content>

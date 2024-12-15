@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.Properties;
 
 import javafx.beans.property.SimpleStringProperty;
+
+import org.bson.types.ObjectId;
 import org.example.mesexadmin.data_access.GlobalQuery;
 import org.example.mesexadmin.data_class.ActivityData;
 import org.example.mesexadmin.data_class.ConversationData;
@@ -204,6 +206,29 @@ public class SessionUser {
         }
 
         return false;
+    }
+
+    public ArrayList<UserData> getFriendList() {
+        return myQuery.users().getUserList(currentUser.getFriend());
+    }
+
+    public ArrayList<UserData>  getBlockedList() {
+        return myQuery.users().getUserList(currentUser.getBlocked());
+    }
+
+    public ArrayList<UserData> getOnlineFriendList() {
+        return myQuery.users().getOnlineUserList(currentUser.getFriend());
+    }
+
+    public boolean unfriendUser(ObjectId targetId) {
+        currentUser.getFriend().remove(targetId);
+        return myQuery.users().removeFriend(currentUser.getUserId(), targetId);
+    }
+
+    public boolean blockUser(ObjectId targetId) {
+        currentUser.getFriend().remove(targetId);
+        currentUser.getBlocked().add(targetId);
+        return myQuery.users().addBlock(currentUser.getUserId(), targetId);
     }
 
     public ArrayList<ConversationData> loadAllConversations(){

@@ -314,4 +314,14 @@ public class UserData {
             .append("passwordHash", this.passwordHashed.get());
         return doc;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this)
+            return true;
+        if (!(object instanceof UserData))
+            return false;
+        UserData userData = (UserData) object;
+        return this.userId.equals(userData.getUserId());
+    }
 }
