@@ -220,6 +220,14 @@ public class SessionUser {
         return myQuery.users().getOnlineUserList(currentUser.getFriend());
     }
 
+    public ArrayList<FriendRequestData> getReceivedRequests() {
+        return myQuery.requests().getAllRequestsDetails(null, currentUser.getUserId());
+    }
+
+    public ArrayList<FriendRequestData> getSentRequests() {
+        return myQuery.requests().getAllRequestsDetails(currentUser.getUserId() , null);
+    }
+
     public boolean unfriendUser(ObjectId targetId) {
         currentUser.getFriend().remove(targetId);
         return myQuery.users().removeFriend(currentUser.getUserId(), targetId);

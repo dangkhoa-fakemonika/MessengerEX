@@ -96,4 +96,14 @@ public class FriendRequestData {
             .append("timeSent", this.timeSent.get());
         return doc;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this)
+            return true;
+        if (!(object instanceof FriendRequestData))
+            return false;
+        FriendRequestData friendRequestData = (FriendRequestData) object;
+        return this.requestId.equals(friendRequestData.getRequestId());
+    }
 }

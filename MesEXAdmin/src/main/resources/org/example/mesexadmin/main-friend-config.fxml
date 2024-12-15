@@ -21,9 +21,9 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <TabPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TabPane fx:id="friendManagementTabPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <tabs>
-                        <Tab closable="false" text="Online">
+                        <Tab fx:id="onlineTab" closable="false" text="Online">
                            <content>
                               <AnchorPane>
                                  <children>
@@ -43,7 +43,7 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="All Friends">
+                        <Tab fx:id="friendsTab" closable="false" text="All Friends">
                            <content>
                               <AnchorPane>
                                  <children>
@@ -65,7 +65,7 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="Sent Requests">
+                        <Tab fx:id="sentRequestsTab" closable="false" text="Sent Requests">
                            <content>
                               <AnchorPane>
                                  <children>
@@ -81,7 +81,7 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="Received Requests">
+                        <Tab fx:id="receivedRequestsTab" closable="false" text="Received Requests">
                            <content>
                               <AnchorPane>
                                  <children>
@@ -98,7 +98,7 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="Blocked Users">
+                        <Tab fx:id="blockedUsersTab" closable="false" text="Blocked Users">
                            <content>
                               <AnchorPane>
                                  <children>
@@ -107,7 +107,7 @@
                                           <TableColumn fx:id="blockedNameColumn" editable="false" prefWidth="400.0" resizable="false" text="Name" />
                                           <TableColumn fx:id="blockedUsernameColumn" editable="false" prefWidth="400.0" resizable="false" text="Username" />
                                        </columns></TableView>
-                                    <Button layoutX="724.0" layoutY="13.0" mnemonicParsing="false" onAction="#unblockUser" text="Unblock" />
+                                    <Button fx:id="unblockUserkButton" layoutX="724.0" layoutY="13.0" mnemonicParsing="false" text="Unblock" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
                                  </children>
