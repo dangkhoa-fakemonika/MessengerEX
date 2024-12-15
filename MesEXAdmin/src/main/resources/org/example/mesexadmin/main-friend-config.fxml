@@ -23,16 +23,44 @@
                <children>
                   <TabPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <tabs>
-                        <Tab closable="false" text="Friend List">
+                        <Tab closable="false" text="Online">
                            <content>
                               <AnchorPane>
                                  <children>
-                                    <TableView fx:id="friendsTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
-                                    <Button layoutX="712.0" layoutY="14.0" mnemonicParsing="false" onAction="#blockUser" text="Block User" />
-                                    <Button layoutX="555.0" layoutY="14.0" mnemonicParsing="false" onAction="#unFriend" text="Remove from Friend List" />
+                                    <TableView fx:id="onlineFriendTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0">
+                                       <columns>
+                                          <TableColumn fx:id="onlineNameColumn" editable="false" prefWidth="200.0" resizable="false" text="Name" />
+                                          <TableColumn fx:id="onlineUsernameColumn" editable="false" prefWidth="200.0" resizable="false" text="Username" />
+                                          <TableColumn fx:id="onlineGenderColumn" editable="false" prefWidth="200.0" text="Gender" />
+                                          <TableColumn fx:id="onlineLoginAtColumn" editable="false" prefWidth="200.0" resizable="false" text="Login At" />
+                                       </columns>
+                                    </TableView>
+                                    <Button fx:id="onlineBlockButton" layoutX="739.0" layoutY="14.0" mnemonicParsing="false" onAction="#blockUser" text="Block" />
+                                    <Button fx:id="onlineUnfriendButton" layoutX="667.0" layoutY="14.0" mnemonicParsing="false" onAction="#unFriend" text="Unfriend" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
-                                    <Button layoutX="472.0" layoutY="14.0" mnemonicParsing="false" onAction="#addFriend" text="Add Friend" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
+                        <Tab closable="false" text="All Friends">
+                           <content>
+                              <AnchorPane>
+                                 <children>
+                                    <TableView fx:id="friendsTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0">
+                                       <columns>
+                                          <TableColumn fx:id="friendsNameColumn" editable="false" prefWidth="175.0" resizable="false" text="Name" />
+                                          <TableColumn fx:id="friendsUsernameColumn" editable="false" prefWidth="150.0" resizable="false" text="Username" />
+                                          <TableColumn fx:id="friendsGenderColumn" editable="false" prefWidth="75.0" resizable="false" text="Gender" />
+                                          <TableColumn fx:id="friendsBirthdayColumn" editable="false" prefWidth="100.0" resizable="false" text="Birthday" />
+                                          <TableColumn fx:id="friendsStatusColumn" editable="false" prefWidth="75.0" resizable="false" text="Status" />
+                                          <TableColumn fx:id="friendsLastLoginColumn" editable="false" prefWidth="125.0" resizable="false" text="Last Login" />
+                                          <TableColumn fx:id="friendsJoinedDateColumn" editable="false" prefWidth="100.0" resizable="false" text="Joined Date" />
+                                       </columns></TableView>
+                                    <Button layoutX="739.0" layoutY="14.0" mnemonicParsing="false" onAction="#blockUser" text="Block" />
+                                    <Button layoutX="667.0" layoutY="14.0" mnemonicParsing="false" onAction="#unFriend" text="Unfriend" />
+                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
+                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
                                  </children>
                               </AnchorPane>
                            </content>
@@ -75,8 +103,12 @@
                            <content>
                               <AnchorPane>
                                  <children>
-                                    <TableView fx:id="blockedTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
-                                    <Button layoutX="697.0" layoutY="13.0" mnemonicParsing="false" onAction="#unblockUser" text="Unblock User" />
+                                    <TableView fx:id="blockedTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0">
+                                       <columns>
+                                          <TableColumn fx:id="blockedNameColumn" editable="false" prefWidth="400.0" resizable="false" text="Name" />
+                                          <TableColumn fx:id="blockedUsernameColumn" editable="false" prefWidth="400.0" resizable="false" text="Username" />
+                                       </columns></TableView>
+                                    <Button layoutX="724.0" layoutY="13.0" mnemonicParsing="false" onAction="#unblockUser" text="Unblock" />
                                     <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
                                     <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
                                  </children>

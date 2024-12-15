@@ -108,10 +108,8 @@ public class FriendRequestQuery {
         // Extract neccessary property
         pipeline.add(new Document("$project", new Document("senderUsername", "$sender.username")
             .append("receiverUsername", "$receiver.username")
-            .append("senderId", "$sender._id")
-            // .append("senderId", "senderId")
-            .append("receiverId", "$receiver._id")
-            // .append("receiverId", "receiverId")
+            .append("senderId", 1)
+            .append("receiverId", 1)
             .append("timeSent", 1)
             .append("_id", 1)));
 

@@ -143,16 +143,35 @@ public class UserQuery {
     }
 
     // get friend/ban list
-    public ArrayList<UserData> getUserLists(ArrayList<ObjectId> idList){
+    public ArrayList<UserData> getUserList(ArrayList<ObjectId> idList){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
         ArrayList<UserData> data = new ArrayList<>();
 
-        for (ObjectId uid : idList){
-            data.add(getUserById(uid));
+        Document query = new Document("_id", new Document("$in", idList));
+
+        ArrayList<Document> result = users.find(query).into(new ArrayList<>());
+
+        for (Document doc : result) {
+            data.add(documentToUser(doc));
         }
 
         return data;
     }
 
+    public ArrayList<UserData> getOnlineFriend(ArrayList<ObjectId> idList) {
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        ArrayList<UserData> data = new ArrayList<>();
+
+        Document query = new Document("_id", new Document("$in", idList)).append("status", "online");
+
+        ArrayList<Document> result = users.find(query).into(new ArrayList<>());
+
+        for (Document doc : result) {
+            data.add(documentToUser(doc));
+        }
+
+        return data;
+    }
 
     public ArrayList<UserData> getNewUsers(){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");

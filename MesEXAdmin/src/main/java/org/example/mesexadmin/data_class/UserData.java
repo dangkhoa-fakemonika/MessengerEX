@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -21,7 +22,6 @@ public class UserData {
     SimpleObjectProperty<Date> lastLogin;
     SimpleObjectProperty<Date> dateCreated;
     SimpleStringProperty role;
-
     
     ArrayList<ObjectId> friend;
     ArrayList<ObjectId> blocked;
@@ -178,6 +178,29 @@ public class UserData {
         return status.get();
     }
 
+    public String getFormattedDate(String field) {
+        Date date = null;
+        String pattern = "dd/MM/yyyy";
+
+        if (field.equals("dateOfBirth")) {
+            date = this.dateOfBirth.get();
+        }
+        else if (field.equals("lastLogin")) {
+            date = this.lastLogin.get();
+            pattern = "yyyy-MM-dd HH:mm:ss";
+        }
+        else if (field.equals("dateJoined")) {
+            date = this.dateCreated.get();
+        }
+
+        if (date == null)
+            return "";
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+
+        return dateFormat.format(date);
+    }
+
 //     public String getFriend() {
 // //        return friendCount.get();
 //         StringBuilder res =  new StringBuilder();
@@ -260,6 +283,18 @@ public class UserData {
 
     public SimpleObjectProperty<Date> getDateCreatedProperty() {
         return this.dateCreated;
+    }
+
+    public SimpleStringProperty getDisplayNameProperty() {
+        return this.displayName;
+    }
+
+    public SimpleStringProperty getStatusProperty() {
+        return this.status;
+    }
+
+    public SimpleStringProperty getGenderProperty() {
+        return this.gender;
     }
 
     public Document toDocument() {
