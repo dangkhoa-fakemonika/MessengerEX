@@ -1,5 +1,7 @@
 package org.example.mesexadmin.data_access;
 
+import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -11,7 +13,11 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.UpdateResult;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class UserQuery {
@@ -140,7 +146,6 @@ public class UserQuery {
         MongoCollection<Document> activities = mongoManagement.database.getCollection("activities");
         MongoCollection<Document> requests = mongoManagement.database.getCollection("requests");
 
-
         try {
             users.deleteOne(Filters.eq("_id", id));
 //            conversations.deleteMany(Filters.eq("_id", id));
@@ -244,8 +249,52 @@ public class UserQuery {
         return userData;
     }
 
+    public Integer getNewUsersOnSectionCount(Integer month, Integer year){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        ArrayList<Document> results = new ArrayList<>();
 
-//    public ArrayList
+        Date startDate, endDate;
+
+        if (month == null){
+            startDate = Date.from(LocalDate.of(year, 1, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+            endDate = Date.from(LocalDate.of(year, 1, 1).plusYears(1).minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        }
+        else {
+            startDate = Date.from(LocalDate.of(year, month, 1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+            endDate = Date.from(LocalDate.of(year, month, 1).plusMonths(1).minusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        }
+
+        users.find(Filters.and(Filters.lte("dateCreated", endDate), Filters.gte("dateCreated", startDate))).into(results);
+
+        return results.size();
+    }
+
+    public ArrayList<String> getRegisterUserYearIndexes(){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        Document userFirst = users.find().sort(Sorts.ascending("dateCreated")).first();
+        Document userLast = users.find().sort(Sorts.descending("dateCreated")).first();
+        ArrayList<String> yearList = new ArrayList<>();
+
+        if (userFirst != null && userLast != null){
+            UserData u1 = documentToUser(userFirst), u2 = documentToUser(userLast);
+            int yearStart = Instant.ofEpochMilli(u1.getDateCreated().getTime()).atZone(ZoneId.systemDefault()).toLocalDate().getYear();
+            int yearEnd = Instant.ofEpochMilli(u2.getDateCreated().getTime()).atZone(ZoneId.systemDefault()).toLocalDate().getYear();
+            for (int i = yearStart; i <= yearEnd; i++)
+                yearList.add(Integer.toString(i));
+        }
+
+        return yearList;
+    }
+
+//    public void getInApplicationActivities(){
+//        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+//        users.aggregate(Arrays.asList(
+//                Aggregates.lookup("activities", "_id", "userId", "activityDetails"),
+//                Aggregates.lookup("conversations", "_id", "userId", "activityDetails"),
+//
+//                ));
+//    }
+
 
     private UserData documentToUser(Document userDocument) {
         UserData user = new UserData();

@@ -25,7 +25,6 @@ public class UserData {
     
     ArrayList<ObjectId> friend;
     ArrayList<ObjectId> blocked;
-    ArrayList<ObjectId> friend2;
 
     SimpleStringProperty address;
     SimpleObjectProperty<Date> dateOfBirth;
@@ -53,7 +52,6 @@ public class UserData {
         
         friend = new ArrayList<>();
         blocked = new ArrayList<>();
-        friend2 = new ArrayList<>();
     }
 
     public UserData(String newName, String newUsername, String newEmail, String currentStatus){
@@ -126,14 +124,6 @@ public class UserData {
         this.lastLogin.set(lastLogin);
     }
 
-//    public void setFriend(String friendCount) {
-////        this.friendCount.set(friendCount);
-//    }
-
-//    public void setBlocked(ObservableList<SimpleStringProperty> blocked) {
-////        this.blocked.set(blocked);
-//    }
-
     public void setDateCreated(Date dateCreated) {
         this.dateCreated.set(dateCreated);
     }
@@ -201,34 +191,8 @@ public class UserData {
         return dateFormat.format(date);
     }
 
-//     public String getFriend() {
-// //        return friendCount.get();
-//         StringBuilder res =  new StringBuilder();
-//         for (SimpleStringProperty i : friend){
-//             if (!i.getValueSafe().trim().isEmpty())
-//                 res.append(i.getValueSafe()).append(", ");
-//         }
-
-//         return !res.isEmpty() ? res.toString() : "No friends.";
-//     }
-
-    // public String getBlocked() {
-    //     StringBuilder res =  new StringBuilder();
-    //     for (SimpleStringProperty i : blocked){
-    //         if (!i.getValueSafe().trim().isEmpty())
-    //             res.append(i.getValueSafe()).append(", ");
-    //     }
-
-    //     return !res.isEmpty() ? res.toString() : "No blocked";
-    // }
-
-
     public ArrayList<ObjectId> getFriend() {
         return this.friend;
-    }
-
-    public ArrayList<ObjectId> getDummyValue(){
-        return this.friend2;
     }
 
     public ArrayList<ObjectId> getBlocked() {
@@ -238,7 +202,6 @@ public class UserData {
     public void setFriend(ArrayList<ObjectId> friend) {
         this.friend.clear();
         this.friend.addAll(friend);
-        this.friend2.addAll(friend);
     }
 
     public void setBlocked(ArrayList<ObjectId> blocked) {

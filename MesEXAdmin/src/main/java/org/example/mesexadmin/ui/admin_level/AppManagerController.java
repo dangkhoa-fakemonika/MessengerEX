@@ -22,10 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class AppManagerController implements ControllerWrapper {
     static SceneManager sceneManager;
@@ -40,7 +37,7 @@ public class AppManagerController implements ControllerWrapper {
     @FXML private TableColumn<ActivityData, String> loginDisplayNameCol;
     static ObservableList<ActivityData> loginData = FXCollections.observableArrayList();
     @FXML private ChoiceBox<String> loginFilter;
-    String[] loginFilterKeys = {"None", "username", "displayName"};
+    static String[] loginFilterKeys = {"None", "username", "displayName"};
     String currentLoginFilter = "None";
     @FXML private TextField loginFilterField;
 
@@ -52,39 +49,34 @@ public class AppManagerController implements ControllerWrapper {
     static ObservableList<UserData> newAccountData = FXCollections.observableArrayList();
     @FXML private ChoiceBox<String> newAccountFilter;
     @FXML private TextField newAccountFilterField;
-    String[] newAccountFilterKeys = {"None", "username", "email"};
+    static String[] newAccountFilterKeys = {"None", "username", "email"};
     String currentNewAccountFilter = "None";
     @FXML private DatePicker newAccountStartDate;
     @FXML private DatePicker newAccountEndDate;
     @FXML private CheckBox showAllNewAccounts;
 
-
-    @FXML private TableView<UserData> socialTable;
-    @FXML private TableView<UserData> activeTable;
+    static String[] monthNames = {"January", "February", "March", "April",
+            "May", "June", "July", "August", "September", "October", "November", "December"};
 
     // Yearly register
     @FXML private BarChart<String, Number> yearlyRegister;
     @FXML private CategoryAxis xRegisterAxis;
     @FXML private NumberAxis yRegisterAxis;
+    @FXML private ChoiceBox<String> registerSelectYear;
+    String registerSelectedYear = "All";
+    static ArrayList<String> registerYearOptions = new ArrayList<>();
+    static XYChart.Series<String, Number> registerChartData = new XYChart.Series<>();
 
     @FXML private BarChart<String, Number> yearlyActive;
     @FXML private CategoryAxis xActiveAxis;
     @FXML private NumberAxis yActiveAxis;
+    @FXML private ChoiceBox<String> activeSelectYear;
+    String activeSelectedYear = "All";
+    static ArrayList<String> activeYearOptions = new ArrayList<>();
+    static XYChart.Series<String, Number> activeChartData = new XYChart.Series<>();
 
-
-    void setUpRegisterBarChart(){
-        xRegisterAxis.setLabel("Month");
-        yRegisterAxis.setLabel("Numbers of new accounts");
-        yearlyRegister.setTitle("New account this year");
-
-        XYChart.Series<String, Number> year = new XYChart.Series<>();
-        year.setName("No. new accounts");
-        for (int i = 0; i < 6; i++){
-            year.getData().add(new XYChart.Data<>("Month " + i , 10 + i * 2));
-        }
-
-        yearlyRegister.getData().add(year);
-    }
+    @FXML private TableView<UserData> socialTable;
+    @FXML private TableView<UserData> activeTable;
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         sceneManager.addScene("Main", "main-messaging.fxml");
@@ -121,7 +113,18 @@ public class AppManagerController implements ControllerWrapper {
         newAccountStartDate.setOnAction(this::selectNewAccountFilter);
         newAccountEndDate.setOnAction(this::selectNewAccountFilter);
 
-        setUpRegisterBarChart();
+
+        xRegisterAxis.setLabel("Month");
+        yRegisterAxis.setLabel("Numbers of new accounts");
+        yearlyRegister.setTitle("New account this year");
+        registerSelectYear.setOnAction(this::selectRegisterBarChart);
+        yearlyRegister.setAnimated(false);
+
+        xActiveAxis.setLabel("Month");
+        yActiveAxis.setLabel("Numbers of new accounts");
+        yearlyActive.setTitle("New account this year");
+        activeSelectYear.setOnAction(this::selectActiveBarChart);
+        yearlyActive.setAnimated(false);
     }
 
     void refreshLoginData(){
@@ -205,7 +208,6 @@ public class AppManagerController implements ControllerWrapper {
             newAccountFilterField.setDisable(false);
             String filterText = newAccountFilterField.getText().trim();
 
-
             if (showAllNewAccounts.isSelected()){
                 newAccount = currentUser.myQuery.users().getNewUsersWithFilters(currentNewAccountFilter, filterText);
             }
@@ -225,9 +227,103 @@ public class AppManagerController implements ControllerWrapper {
         newAccountTable.refresh();
     }
 
+    void selectRegisterBarChart(ActionEvent actionEvent){
+        registerSelectedYear = registerSelectYear.getValue();
+
+        registerChartData = new XYChart.Series<>();
+
+        if (Objects.equals(registerSelectedYear, "All")){
+            registerChartData.setName("No. new accounts");
+            for (int i = 1; i < registerYearOptions.size(); i++){
+                int userRegisterCount = currentUser.myQuery.users().getNewUsersOnSectionCount(null, Integer.parseInt(registerYearOptions.get(i)));
+                if (userRegisterCount > 0)
+                    registerChartData.getData().add(new XYChart.Data<>(registerYearOptions.get(i), userRegisterCount));
+            }
+        }
+        else {
+            registerChartData.setName("No. new accounts");
+            for (int i = 1; i <= 12; i++) {
+                registerChartData.getData().add(new XYChart.Data<>(Integer.toString(i), currentUser.myQuery.users().getNewUsersOnSectionCount(i, Integer.parseInt(registerSelectedYear))));
+            }
+        }
+
+        yearlyRegister.getData().clear();
+        yearlyRegister.getData().add(registerChartData);
+    }
+
+    void refreshRegisterBarChart(){
+        registerYearOptions.clear();
+        registerYearOptions.add("All");
+        registerYearOptions.addAll(currentUser.myQuery.users().getRegisterUserYearIndexes());
+        registerSelectYear.getItems().clear();
+        registerSelectYear.getItems().addAll(registerYearOptions);
+        registerSelectYear.setValue("All");
+        registerSelectedYear = "All";
+
+        registerChartData = new XYChart.Series<>();
+
+        registerChartData.setName("No. new accounts");
+        for (int i = 1; i < registerYearOptions.size(); i++){
+            int userRegisterCount = currentUser.myQuery.users().getNewUsersOnSectionCount(null, Integer.parseInt(registerYearOptions.get(i)));
+            if (userRegisterCount > 0)
+                registerChartData.getData().add(new XYChart.Data<>(registerYearOptions.get(i), userRegisterCount));
+        }
+
+        yearlyRegister.getData().clear();
+        yearlyRegister.getData().add(registerChartData);
+    }
+
+    void selectActiveBarChart(ActionEvent actionEvent){
+        activeSelectedYear = activeSelectYear.getValue();
+
+        activeChartData = new XYChart.Series<>();
+
+        if (Objects.equals(activeSelectedYear, "All")){
+            activeChartData.setName("No. new accounts");
+            for (int i = 1; i < activeYearOptions.size(); i++){
+                int userRegisterCount = currentUser.myQuery.activities().getLoginOnSectionCount(null, Integer.parseInt(activeYearOptions.get(i)));
+                if (userRegisterCount > 0)
+                    activeChartData.getData().add(new XYChart.Data<>(activeYearOptions.get(i), userRegisterCount));
+            }
+        }
+        else {
+            activeChartData.setName("No. new accounts");
+            for (int i = 1; i <= 12; i++) {
+                activeChartData.getData().add(new XYChart.Data<>(Integer.toString(i), currentUser.myQuery.activities().getLoginOnSectionCount(i, Integer.parseInt(activeSelectedYear))));
+            }
+        }
+
+        yearlyActive.getData().clear();
+        yearlyActive.getData().add(activeChartData);
+    }
+
+    void refreshActiveBarChart(){
+        activeYearOptions.clear();
+        activeYearOptions.add("All");
+        activeYearOptions.addAll(currentUser.myQuery.activities().getLoginUserYearIndexes());
+        activeSelectYear.getItems().clear();
+        activeSelectYear.getItems().addAll(activeYearOptions);
+        activeSelectYear.setValue("All");
+        activeSelectedYear = "All";
+
+        activeChartData = new XYChart.Series<>();
+
+        activeChartData.setName("No. new accounts");
+        for (int i = 1; i < activeYearOptions.size(); i++){
+            int userRegisterCount = currentUser.myQuery.activities().getLoginOnSectionCount(null, Integer.parseInt(activeYearOptions.get(i)));
+            if (userRegisterCount > 0)
+                activeChartData.getData().add(new XYChart.Data<>(activeYearOptions.get(i), userRegisterCount));
+        }
+
+        yearlyActive.getData().clear();
+        yearlyActive.getData().add(activeChartData);
+    }
+
     @Override
     public void myInitialize() {
         refreshLoginData();
         refreshNewAccountData();
+        refreshRegisterBarChart();
+        refreshActiveBarChart();
     }
 }
