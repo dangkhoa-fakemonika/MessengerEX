@@ -1,8 +1,6 @@
 package org.example.mesexadmin.data_access;
 
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Sorts;
-import com.mongodb.client.model.Updates;
+import com.mongodb.client.model.*;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.example.mesexadmin.MongoManagement;
@@ -10,7 +8,6 @@ import org.example.mesexadmin.data_class.UserData;
 
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.UpdateResult;
 
 import java.time.Instant;
@@ -172,6 +169,17 @@ public class UserQuery {
         return true;
     }
 
+    public ArrayList<UserData> getAllUsers(){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        ArrayList<Document> results = new ArrayList<>();
+        users.find().into(results);
+        ArrayList<UserData> allUserData = new ArrayList<>();
+        for (Document res : results){
+            allUserData.add(documentToUser(res));
+        }
+        return allUserData;
+    }
+
     // get friend/ban list
     public ArrayList<UserData> getUserList(ArrayList<ObjectId> idList){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
@@ -286,15 +294,18 @@ public class UserQuery {
         return yearList;
     }
 
-//    public void getInApplicationActivities(){
+//    public int getFriendsOfFriends(){
 //        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+//        ArrayList<Document> results;
 //        users.aggregate(Arrays.asList(
-//                Aggregates.lookup("activities", "_id", "userId", "activityDetails"),
-//                Aggregates.lookup("conversations", "_id", "userId", "activityDetails"),
+//                Aggregates.lookup("user", "friend", "_id", "friendsData"),
+//                Aggregates.unwind("$friendsData"),
+//                Aggregates.lookup("user", "$friendsData.friend", "_id", "friendsFriend"),
 //
-//                ));
+//                Aggregates.count()
+//        ));
+//        return 100;
 //    }
-
 
     private UserData documentToUser(Document userDocument) {
         UserData user = new UserData();

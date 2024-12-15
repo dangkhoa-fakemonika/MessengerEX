@@ -1,5 +1,6 @@
 package org.example.mesexadmin.ui.admin_level;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -37,7 +38,7 @@ public class AppManagerController implements ControllerWrapper {
     @FXML private TableColumn<ActivityData, String> loginDisplayNameCol;
     static ObservableList<ActivityData> loginData = FXCollections.observableArrayList();
     @FXML private ChoiceBox<String> loginFilter;
-    static String[] loginFilterKeys = {"None", "username", "displayName"};
+    static final String[] loginFilterKeys = {"None", "username", "displayName"};
     String currentLoginFilter = "None";
     @FXML private TextField loginFilterField;
 
@@ -49,13 +50,13 @@ public class AppManagerController implements ControllerWrapper {
     static ObservableList<UserData> newAccountData = FXCollections.observableArrayList();
     @FXML private ChoiceBox<String> newAccountFilter;
     @FXML private TextField newAccountFilterField;
-    static String[] newAccountFilterKeys = {"None", "username", "email"};
+    static final String[] newAccountFilterKeys = {"None", "username", "email"};
     String currentNewAccountFilter = "None";
     @FXML private DatePicker newAccountStartDate;
     @FXML private DatePicker newAccountEndDate;
     @FXML private CheckBox showAllNewAccounts;
 
-    static String[] monthNames = {"January", "February", "March", "April",
+    static final String[] monthNames = {"January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October", "November", "December"};
 
     // Yearly register
@@ -67,6 +68,7 @@ public class AppManagerController implements ControllerWrapper {
     static ArrayList<String> registerYearOptions = new ArrayList<>();
     static XYChart.Series<String, Number> registerChartData = new XYChart.Series<>();
 
+    // Yearly login
     @FXML private BarChart<String, Number> yearlyActive;
     @FXML private CategoryAxis xActiveAxis;
     @FXML private NumberAxis yActiveAxis;
@@ -75,7 +77,22 @@ public class AppManagerController implements ControllerWrapper {
     static ArrayList<String> activeYearOptions = new ArrayList<>();
     static XYChart.Series<String, Number> activeChartData = new XYChart.Series<>();
 
+    // Mutual friends
     @FXML private TableView<UserData> socialTable;
+    static ObservableList<UserData> socialUserData = FXCollections.observableArrayList();
+    @FXML private TableColumn<UserData, String> socialUsernameCol;
+    @FXML private TableColumn<UserData, String> socialDisplayNameCol;
+    @FXML private TableColumn<UserData, Integer> socialDirectFriendCountCol;
+    @FXML private TableColumn<UserData, Integer> socialIndirectFriendCountCol;
+    @FXML private TextField socialCompareField;
+    @FXML private TextField socialFilterField;
+    @FXML private ChoiceBox<String> socialFilter;
+    static final String[] socialFilterKeys = {"None", "username", "displayName"};
+    String socialSelectedFilter = "None";
+    @FXML private ChoiceBox<String> socialCompare;
+    static final String[] socialCompareKeys = {"None", "Equal", "Greater", "Lesser"};
+    String socialSelectedCompare = "None";
+
     @FXML private TableView<UserData> activeTable;
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
@@ -113,7 +130,6 @@ public class AppManagerController implements ControllerWrapper {
         newAccountStartDate.setOnAction(this::selectNewAccountFilter);
         newAccountEndDate.setOnAction(this::selectNewAccountFilter);
 
-
         xRegisterAxis.setLabel("Month");
         yRegisterAxis.setLabel("Numbers of new accounts");
         yearlyRegister.setTitle("New account this year");
@@ -125,6 +141,11 @@ public class AppManagerController implements ControllerWrapper {
         yearlyActive.setTitle("New account this year");
         activeSelectYear.setOnAction(this::selectActiveBarChart);
         yearlyActive.setAnimated(false);
+
+        socialUsernameCol.setCellValueFactory((a) -> new SimpleStringProperty(a.getValue().getUsername()));
+        socialDisplayNameCol.setCellValueFactory((a) -> new SimpleStringProperty(a.getValue().getDisplayName()));
+        socialDirectFriendCountCol.setCellValueFactory((a) -> new SimpleObjectProperty<Integer>(a.getValue().getFriend().size()));
+        socialIndirectFriendCountCol.setCellValueFactory((a) -> new SimpleObjectProperty<Integer>(69));
     }
 
     void refreshLoginData(){
@@ -319,11 +340,20 @@ public class AppManagerController implements ControllerWrapper {
         yearlyActive.getData().add(activeChartData);
     }
 
+    void refreshSocialTable(){
+        ArrayList<UserData> socialUsers = currentUser.myQuery.users().getAllUsers();
+        socialUserData.clear();
+        socialUserData.addAll(socialUsers);
+        socialTable.setItems(socialUserData);
+        socialTable.refresh();
+    }
+
     @Override
     public void myInitialize() {
         refreshLoginData();
         refreshNewAccountData();
         refreshRegisterBarChart();
         refreshActiveBarChart();
+        refreshSocialTable();
     }
 }
