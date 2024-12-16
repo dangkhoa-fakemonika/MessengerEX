@@ -197,8 +197,6 @@ public class AppManagerController implements ControllerWrapper {
             socialPause.stop();
             socialPause.playFromStart();
         }));
-
-
     }
 
     void refreshLoginData(){

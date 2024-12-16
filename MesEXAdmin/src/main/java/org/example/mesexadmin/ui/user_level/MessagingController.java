@@ -1,5 +1,7 @@
 package org.example.mesexadmin.ui.user_level;
 
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -22,7 +24,6 @@ import org.example.mesexadmin.data_class.MessageData;
 import org.example.mesexadmin.ui.ControllerWrapper;
 import org.example.mesexadmin.ui.elements.ConversationListComponent;
 import org.example.mesexadmin.ui.elements.MessageListComponent;
-import javafx.scene.control.ButtonBar.ButtonData;
 
 import java.io.IOException;
 import java.net.URL;
@@ -45,11 +46,18 @@ public class MessagingController implements ControllerWrapper {
     @FXML private MenuItem logoutButton;
     @FXML private MenuItem addPrivateChat;
     @FXML private Button sendButton;
+    @FXML private Tab privateTab;
+    @FXML private Tab groupTab;
+    @FXML private TabPane messagesTabPane;
 
     // Load from database
     static ObservableList<ConversationListComponent> privateItems;
     static ObservableList<ConversationListComponent> groupItems;
     static ObservableList<MessageListComponent> messagesList;
+
+    public static boolean jumpToMessage = false;
+    static ConversationData jumpConversation = null;
+    static MessageData jumpMessage = null;
 
     public void addMessage(ActionEvent actionEvent){
         if (!myTextArea.getText().trim().isEmpty()){
@@ -62,6 +70,52 @@ public class MessagingController implements ControllerWrapper {
 //            messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
             myTextArea.setText("");
         }
+    }
+
+    public static void findMessage(ConversationData conversationData, MessageData messageData){
+        jumpMessage = messageData;
+        jumpConversation = conversationData;
+        jumpToMessage = true;
+    }
+
+    public void goToMessage() {
+        ConversationListComponent item = new ConversationListComponent(jumpConversation);
+        if (jumpConversation.getType().equals("private")) {
+            messagesTabPane.getSelectionModel().clearAndSelect(0);
+            privateList.scrollTo(item);
+            privateList.getSelectionModel().select(item);
+            privateList.getFocusModel().focus(privateItems.indexOf(item));
+        }
+        if (jumpConversation.getType().equals("group")) {
+            messagesTabPane.getSelectionModel().clearAndSelect(1);
+            groupList.scrollTo(item);
+            groupList.getSelectionModel().select(item);
+            groupList.getFocusModel().focus(groupItems.indexOf(item));
+        }
+
+        chatSelection();
+        currentConversation = item.getConversation();
+
+        jumpToMessage = false;
+        myTextArea.setDisable(false);
+        sendButton.setDisable(false);
+        optionButton.setDisable(false);
+
+        MessageListComponent itemM = new MessageListComponent(jumpMessage);
+        messages.scrollTo(itemM);
+        messages.getSelectionModel().select(itemM);
+        int indexMessage = -1;
+        for (int i = 0; i < messagesList.size(); i++){
+            if (messagesList.get(i).getMessage().getMessageId().equals(jumpMessage.getMessageId())){
+                indexMessage = i;
+                break;
+            }
+        }
+
+//        Platform.runLater(() -> {
+        messages.requestFocus();
+        messages.getFocusModel().focus(indexMessage);
+//        });
     }
 
     public void addMessage(){
@@ -102,9 +156,10 @@ public class MessagingController implements ControllerWrapper {
         for (MessageData mQuery : messageQuery){
             messagesList.add(new MessageListComponent(mQuery));
         }
-
         messages.getItems().clear();
         messages.getItems().addAll(messagesList);
+        messages.scrollTo(messagesList.size());
+        messages.refresh();
     }
 
     void refresh(){
@@ -128,6 +183,10 @@ public class MessagingController implements ControllerWrapper {
 
         groupList.refresh();
         privateList.refresh();
+        messagesList = FXCollections.observableArrayList();
+        messages.getItems().clear();
+        messages.scrollTo(messagesList.size());
+        messages.refresh();
     }
 
     
@@ -140,6 +199,8 @@ public class MessagingController implements ControllerWrapper {
 
         currentUser = Main.getCurrentUser();
         refresh();
+
+        if (jumpToMessage) goToMessage();
     }
 
     @Override
@@ -153,10 +214,9 @@ public class MessagingController implements ControllerWrapper {
                 if (c != null){
                     currentConversation = c.getConversation();
                     myLabel.setText("Selected Chat: " + currentConversation.getMembersName().toString());
+                    chatSelection();
                     myTextArea.setDisable(false);
                     sendButton.setDisable(false);
-                    chatSelection();
-
                     optionButton.setDisable(false);
                 }
             }
