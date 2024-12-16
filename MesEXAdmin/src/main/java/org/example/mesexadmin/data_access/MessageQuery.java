@@ -35,13 +35,10 @@ public class MessageQuery {
         return data;
     }
 
-    public ArrayList<MessageData> matchStringByUser(String key, ObjectId id){
+    public ArrayList<MessageData> lookUpByUserFilter(ObjectId id, String token){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
         ArrayList<Document> results = new ArrayList<>();
-        messages.find(
-                Filters.and(Filters.regex("content", key), Filters.eq("senderId", id))
-        ).into(results);
-
+        messages.find(Filters.and(Filters.eq("senderId", id), Filters.regex("content", token, "i")) ).into(results);
         ArrayList<MessageData> data = new ArrayList<>();
         for (Document res : results){
             data.add(documentToMessage(res));
@@ -50,20 +47,6 @@ public class MessageQuery {
         return data;
     }
 
-    public ArrayList<MessageData> matchStringByConversation(String key, ObjectId id){
-        MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
-        ArrayList<Document> results = new ArrayList<>();
-        messages.find(
-                Filters.and(Filters.regex("content", key), Filters.eq("conversationId", id))
-        ).into(results);
-
-        ArrayList<MessageData> data = new ArrayList<>();
-        for (Document res : results){
-            data.add(documentToMessage(res));
-        }
-
-        return data;
-    }
 
     public ArrayList<MessageData> lookUpByConv(ObjectId id){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
@@ -76,6 +59,19 @@ public class MessageQuery {
 
         return data;
     }
+
+    public ArrayList<MessageData> lookUpByConvFilter(ObjectId id, String token){
+        MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
+        ArrayList<Document> results = new ArrayList<>();
+        messages.find(Filters.and(Filters.eq("conversationId", id), Filters.regex("content",token, "i"))).into(results);
+        ArrayList<MessageData> data = new ArrayList<>();
+        for (Document res : results){
+            data.add(documentToMessage(res));
+        }
+
+        return data;
+    }
+
 
     public ArrayList<MessageData> lookUpAll(ObjectId id){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");

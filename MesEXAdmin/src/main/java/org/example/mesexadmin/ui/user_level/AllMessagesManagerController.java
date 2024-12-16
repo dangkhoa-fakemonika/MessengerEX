@@ -1,6 +1,7 @@
 package org.example.mesexadmin.ui.user_level;
 
 import javafx.animation.PauseTransition;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -23,11 +24,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class MessagesManagerController implements ControllerWrapper {
+public class AllMessagesManagerController implements ControllerWrapper {
     static SceneManager sceneManager;
     static SessionUser currentUser;
 
-    static ConversationData thisConversation;
     static MessageData selectedMessage;
 
     PauseTransition fieldPause;
@@ -35,17 +35,9 @@ public class MessagesManagerController implements ControllerWrapper {
     @FXML
     private ListView<MessageListComponent> chat;
     @FXML
-    private Button reportUserButton;
-    @FXML
-    private Button deleteOneButton;
-    @FXML
-    private Button deleteAllButton;
-    @FXML
     private TextField filterField;
     @FXML
     private Button jumpButton;
-    @FXML
-    private Label title;
 
     static ObservableList<MessageListComponent> loadedMessages;
 
@@ -54,63 +46,12 @@ public class MessagesManagerController implements ControllerWrapper {
         sceneManager.switchScene("Main");
     }
 
-    public void reportUser(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Report this user?");
-        newAlert.setHeaderText("Spam Report");
-        newAlert.showAndWait();
-    }
-
-    public void deleteAllMessages(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Delete all messages");
-        newAlert.setHeaderText("Delete all messages in the chat?");
-        newAlert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                if (currentUser.myQuery.messages().removeAllByGroup(thisConversation.getConversationId())){
-                    ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByConv(thisConversation.getConversationId());
-                    loadedMessages = FXCollections.observableArrayList();
-                    for (MessageData mQuery : messageQuery){
-                        loadedMessages.add(new MessageListComponent(mQuery));
-                    }
-
-                    chat.getItems().clear();
-                    chat.getItems().addAll(loadedMessages);
-                    chat.scrollTo(loadedMessages.size());
-                    chat.refresh();
-                }
-            }
-        });
-    }
-
-    public void deleteOneMessage(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Delete this");
-        newAlert.setHeaderText("");
-        newAlert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                if (currentUser.myQuery.messages().remove(selectedMessage.getMessageId())){
-                    ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByConv(thisConversation.getConversationId());
-                    loadedMessages = FXCollections.observableArrayList();
-                    for (MessageData mQuery : messageQuery){
-                        loadedMessages.add(new MessageListComponent(mQuery));
-                    }
-
-                    chat.getItems().clear();
-                    chat.getItems().addAll(loadedMessages);
-                    chat.scrollTo(loadedMessages.size());
-                    chat.refresh();
-                }
-            }
-        });
-    }
-
     public void updateMessages(){
         ArrayList<MessageData> messageQuery;
         String token = filterField.getText().trim();
         if (!token.isEmpty())
-            messageQuery = currentUser.myQuery.messages().lookUpByConvFilter(thisConversation.getConversationId(), token);
-        else messageQuery = currentUser.myQuery.messages().lookUpByConv(thisConversation.getConversationId());
+            messageQuery = currentUser.myQuery.messages().lookUpByUserFilter(currentUser.getSessionUserData().getUserId(), token);
+        else messageQuery = currentUser.myQuery.messages().lookUpByUser(currentUser.getSessionUserData().getUserId());
 
         loadedMessages = FXCollections.observableArrayList();
         for (MessageData mQuery : messageQuery){
@@ -124,20 +65,22 @@ public class MessagesManagerController implements ControllerWrapper {
     }
 
     public void jumpTo() throws IOException {
-        MessagingController.findMessage(thisConversation, selectedMessage);
+        ConversationData findConversation = currentUser.myQuery.conversations().getConversation(selectedMessage.getConversationId());
+        findConversation.getMembersId().forEach((id) ->
+                findConversation.getMembersName().add(new SimpleStringProperty(currentUser.myQuery.users().getUserById(id).getUsername())));
+        findConversation.getModeratorsId().forEach((id) ->
+                findConversation.getModeratorsName().add(new SimpleStringProperty(currentUser.myQuery.users().getUserById(id).getUsername())));
+        MessagingController.findMessage(findConversation, selectedMessage);
         sceneManager.addScene("Main", "main-messaging.fxml");
         sceneManager.switchScene("Main");
     }
 
     @Override
     public void myInitialize() {
-        deleteOneButton.setDisable(true);
         jumpButton.setDisable(true);
-        thisConversation = MessagingController.currentConversation;
-        title.setText(thisConversation.getConversationName());
         selectedMessage = null;
 
-        ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByConv(thisConversation.getConversationId());
+        ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByUser(currentUser.getSessionUserData().getUserId());
         loadedMessages = FXCollections.observableArrayList();
         for (MessageData mQuery : messageQuery){
             loadedMessages.add(new MessageListComponent(mQuery));
@@ -163,7 +106,6 @@ public class MessagesManagerController implements ControllerWrapper {
                     if (sM != null){
                         selectedMessage = sM.getMessage();
                         System.out.println(selectedMessage.getContent());
-                        deleteOneButton.setDisable(false);
                         jumpButton.setDisable(false);
                     }
                 }

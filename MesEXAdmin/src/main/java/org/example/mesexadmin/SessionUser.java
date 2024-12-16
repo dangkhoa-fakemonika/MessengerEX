@@ -244,6 +244,7 @@ public class SessionUser {
         return myQuery.users().removeBlock(currentUser.getUserId(), targetId);
     }
 
+
     public ArrayList<ConversationData> loadAllConversations(){
         ArrayList<ConversationData> convData = myQuery.conversations().getUserAllConversation(currentUser.getUserId());
         convData.forEach((conv) -> {
