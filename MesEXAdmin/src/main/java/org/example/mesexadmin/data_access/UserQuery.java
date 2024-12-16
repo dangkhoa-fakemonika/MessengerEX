@@ -212,11 +212,41 @@ public class UserQuery {
         return data;
     }
 
+    public ArrayList<UserData> getUserListWithFilter(ArrayList<ObjectId> idList, String field, String value){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        ArrayList<UserData> data = new ArrayList<>();
+
+        Document query = new Document("_id", new Document("$in", idList)).append(field, new Document("$regex", value).append("$options", "i"));
+
+        ArrayList<Document> result = users.find(query).into(new ArrayList<>());
+
+        for (Document doc : result) {
+            data.add(documentToUser(doc));
+        }
+
+        return data;
+    }
+
     public ArrayList<UserData> getOnlineUserList(ArrayList<ObjectId> idList) {
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
         ArrayList<UserData> data = new ArrayList<>();
 
         Document query = new Document("_id", new Document("$in", idList)).append("status", "online");
+
+        ArrayList<Document> result = users.find(query).into(new ArrayList<>());
+
+        for (Document doc : result) {
+            data.add(documentToUser(doc));
+        }
+
+        return data;
+    }
+
+    public ArrayList<UserData> getOnlineUserListWithFilter(ArrayList<ObjectId> idList, String field, String value) {
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        ArrayList<UserData> data = new ArrayList<>();
+
+        Document query = new Document("_id", new Document("$in", idList)).append("status", "online").append(field, new Document("$regex", value).append("$options", "i"));
 
         ArrayList<Document> result = users.find(query).into(new ArrayList<>());
 

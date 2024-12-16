@@ -212,12 +212,24 @@ public class SessionUser {
         return myQuery.users().getUserList(currentUser.getFriend());
     }
 
+    public ArrayList<UserData> getFriendListWithFilter(String field, String value) {
+        return myQuery.users().getUserListWithFilter(currentUser.getFriend(), field, value);
+    }
+
     public ArrayList<UserData>  getBlockedList() {
         return myQuery.users().getUserList(currentUser.getBlocked());
     }
 
+    public ArrayList<UserData>  getBlockedListWithFilter(String field, String value) {
+        return myQuery.users().getUserListWithFilter(currentUser.getBlocked(), field, value);
+    }
+
     public ArrayList<UserData> getOnlineFriendList() {
         return myQuery.users().getOnlineUserList(currentUser.getFriend());
+    }
+
+    public ArrayList<UserData> getOnlineFriendListWithFilter(String field, String value) {
+        return myQuery.users().getOnlineUserListWithFilter(currentUser.getFriend(), field, value);
     }
 
     public ArrayList<FriendRequestData> getReceivedRequests() {

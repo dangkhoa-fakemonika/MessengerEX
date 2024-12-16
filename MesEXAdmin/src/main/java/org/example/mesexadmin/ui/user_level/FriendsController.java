@@ -1,5 +1,6 @@
 package org.example.mesexadmin.ui.user_level;
 
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -58,6 +60,8 @@ public class FriendsController implements ControllerWrapper {
     @FXML private TableColumn<UserData, String> onlineUsernameColumn;
     @FXML private TableColumn<UserData, String> onlineGenderColumn;
     @FXML private TableColumn<UserData, String> onlineLoginAtColumn;
+    @FXML private ChoiceBox<String> onlineFilter;
+    @FXML private TextField onlineFilterField;
 
     // All friend table
     @FXML private TableView<UserData> friendsTable;
@@ -68,12 +72,16 @@ public class FriendsController implements ControllerWrapper {
     @FXML private TableColumn<UserData, String> friendsStatusColumn;
     @FXML private TableColumn<UserData, String> friendsLastLoginColumn;
     @FXML private TableColumn<UserData, String> friendsJoinedDateColumn;
+    @FXML private ChoiceBox<String> friendsFilter;
+    @FXML private TextField friendsFilterField;
 
     // Sent request table
     @FXML private TableView<FriendRequestData> sentRequestsTable;
     @FXML private TableColumn<FriendRequestData, String> sentRequestsUsernameColumn;
     @FXML private TableColumn<FriendRequestData, String> sentRequestsDateColumn;
     @FXML private Button removeFriendRequestButton;
+    @FXML private ChoiceBox<String> sentRequestsFilter;
+    @FXML private TextField sentRequestsFilterField;
 
     // Received request table
     @FXML private TableView<FriendRequestData> receivedRequestsTable;
@@ -81,16 +89,26 @@ public class FriendsController implements ControllerWrapper {
     @FXML private TableColumn<FriendRequestData, String> receivedRequestsDateColumn;
     @FXML private Button acceptRequestButton;
     @FXML private Button rejectFriendRequestButton;
+    @FXML private ChoiceBox<String> receivedRequestsFilter;
+    @FXML private TextField receivedRequestsFilterField;
 
     // Blocked table
     @FXML private TableView<UserData> blockedTable;
     @FXML private TableColumn<UserData,  String> blockedNameColumn;
     @FXML private TableColumn<UserData, String> blockedUsernameColumn;
     @FXML private Button unblockUserkButton;
+    @FXML private ChoiceBox<String> blockedFilter;
+    @FXML private TextField blockedFilterField;
 
     // Selected row
     static UserData currentOnline, currentFriend, currentBlocked;
     static FriendRequestData currentSentRequest, currentReceivedRequest;
+
+    // Selected filter
+    static ChoiceBox<String> currentFilter;
+    static TextField currentFilterField;
+    static String previousFilterOption;
+    static String currentFilterOption;
 
     // Data list
     final ObservableList<UserData> onlineData = FXCollections.observableArrayList();
@@ -99,11 +117,22 @@ public class FriendsController implements ControllerWrapper {
     final ObservableList<FriendRequestData> receivedRequests = FXCollections.observableArrayList();
     final ObservableList<FriendRequestData> sentRequests = FXCollections.observableArrayList();
 
-    private ScheduledService<Void> getOnlineData;
-    private ScheduledService<Void> getFriendData;
-    private ScheduledService<Void> getBlockedData;
-    private ScheduledService<Void> getReceivedRequests;
-    private ScheduledService<Void> getSentRequests;
+    // Update data task
+    private ScheduledService<Void> updateOnlineData;
+    private ScheduledService<Void> updateFriendData;
+    private ScheduledService<Void> updateBlockedData;
+    private ScheduledService<Void> updateReceivedRequests;
+    private ScheduledService<Void> updateSentRequests;
+
+    // Utility
+    private PauseTransition onlineFilterPause;
+    private PauseTransition friendsFilterPause;
+    private PauseTransition blockedFilterPause;
+    private PauseTransition sentRequestsFilterPause;
+    private PauseTransition receivedRequestsFilterPause;
+    private String[] userFilterKeys = {"None", "username", "displayName"};
+    private String[] requestFilterKeys = {"None", "username"};
+    private HashMap<String, String> filterMap = new HashMap<>();
 
     public void addFriend(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-add.fxml"));
@@ -171,8 +200,38 @@ public class FriendsController implements ControllerWrapper {
     @Override
     public void myInitialize() {
         currentUser = Main.getCurrentUser();
-        
-        initiateGetData();
+
+        filterMap.put("online", "None");
+        filterMap.put("blocked", "None");
+        filterMap.put("friends", "None");
+        filterMap.put("sentRequests", "None");
+        filterMap.put("receivedRequests", "None");
+
+        onlineFilter.setValue("None");
+        friendsFilter.setValue("None");
+        blockedFilter.setValue("None");
+        sentRequestsFilter.setValue("None");
+        receivedRequestsFilter.setValue("None");
+
+        currentFilter = onlineFilter;
+        currentFilterField = onlineFilterField;
+
+        initiateUpdateTask();
+
+        onlineFilter.setOnAction((e) -> updateOnlineData.restart());
+        onlineFilterPause.setOnFinished((e) -> updateOnlineData.restart());
+
+        friendsFilter.setOnAction((e) -> updateFriendData.restart());
+        friendsFilterPause.setOnFinished((e) -> updateFriendData.restart());
+
+        blockedFilter.setOnAction((e) -> updateBlockedData.restart());
+        blockedFilterPause.setOnFinished((e) -> updateBlockedData.restart());
+
+        sentRequestsFilter.setOnAction((e) -> updateSentRequests.restart());
+        sentRequestsFilterPause.setOnFinished((e) -> updateSentRequests.restart());
+
+        receivedRequestsFilter.setOnAction((e) -> updateReceivedRequests.restart());
+        receivedRequestsFilterPause.setOnFinished((e) -> updateReceivedRequests.restart());
     }
 
     @Override
@@ -180,17 +239,41 @@ public class FriendsController implements ControllerWrapper {
         sceneManager = Main.getSceneManager();
         currentUser = Main.getCurrentUser();
 
-        returnToMainButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                try {
-                    pauseAllServices();
-                    sceneManager.addScene("Main", "main-messaging.fxml");
-                    sceneManager.switchScene("Main");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+        // Set up filter
+        onlineFilter.getItems().addAll(userFilterKeys);
+        friendsFilter.getItems().addAll(userFilterKeys);
+        blockedFilter.getItems().addAll(userFilterKeys);
+        sentRequestsFilter.getItems().addAll(requestFilterKeys);
+        receivedRequestsFilter.getItems().addAll(requestFilterKeys);
+
+        onlineFilterPause = new PauseTransition(Duration.millis(500));
+        onlineFilterField.textProperty().addListener((observableValue, o, n) -> {
+            onlineFilterPause.stop();
+            onlineFilterPause.playFromStart();
+        });
+
+        friendsFilterPause = new PauseTransition(Duration.millis(500));
+        friendsFilterField.textProperty().addListener((observableValue, o, n) -> {
+            friendsFilterPause.stop();
+            friendsFilterPause.playFromStart();
+        });
+
+        blockedFilterPause = new PauseTransition(Duration.millis(500));
+        blockedFilterField.textProperty().addListener((observableValue, o, n) -> {
+            blockedFilterPause.stop();
+            blockedFilterPause.playFromStart();
+        });
+
+        sentRequestsFilterPause = new PauseTransition(Duration.millis(500));
+        sentRequestsFilterField.textProperty().addListener((observableValue, o, n) -> {
+            sentRequestsFilterPause.stop();
+            sentRequestsFilterPause.playFromStart();
+        });
+
+        receivedRequestsFilterPause = new PauseTransition(Duration.millis(500));
+        receivedRequestsFilterField.textProperty().addListener((observableValue, o, n) -> {
+            receivedRequestsFilterPause.stop();
+            receivedRequestsFilterPause.playFromStart();
         });
 
         // Online friend table
@@ -341,6 +424,19 @@ public class FriendsController implements ControllerWrapper {
                 });
             };
         });
+
+        returnToMainButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                try {
+                    cancelAllTasks();
+                    sceneManager.addScene("Main", "main-messaging.fxml");
+                    sceneManager.switchScene("Main");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private boolean acceptFriendRequest() {
@@ -355,40 +451,49 @@ public class FriendsController implements ControllerWrapper {
         return currentUser.unblockUser(blockedUser.getUserId());
     }
 
-    private void initiateGetData() {
-        getOnlineData = initiateGetUserDataTask(onlineData, "online");
-        getOnlineData.setPeriod(Duration.seconds(30));
-        getOnlineData.start();  // This task run upon entry
+    private void initiateUpdateTask() {
+        updateOnlineData = initiateGetUserDataTask(onlineData, "online");
+        updateOnlineData.setPeriod(Duration.seconds(60));
+        updateOnlineData.start();  // This task run upon entry
 
-        getFriendData = initiateGetUserDataTask(friendData, "friends");
-        getFriendData.setPeriod(Duration.seconds(30));
+        updateFriendData = initiateGetUserDataTask(friendData, "friends");
+        updateFriendData.setPeriod(Duration.seconds(60));
 
-        getBlockedData = initiateGetUserDataTask(blockedData, "blocked");
-        getBlockedData.setPeriod(Duration.seconds(30)); 
+        updateBlockedData = initiateGetUserDataTask(blockedData, "blocked");
+        updateBlockedData.setPeriod(Duration.seconds(60)); 
 
-        getSentRequests = initiateGetFriendRequesstDataTask(sentRequests, "sentRequests");
-        getSentRequests.setPeriod(Duration.seconds(30));
+        updateSentRequests = initiateGetFriendRequesstDataTask(sentRequests, "sentRequests");
+        updateSentRequests.setPeriod(Duration.seconds(60));
 
-        getReceivedRequests = initiateGetFriendRequesstDataTask(receivedRequests, "reveicedRequests");
-        getReceivedRequests.setPeriod(Duration.seconds(30));
+        updateReceivedRequests = initiateGetFriendRequesstDataTask(receivedRequests, "reveicedRequests");
+        updateReceivedRequests.setPeriod(Duration.seconds(60));
     }
 
     private void handleSwitchTab(Tab tab) {
         if (tab == onlineTab) {
-            System.out.println("onl");
-            getOnlineData.restart();
+            currentFilter = onlineFilter;
+            currentFilterField = onlineFilterField;
+            updateOnlineData.restart();
+
         } else if (tab == friendsTab) {
-            System.out.println("friend");
-            getFriendData.restart();
+            currentFilter = friendsFilter;
+            currentFilterField = friendsFilterField;
+            updateFriendData.restart();
+
         } else if (tab == blockedUsersTab) {
-            System.out.println("blocked");
-            getBlockedData.restart();
+            currentFilter = blockedFilter;
+            currentFilterField = blockedFilterField;
+            updateBlockedData.restart();
+
         } else if (tab == sentRequestsTab) {
-            System.out.println("sent");
-            getSentRequests.restart();
+            currentFilter = sentRequestsFilter;
+            currentFilterField = sentRequestsFilterField;
+            updateSentRequests.restart();
+
         } else if (tab == receivedRequestsTab) {
-            System.out.println("receiv");
-            getReceivedRequests.restart();
+            currentFilter = receivedRequestsFilter;
+            currentFilterField = receivedRequestsFilterField;
+            updateReceivedRequests.restart();
         }
     }
 
@@ -400,9 +505,9 @@ public class FriendsController implements ControllerWrapper {
                     @Override
                     protected Void call() throws Exception {
                         Platform.runLater(() -> {
-                            System.out.println("start fet");
-                            getUserDataList(tab).stream().filter(item -> !data.contains(item)).forEach(data::add);
-                            System.out.println("end fet");
+                            ArrayList<UserData> newData = getUserDataList(tab);
+                            data.setAll(newData);
+                            updateFilterField(tab);
                         });
                         return null;
                     }
@@ -419,9 +524,9 @@ public class FriendsController implements ControllerWrapper {
                     @Override
                     protected Void call() throws Exception {
                         Platform.runLater(() -> {
-                            System.out.println("start fet");
-                            getFriendRequestDataList(tab).stream().filter(item -> !data.contains(item)).forEach(data::add);
-                            System.out.println("end fet");
+                            ArrayList<FriendRequestData> newData = getFriendRequestDataList(tab);
+                            data.setAll(newData);
+                            updateFilterField(tab);
                         });
                         return null;
                     }
@@ -431,28 +536,61 @@ public class FriendsController implements ControllerWrapper {
     }
 
     private ArrayList<UserData> getUserDataList(String tab) {
+        String filterKey = currentFilterField.getText();
+        String filterOption = currentFilter.getValue();
+        boolean isFilter = !filterOption.equals("None") && !filterKey.isEmpty();
+
         if (tab.equals("online")) {
-            return currentUser.getOnlineFriendList();
+            if (isFilter)
+                return currentUser.getOnlineFriendListWithFilter(filterOption, filterKey);
+            else 
+                return currentUser.getOnlineFriendList();
         } else if (tab.equals("friends")) {
-            return currentUser.getFriendList();
+            if (isFilter)
+                return currentUser.getFriendListWithFilter(filterOption, filterKey);
+            else
+                return currentUser.getFriendList();
         } else {
-            return currentUser.getBlockedList();
+            filterOption = blockedFilter.getValue();
+            if (isFilter)
+                return currentUser.getBlockedListWithFilter(filterOption, filterKey);
+            else
+                return currentUser.getBlockedList();
         }
     }
 
     private ArrayList<FriendRequestData> getFriendRequestDataList(String tab) {
+        String filterKey = currentFilterField.getText();
+        String filterOption = currentFilter.getValue();
+        boolean isFilter = !filterOption.equals("None") && !filterKey.isEmpty();
+
         if (tab.equals("sentRequests")) {
-            return currentUser.getSentRequests();
+            if (isFilter)
+                return currentUser.getSentRequests();
+            else
+                return currentUser.getSentRequests();
         } else {
-            return currentUser.getReceivedRequests();
+            if (isFilter)
+                return currentUser.getReceivedRequests();
+            else
+                return currentUser.getReceivedRequests();
         }
     }
-    
-    private void pauseAllServices() {
-        getOnlineData.cancel();
-        getFriendData.cancel();
-        getBlockedData.cancel();
-        getSentRequests.cancel();
-        getReceivedRequests.cancel();
+
+    private void updateFilterField(String tab) {
+        if (currentFilter.getValue().equals("None")) {
+            currentFilterField.clear();
+            currentFilterField.setDisable(true);
+        } else {
+            currentFilterField.setDisable(false);
+        }    
+    }
+
+    private void cancelAllTasks() {
+        updateOnlineData.cancel();
+        updateFriendData.cancel();
+        updateBlockedData.cancel();
+        updateSentRequests.cancel();
+        updateReceivedRequests.cancel();
     }
 }
