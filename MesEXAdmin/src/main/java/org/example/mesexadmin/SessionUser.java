@@ -5,6 +5,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Properties;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -270,6 +271,34 @@ public class SessionUser {
                     conv.getModeratorsName().add(new SimpleStringProperty(myQuery.users().getUserById(id).getUsername())));
         });
         return convData;
+    }
+
+    public int GetIndirectFriendsCount(ObjectId targetId){
+        return myQuery.users().getFriendsOfFriends(targetId);
+    }
+
+    public ArrayList<UserData> loadUserFriendsStatus(){
+        return myQuery.users().getAllUsers();
+    }
+
+    public ArrayList<UserData> loadUserFriendsStatusFilter(String filterRange, Integer value, String key, String token){
+        ArrayList<UserData> friendsData;
+        if (key != null && token != null)
+             friendsData = myQuery.users().getAllUsersFilter(key, token);
+        else
+            friendsData = myQuery.users().getAllUsers();
+
+        ArrayList<UserData> returnData = new ArrayList<>();
+
+        friendsData.forEach((d) -> {
+            if ((Objects.equals(filterRange, "Equal to") && d.getFriend().size() == value) ||
+                    (Objects.equals(filterRange, "Greater than") && d.getFriend().size() > value) ||
+                    (Objects.equals(filterRange, "Lesser than") && d.getFriend().size() < value) ||
+                    Objects.equals(filterRange, "None"))
+                returnData.add(d);
+        });
+
+        return returnData;
     }
                 
     private static boolean sendResetPasswordEmail(String emailTo, String newPassword) {

@@ -1,7 +1,9 @@
 package org.example.mesexadmin.data_access;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.client.model.*;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.example.mesexadmin.MongoManagement;
 import org.example.mesexadmin.data_class.UserData;
@@ -10,6 +12,8 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 
+import javax.print.Doc;
+import java.awt.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -180,6 +184,18 @@ public class UserQuery {
         return allUserData;
     }
 
+    public ArrayList<UserData> getAllUsersFilter(String key, String token){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        ArrayList<Document> results = new ArrayList<>();
+        users.find(Filters.regex(key, token)).into(results);
+        ArrayList<UserData> allUserData = new ArrayList<>();
+        for (Document res : results){
+            allUserData.add(documentToUser(res));
+        }
+        return allUserData;
+    }
+
+
     // get friend/ban list
     public ArrayList<UserData> getUserList(ArrayList<ObjectId> idList){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
@@ -294,18 +310,31 @@ public class UserQuery {
         return yearList;
     }
 
-//    public int getFriendsOfFriends(){
-//        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
-//        ArrayList<Document> results;
-//        users.aggregate(Arrays.asList(
-//                Aggregates.lookup("user", "friend", "_id", "friendsData"),
-//                Aggregates.unwind("$friendsData"),
-//                Aggregates.lookup("user", "$friendsData.friend", "_id", "friendsFriend"),
-//
-//                Aggregates.count()
-//        ));
-//        return 100;
-//    }
+    public int getFriendsOfFriends(ObjectId targetId){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+//        ArrayList<Document> results = new ArrayList<>();
+
+        Document result = users.aggregate(Arrays.asList(
+                Aggregates.match(Filters.eq("_id", targetId)),
+                Aggregates.lookup("users", "friend", "_id", "FriendsList"),
+                Aggregates.unwind("$FriendsList"),
+                Aggregates.lookup("users", "FriendsList.friend", "_id", "SecondFriendsList"),
+                Aggregates.unwind("$SecondFriendsList"),
+                Aggregates.match(Filters.ne("SecondFriendsList._id",targetId)),
+//                Aggregates.match(Filters.ne("SecondFriendsList._id", "_id")),
+//                BasicDBObject.parse("{$match: {$expr: {$ne : [\"$_id\", \"$SecondFriendsList._id\"]}}},"),
+                Aggregates.group("$_id", Accumulators.sum("count", 1))
+        )).first();
+
+
+        try{
+            if (result == null)
+                return 0;
+            return result.getInteger("count");
+        } catch (Exception e){
+            return 0;
+        }
+    }
 
     private UserData documentToUser(Document userDocument) {
         UserData user = new UserData();

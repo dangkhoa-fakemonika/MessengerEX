@@ -3,6 +3,8 @@ package org.example.mesexadmin.ui.admin_level;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -90,7 +92,7 @@ public class AppManagerController implements ControllerWrapper {
     static final String[] socialFilterKeys = {"None", "username", "displayName"};
     String socialSelectedFilter = "None";
     @FXML private ChoiceBox<String> socialCompare;
-    static final String[] socialCompareKeys = {"None", "Equal", "Greater", "Lesser"};
+    static final String[] socialCompareKeys = {"None", "Equal to", "Greater than", "Lesser than"};
     String socialSelectedCompare = "None";
 
     @FXML private TableView<UserData> activeTable;
@@ -145,7 +147,29 @@ public class AppManagerController implements ControllerWrapper {
         socialUsernameCol.setCellValueFactory((a) -> new SimpleStringProperty(a.getValue().getUsername()));
         socialDisplayNameCol.setCellValueFactory((a) -> new SimpleStringProperty(a.getValue().getDisplayName()));
         socialDirectFriendCountCol.setCellValueFactory((a) -> new SimpleObjectProperty<Integer>(a.getValue().getFriend().size()));
-        socialIndirectFriendCountCol.setCellValueFactory((a) -> new SimpleObjectProperty<Integer>(69));
+        socialIndirectFriendCountCol.setCellValueFactory((a) -> new SimpleObjectProperty<Integer>(
+                currentUser.GetIndirectFriendsCount(a.getValue().getUserId())));
+        socialFilter.getItems().addAll(socialFilterKeys);
+        socialCompare.getItems().addAll(socialCompareKeys);
+        socialFilter.setOnAction(this::selectSocialTable);
+        socialCompare.setOnAction(this::selectSocialTable);
+        socialFilterField.textProperty().addListener(((observableValue, s, t1) -> {
+            selectSocialTable(null);
+        }));
+        socialCompareField.textProperty().addListener(((observableValue, s, t1) -> {
+            selectSocialTable(null);
+        }));
+
+        socialCompareField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    socialCompareField.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+
     }
 
     void refreshLoginData(){
@@ -340,8 +364,38 @@ public class AppManagerController implements ControllerWrapper {
         yearlyActive.getData().add(activeChartData);
     }
 
+    void selectSocialTable(ActionEvent actionEvent){
+        socialSelectedFilter = socialFilter.getValue();
+        socialSelectedCompare = socialCompare.getValue();
+
+        socialFilterField.setDisable(Objects.equals(socialSelectedFilter, "None"));
+        socialCompareField.setDisable(Objects.equals(socialSelectedCompare, "None"));
+
+        String filterField = socialFilterField.getText().trim();
+        int compareField = 0;
+        if (!socialCompareField.getText().trim().isEmpty())
+            compareField = Integer.parseInt(socialCompareField.getText().trim());
+
+        if (Objects.equals(socialSelectedFilter, "None") || filterField.isEmpty()){
+            filterField = null;
+        }
+
+        ArrayList<UserData> socialUsers = currentUser.loadUserFriendsStatusFilter(socialSelectedCompare, compareField, socialSelectedFilter, filterField);
+
+        socialUserData.clear();
+        socialUserData.addAll(socialUsers);
+        socialTable.setItems(socialUserData);
+        socialTable.refresh();
+    }
+
     void refreshSocialTable(){
-        ArrayList<UserData> socialUsers = currentUser.myQuery.users().getAllUsers();
+        socialSelectedFilter = "None";
+        socialSelectedCompare = "None";
+        socialFilter.setValue("None");
+        socialCompare.setValue("None");
+        socialFilterField.setDisable(true);
+        socialCompareField.setDisable(true);
+        ArrayList<UserData> socialUsers = currentUser.loadUserFriendsStatusFilter("None", 0, null, null);
         socialUserData.clear();
         socialUserData.addAll(socialUsers);
         socialTable.setItems(socialUserData);
