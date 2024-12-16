@@ -75,7 +75,7 @@ public class ActivityQuery {
                         Projections.computed("displayName", "$userDetails.displayName"),
                         Projections.include("loginDate")
                 )),
-                Aggregates.match(Filters.regex(key, token))
+                Aggregates.match(Filters.regex(key, token, "i"))
         )).into(results);
 
         ArrayList<ActivityData> loginLogs = new ArrayList<>();

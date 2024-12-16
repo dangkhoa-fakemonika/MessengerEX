@@ -115,14 +115,14 @@
                                     <TableView fx:id="socialTable" layoutY="49.0" prefHeight="433.0" prefWidth="798.0">
                                        <columns>
                                           <TableColumn fx:id="socialUsernameCol" prefWidth="146.3999908566475" text="Username" />
-                                          <TableColumn fx:id="socialDisplayNameCol" prefWidth="235.2000274658203" text="Display Name" />
-                                          <TableColumn fx:id="socialDirectFriendCountCol" prefWidth="216.79998779296875" text="Direct Friend" />
-                                          <TableColumn fx:id="socialIndirectFriendCountCol" prefWidth="203.20001220703125" text="Indirect Friend" />
+                                          <TableColumn fx:id="socialDisplayNameCol" prefWidth="241.59999084472656" text="Display Name" />
+                                          <TableColumn fx:id="socialDirectFriendCountCol" prefWidth="207.20001220703125" text="Direct Friends" />
+                                          <TableColumn fx:id="socialIndirectFriendCountCol" prefWidth="203.20001220703125" text="Indirect Friends" />
                                        </columns></TableView>
                                     <TextField fx:id="socialFilterField" layoutX="6.0" layoutY="14.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter" />
                                     <ChoiceBox fx:id="socialFilter" layoutX="151.0" layoutY="14.0" prefHeight="26.0" prefWidth="96.0" />
-                                    <TextField fx:id="socialCompareField" layoutX="382.0" layoutY="14.0" prefHeight="26.0" prefWidth="130.0" promptText="Friends Count" />
-                                    <ChoiceBox fx:id="socialCompare" layoutX="524.0" layoutY="14.0" prefHeight="26.0" prefWidth="96.0" />
+                                    <TextField fx:id="socialCompareField" layoutX="653.0" layoutY="14.0" prefHeight="26.0" prefWidth="130.0" promptText="Friends Count" />
+                                    <ChoiceBox fx:id="socialCompare" layoutX="542.0" layoutY="14.0" prefHeight="26.0" prefWidth="96.0" />
                                  </children>
                               </AnchorPane>
                            </content>

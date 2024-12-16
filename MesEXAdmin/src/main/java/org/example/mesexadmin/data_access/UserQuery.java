@@ -187,7 +187,7 @@ public class UserQuery {
     public ArrayList<UserData> getAllUsersFilter(String key, String token){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
         ArrayList<Document> results = new ArrayList<>();
-        users.find(Filters.regex(key, token)).into(results);
+        users.find(Filters.regex(key, token, "i")).into(results);
         ArrayList<UserData> allUserData = new ArrayList<>();
         for (Document res : results){
             allUserData.add(documentToUser(res));
@@ -253,7 +253,7 @@ public class UserQuery {
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
         ArrayList<Document> results = new ArrayList<>();
 
-        users.find(Filters.regex(key, token)).into(results);
+        users.find(Filters.regex(key, token, "i")).into(results);
 
         ArrayList<UserData> userData = new ArrayList<>();
         results.forEach((res) -> userData.add(documentToUser(res)));
@@ -265,7 +265,7 @@ public class UserQuery {
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
         ArrayList<Document> results = new ArrayList<>();
 
-        users.find(Filters.and(Filters.regex(key, token), Filters.lte("dateCreated", endDate), Filters.gte("dateCreated", startDate))).into(results);
+        users.find(Filters.and(Filters.regex(key, token , "i"), Filters.lte("dateCreated", endDate), Filters.gte("dateCreated", startDate))).into(results);
 
         ArrayList<UserData> userData = new ArrayList<>();
         results.forEach((res) -> userData.add(documentToUser(res)));

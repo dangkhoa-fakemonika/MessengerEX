@@ -1,5 +1,6 @@
 package org.example.mesexadmin.ui.admin_level;
 
+import javafx.animation.PauseTransition;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +15,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.util.Duration;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
@@ -30,6 +32,7 @@ import java.util.*;
 public class AppManagerController implements ControllerWrapper {
     static SceneManager sceneManager;
     static SessionUser currentUser;
+    PauseTransition pause;
 
     @FXML private TableView<ActivityData> userTable;
 
@@ -96,6 +99,17 @@ public class AppManagerController implements ControllerWrapper {
     String socialSelectedCompare = "None";
 
     @FXML private TableView<UserData> activeTable;
+    @FXML private TextField activeFilterField;
+    @FXML private TextField activeCompareField;
+    @FXML private TableColumn<UserData, String> activeUsernameCol;
+    @FXML private TableColumn<UserData, Integer> activeTotalLoginCol;
+    @FXML private TableColumn<UserData, Integer> activeTotalPrivateChatCol;
+    @FXML private TableColumn<UserData, Integer> activeTotalGroupChatCol;
+    @FXML private TableColumn<UserData, Integer> activeTotalMessageSentCol;
+    @FXML private ChoiceBox<String> activeColumn;
+    @FXML private ChoiceBox<String> activeCompare;
+    @FXML private DatePicker activeStartDate;
+    @FXML private DatePicker activeEndDate;
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         sceneManager.addScene("Main", "main-messaging.fxml");
@@ -104,6 +118,7 @@ public class AppManagerController implements ControllerWrapper {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        pause = new PauseTransition(Duration.millis(500));
         currentUser = Main.getCurrentUser();
         sceneManager = Main.getSceneManager();
 
@@ -113,7 +128,9 @@ public class AppManagerController implements ControllerWrapper {
         loginFilter.getItems().addAll(loginFilterKeys);
         loginFilter.setOnAction(this::selectLoginDataFilter);
         loginFilterField.textProperty().addListener((observableValue, o, n) -> {
-            selectLoginDataFilter(null);
+            pause.stop();
+            pause.setOnFinished((e) -> selectLoginDataFilter(null));
+            pause.playFromStart();
         });
 
         newAccountUsernameCol.setCellValueFactory((a) -> new SimpleStringProperty(a.getValue().getUsername()));
@@ -122,13 +139,11 @@ public class AppManagerController implements ControllerWrapper {
         newAccountFilter.getItems().addAll(newAccountFilterKeys);
         newAccountFilter.setOnAction(this::selectNewAccountFilter);
         newAccountFilterField.textProperty().addListener((observableValue, o, n) -> {
-            selectNewAccountFilter(null);
+            pause.stop();
+            pause.setOnFinished((e) -> selectNewAccountFilter(null));
+            pause.playFromStart();
         });
-        showAllNewAccounts.setOnAction((e) -> {
-            newAccountStartDate.setDisable(showAllNewAccounts.isSelected());
-            newAccountEndDate.setDisable(showAllNewAccounts.isSelected());
-            selectNewAccountFilter(e);
-        });
+        showAllNewAccounts.setOnAction(this::selectNewAccountFilter);
         newAccountStartDate.setOnAction(this::selectNewAccountFilter);
         newAccountEndDate.setOnAction(this::selectNewAccountFilter);
 
@@ -154,10 +169,9 @@ public class AppManagerController implements ControllerWrapper {
         socialFilter.setOnAction(this::selectSocialTable);
         socialCompare.setOnAction(this::selectSocialTable);
         socialFilterField.textProperty().addListener(((observableValue, s, t1) -> {
-            selectSocialTable(null);
-        }));
-        socialCompareField.textProperty().addListener(((observableValue, s, t1) -> {
-            selectSocialTable(null);
+            pause.stop();
+            pause.setOnFinished((e) -> selectSocialTable(null));
+            pause.playFromStart();
         }));
 
         socialCompareField.textProperty().addListener(new ChangeListener<String>() {
@@ -165,10 +179,15 @@ public class AppManagerController implements ControllerWrapper {
             public void changed(ObservableValue<? extends String> observable, String oldValue,
                                 String newValue) {
                 if (!newValue.matches("\\d*")) {
-                    socialCompareField.setText(newValue.replaceAll("[^\\d]", ""));
+                    socialCompareField.setText(newValue.replaceAll("\\D", ""));
                 }
             }
         });
+
+        socialCompareField.textProperty().addListener(((observableValue, s, t1) -> {
+            selectSocialTable(null);
+        }));
+
 
     }
 
@@ -223,6 +242,8 @@ public class AppManagerController implements ControllerWrapper {
     }
 
     void selectNewAccountFilter(ActionEvent event){
+        newAccountStartDate.setDisable(showAllNewAccounts.isSelected());
+        newAccountEndDate.setDisable(showAllNewAccounts.isSelected());
         currentNewAccountFilter = newAccountFilter.getValue();
         ArrayList<UserData> newAccount;
 
