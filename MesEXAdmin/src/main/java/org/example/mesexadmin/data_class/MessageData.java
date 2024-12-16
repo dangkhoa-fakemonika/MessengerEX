@@ -16,14 +16,18 @@ public class MessageData {
     ObjectId conversationId;
 
     public MessageData(){
+        messageId = new ObjectId();
         senderId = null;
+        senderName = new SimpleStringProperty();
         content = new SimpleStringProperty("");
-        timeSent = new SimpleObjectProperty<>(null);
+        timeSent = new SimpleObjectProperty<>(new Date());
         conversationId = null;
     }
 
     public MessageData(String message, String sender, String receiver){
+        messageId = new ObjectId();
         senderId = null;
+        senderName = new SimpleStringProperty();
         content = new SimpleStringProperty(message);
         timeSent = new SimpleObjectProperty<>(null);
         conversationId = null;

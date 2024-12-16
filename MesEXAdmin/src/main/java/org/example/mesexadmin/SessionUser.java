@@ -12,10 +12,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 import org.bson.types.ObjectId;
 import org.example.mesexadmin.data_access.GlobalQuery;
-import org.example.mesexadmin.data_class.ActivityData;
-import org.example.mesexadmin.data_class.ConversationData;
-import org.example.mesexadmin.data_class.FriendRequestData;
-import org.example.mesexadmin.data_class.UserData;
+import org.example.mesexadmin.data_class.*;
 
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
@@ -150,11 +147,6 @@ public class SessionUser {
     public boolean acceptFriendRequest(FriendRequestData request) {
         
         if (myQuery.users().addFriend(request.getSenderId(), request.getReceiverId())) {
-            ConversationData newConvo = new ConversationData();
-            newConvo.setType("private");
-            newConvo.getMembersId().add(request.getSenderId());
-            newConvo.getMembersId().add(request.getReceiverId());
-            myQuery.conversations().createConversation(newConvo);
 
             //
             currentUser.getFriend().add(request.getSenderId());
@@ -289,6 +281,24 @@ public class SessionUser {
         return myQuery.users().getFriendsOfFriends(targetId);
     }
 
+    public boolean createPrivateConversation(String username){
+        UserData findUser = myQuery.users().getUserByUsername(username);
+        if (findUser == null || findUser.getUserId() == currentUser.getUserId()){
+            return false;
+        }
+
+        ConversationData getConvo = myQuery.conversations().findExistingPrivateConversation(findUser.getUserId(), currentUser.getUserId());
+        if (getConvo != null)
+            return false;
+
+        ConversationData newConvo = new ConversationData();
+        newConvo.setType("private");
+        newConvo.getMembersId().add(currentUser.getUserId());
+
+        newConvo.getMembersId().add(findUser.getUserId());
+        return myQuery.conversations().createConversation(newConvo);
+    }
+
     public ArrayList<UserData> loadUserFriendsStatus(){
         return myQuery.users().getAllUsers();
     }
@@ -311,6 +321,16 @@ public class SessionUser {
         });
 
         return returnData;
+    }
+
+    public boolean sendMessage(String content, ObjectId conversationId){
+        MessageData messageData = new MessageData();
+        messageData.setSenderId(currentUser.getUserId());
+        messageData.setSenderName(currentUser.getUsername());
+        messageData.setContent(content);
+        messageData.setConversationId(conversationId);
+
+        return myQuery.messages().postMessage(messageData);
     }
                 
     private static boolean sendResetPasswordEmail(String emailTo, String newPassword) {

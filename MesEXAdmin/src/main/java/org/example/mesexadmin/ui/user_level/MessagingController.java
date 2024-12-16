@@ -43,6 +43,8 @@ public class MessagingController implements ControllerWrapper {
     @FXML private MenuButton optionButton;
     @FXML private MenuItem addFriendButton;
     @FXML private MenuItem logoutButton;
+    @FXML private MenuItem addPrivateChat;
+    @FXML private Button sendButton;
 
     // Load from database
     static ObservableList<ConversationListComponent> privateItems;
@@ -54,10 +56,10 @@ public class MessagingController implements ControllerWrapper {
             String msg = myTextArea.getText().trim();
 
             // Add Message processing here
-            boolean res = currentUser.myQuery.messages().postMessage(msg, currentUser.getSessionUserData().getUserId(), currentConversation.getConversationId());
+            boolean res = currentUser.sendMessage(msg, currentConversation.getConversationId());
             if (res) System.out.println("Message sent");
 
-            messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
+//            messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
             myTextArea.setText("");
         }
     }
@@ -67,10 +69,10 @@ public class MessagingController implements ControllerWrapper {
             String msg = myTextArea.getText().trim();
 
             // Add Message processing here
-            boolean res = currentUser.myQuery.messages().postMessage(msg, currentUser.getSessionUserData().getUserId(), currentConversation.getConversationId());
+            boolean res = currentUser.sendMessage(msg, currentConversation.getConversationId());
             if (res) System.out.println("Message sent");
 
-            messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
+//            messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
             myTextArea.setText("");
         }
     }
@@ -132,11 +134,12 @@ public class MessagingController implements ControllerWrapper {
     @Override
     public void myInitialize() {
         currentUser = Main.getCurrentUser();
-
         optionButton.setDisable(true);
+        sendButton.setDisable(true);
+        myTextArea.setDisable(true);
 
-        refresh();
         currentUser = Main.getCurrentUser();
+        refresh();
     }
 
     @Override
@@ -149,7 +152,11 @@ public class MessagingController implements ControllerWrapper {
                 ConversationListComponent c =  privateList.getSelectionModel().getSelectedItem();
                 if (c != null){
                     currentConversation = c.getConversation();
-                    myLabel.setText("Selected Chat: " + currentConversation.getConversationName());
+                    myLabel.setText("Selected Chat: " + currentConversation.getMembersName().toString());
+                    myTextArea.setDisable(false);
+                    sendButton.setDisable(false);
+                    chatSelection();
+
                     optionButton.setDisable(false);
                 }
             }
@@ -162,6 +169,9 @@ public class MessagingController implements ControllerWrapper {
                 if (c != null){
                     currentConversation = c.getConversation();
                     myLabel.setText("Selected Chat: " + currentConversation.getConversationName());
+                    chatSelection();
+                    myTextArea.setDisable(false);
+                    sendButton.setDisable(false);
                     optionButton.setDisable(false);
                 }
             }
@@ -243,6 +253,45 @@ public class MessagingController implements ControllerWrapper {
             }
         });
 
+        addPrivateChat.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-create-private.fxml")));
+                Dialog<Objects> dialog = new Dialog<>();
+
+                try {
+                    DialogPane dialogPane = loader.load();
+                    dialog.setDialogPane(dialogPane);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                PopUpController popUpController = loader.getController();
+                ButtonType confirmButtonType = new ButtonType("Confirm", ButtonData.YES);
+                ButtonType cancelButtonType = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+
+                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+                confirmButton.addEventFilter(ActionEvent.ACTION, event -> {
+                    String username = popUpController.getUsernameField();
+                    if (username.isEmpty()) {
+                        new Alert(AlertType.ERROR, "The field must not be empty!").showAndWait();
+                        event.consume();
+                    } else if (currentUser.createPrivateConversation(username)) {
+                        new Alert(AlertType.INFORMATION, "Private conversation created!").showAndWait();
+                        event.consume();
+                    } else {
+                        new Alert(AlertType.ERROR, "Can't create conversation").showAndWait();
+                        event.consume();
+                    }
+
+                    popUpController.clearAllFields();
+                });
+
+                dialog.showAndWait();
+                dialog.close();
+            }
+        });
     }
 
     public void advanced(ActionEvent actionEvent) throws IOException{

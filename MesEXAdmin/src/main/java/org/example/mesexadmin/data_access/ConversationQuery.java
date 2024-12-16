@@ -85,6 +85,15 @@ public class ConversationQuery {
         return data;
     }
 
+    public ConversationData findExistingPrivateConversation(ObjectId id1, ObjectId id2){
+        MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");
+        Document result = conversations.find(Filters.and(Filters.in("membersId", id1, id2))).first();
+
+        if (result != null)
+            return documentToConversation(result);
+        else return null;
+    }
+
     // get a conversation of the current user
     public ConversationData getConversation(ObjectId id){
         MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");

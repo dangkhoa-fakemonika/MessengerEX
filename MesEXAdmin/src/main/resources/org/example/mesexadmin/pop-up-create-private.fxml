@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane prefHeight="120.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesexadmin.PopUpController">
+   <content>
+      <AnchorPane prefHeight="112.0" prefWidth="242.0">
+         <children>
+            <Label layoutX="85.0" layoutY="13.0" text="Username" />
+            <TextField fx:id="usernameField" layoutX="146.0" layoutY="9.0" promptText="user-123" />
+         </children>
+      </AnchorPane>
+   </content>
+   <header>
+      <Label style="-fx-padding: 10;" text="Create Private Conversation">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+   </header>
+</DialogPane>

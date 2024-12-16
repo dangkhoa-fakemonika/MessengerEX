@@ -1,15 +1,18 @@
 package org.example.mesexadmin.data_access;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Projections;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.example.mesexadmin.MongoManagement;
 import org.example.mesexadmin.data_class.MessageData;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class MessageQuery {
@@ -86,15 +89,8 @@ public class MessageQuery {
         return data;
     }
 
-    public boolean postMessage(String content, ObjectId senderId, ObjectId conversationId){
+    public boolean postMessage(MessageData message){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
-
-        MessageData message = new MessageData();
-        message.setContent(content);
-        message.setSenderId(senderId);
-        message.setConversationId(conversationId);
-        message.setTimeSent(new Date());
-
 
         try {
             messages.insertOne(message.toDocument());
@@ -141,6 +137,49 @@ public class MessageQuery {
 
         return true;
     }
+
+    public int countChatOccurrences(ObjectId targetId, String type){
+        MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
+
+        Document result = messages.aggregate(Arrays.asList(
+                Aggregates.match(Filters.eq("senderId", targetId)),
+                Aggregates.lookup("conversations", "conversationId", "_id", "conversationData"),
+                Aggregates.match(Filters.eq("conversationData.type", type)),
+                Aggregates.project(Projections.fields(
+                        Projections.computed("count", "$size : $conversationData")
+                ))
+        )).first();
+
+        try{
+            if (result == null)
+                return 0;
+            return result.getInteger("count");
+        } catch (Exception e){
+            return 0;
+        }
+    }
+
+    public int countChatOccurrencesWithFilters(ObjectId targetId, String type){
+        MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
+
+        Document result = messages.aggregate(Arrays.asList(
+                Aggregates.match(Filters.eq("senderId", targetId)),
+                Aggregates.lookup("conversations", "conversationId", "_id", "conversationData"),
+                Aggregates.match(Filters.eq("conversationData.type", type)),
+                Aggregates.project(Projections.fields(
+                        Projections.computed("count", "$size : $conversationData")
+                ))
+        )).first();
+
+        try{
+            if (result == null)
+                return 0;
+            return result.getInteger("count");
+        } catch (Exception e){
+            return 0;
+        }
+    }
+
 
     private MessageData documentToMessage(Document messageDocument){
         MessageData msg = new MessageData();

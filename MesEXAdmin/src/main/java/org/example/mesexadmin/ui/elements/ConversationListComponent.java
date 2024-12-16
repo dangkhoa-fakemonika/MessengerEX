@@ -17,9 +17,9 @@ public class ConversationListComponent extends HBox{
         // Set display data here
         if (Objects.equals(data.getType(), "private")){
             if (viewingUser.getUserId() == conversation.getMembersId().getFirst())
-                this.getChildren().add(new Label(conversation.getMembersName().getLast().get()));
-            else
                 this.getChildren().add(new Label(conversation.getMembersName().getFirst().get()));
+            else
+                this.getChildren().add(new Label(conversation.getMembersName().getLast().get()));
         }
 
         else

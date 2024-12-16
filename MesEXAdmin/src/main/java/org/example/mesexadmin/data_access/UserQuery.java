@@ -336,6 +336,8 @@ public class UserQuery {
         }
     }
 
+
+
     private UserData documentToUser(Document userDocument) {
         UserData user = new UserData();
 
