@@ -34,7 +34,7 @@ public class ChangePasswordController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        currentUser = Main.getThisUser();
+        currentUser = Main.getCurrentUser();
     }
 
     @Override

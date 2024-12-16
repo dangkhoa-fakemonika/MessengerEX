@@ -104,7 +104,7 @@ public class AppManagerController implements ControllerWrapper {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        currentUser = Main.getThisUser();
+        currentUser = Main.getCurrentUser();
         sceneManager = Main.getSceneManager();
 
         loginDateCol.setCellValueFactory((a) -> new SimpleObjectProperty<>(a.getValue().getLoginDate()));

@@ -13,7 +13,7 @@ public class ConversationListComponent extends HBox{
 
     public ConversationListComponent(ConversationData conversation) {
         data = conversation;
-        UserData viewingUser = Main.getThisUser().getSessionUserData();
+        UserData viewingUser = Main.getCurrentUser().getSessionUserData();
         // Set display data here
         if (Objects.equals(data.getType(), "private")){
             if (viewingUser.getUserId() == conversation.getMembersId().getFirst())

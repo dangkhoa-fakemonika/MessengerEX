@@ -42,6 +42,7 @@ public class MessagingController implements ControllerWrapper {
     @FXML private TextArea myTextArea;
     @FXML private MenuButton optionButton;
     @FXML private MenuItem addFriendButton;
+    @FXML private MenuItem logoutButton;
 
     // Load from database
     static ObservableList<ConversationListComponent> privateItems;
@@ -130,12 +131,12 @@ public class MessagingController implements ControllerWrapper {
     
     @Override
     public void myInitialize() {
-        currentUser = Main.getThisUser();
+        currentUser = Main.getCurrentUser();
 
         optionButton.setDisable(true);
 
         refresh();
-        currentUser = Main.getThisUser();
+        currentUser = Main.getCurrentUser();
     }
 
     @Override
@@ -220,8 +221,27 @@ public class MessagingController implements ControllerWrapper {
             }
         });
 
-//        Thread thread = getThread();
-//        thread.start();
+        logoutButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setHeaderText("Do you want to logout?");
+                alert.setTitle("Confirm Logout");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        if (currentUser.logoutSession()) {
+                            try {
+                                sceneManager.addScene("Login", "main-login.fxml");
+                                sceneManager.switchScene("Login");
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
+        });
 
     }
 

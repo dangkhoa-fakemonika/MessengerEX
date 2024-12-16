@@ -107,7 +107,7 @@ public class EditProfileController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        currentUser = Main.getThisUser();
+        currentUser = Main.getCurrentUser();
         UserData userData = currentUser.getSessionUserData();
         LocalDate localDate;
 

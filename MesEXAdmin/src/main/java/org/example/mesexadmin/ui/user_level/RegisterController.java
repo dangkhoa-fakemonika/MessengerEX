@@ -122,7 +122,7 @@ public class RegisterController implements ControllerWrapper {
             return false;
         }
 
-        return Main.getThisUser().registerUser(username, email, password);
+        return Main.getCurrentUser().registerUser(username, email, password);
     }
 
     private void clearField() {

@@ -42,6 +42,8 @@ public class FriendsController implements ControllerWrapper {
     private SceneManager sceneManager;
     private SessionUser currentUser;
 
+    @FXML private Button returnToMainButton;
+
     @FXML private TabPane friendManagementTabPane;
 
     @FXML private Tab onlineTab;
@@ -166,64 +168,30 @@ public class FriendsController implements ControllerWrapper {
         }
     }
 
-    public void unblockUser(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(AlertType.CONFIRMATION);
-        newAlert.setContentText("Remove block on this user?");
-        newAlert.setHeaderText("Unblock User");
-        newAlert.showAndWait();
-    }
-
-    public void returnToMain(ActionEvent actionEvent) throws IOException {
-        pauseAllServices();
-        sceneManager.addScene("Main", "main-messaging.fxml");
-        sceneManager.switchScene("Main");
-    }
-
     @Override
     public void myInitialize() {
-        currentUser = Main.getThisUser();
-        UserData userData = currentUser.getSessionUserData();
-
-        //Online friend table
-        // onlineData.setAll(
-        //     // Get currently online users from database
-        //     currentUser.getOnlineFriendList()
-        // );
-        // onlineFriendTable.setItems(onlineData);
-
-        // All friend table
-        // friendData.setAll(
-        //     // Get all friend of current user from database
-        //     currentUser.getFriendList()
-        // );
-        // friendsTable.setItems(friendData);
-
-        // Sent requests table
-        // sentRequests.setAll(
-        //     // Get sent requests from database
-        //     currentUser.getSentRequests()
-        // );
-        // sentRequestsTable.setItems(sentRequests);
-
-        // Received requests table
-        // receivedRequests.setAll(
-        //     // Get received requests from database
-        //     currentUser.getReceivedRequests()
-        // );
-        // receivedRequestsTable.setItems(receivedRequests);
-
-        // Blocked user table
-        // blockedData.setAll(
-        //     currentUser.getBlockedList()
-        // );
-        // blockedTable.setItems(blockedData);
+        currentUser = Main.getCurrentUser();
+        
         initiateGetData();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
-        currentUser = Main.getThisUser();
+        currentUser = Main.getCurrentUser();
+
+        returnToMainButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                try {
+                    pauseAllServices();
+                    sceneManager.addScene("Main", "main-messaging.fxml");
+                    sceneManager.switchScene("Main");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         // Online friend table
         onlineNameColumn.setCellValueFactory(new PropertyValueFactory<>("displayName"));
@@ -314,7 +282,6 @@ public class FriendsController implements ControllerWrapper {
                         if (acceptFriendRequest()) {
                             new Alert(AlertType.INFORMATION, "You have accepted a friend request!").showAndWait();
                             receivedRequests.remove(currentReceivedRequest);
-                            // receivedRequestsTable.refresh();
                         }
                     }
                 });
@@ -333,7 +300,6 @@ public class FriendsController implements ControllerWrapper {
                         if (removeFriendRequest(currentReceivedRequest)) {
                             new Alert(AlertType.INFORMATION, "You have rejected a friend request!").showAndWait();
                             receivedRequests.remove(currentReceivedRequest);
-                            // receivedRequestsTable.refresh();
                         }
                     }
                 });
@@ -352,11 +318,28 @@ public class FriendsController implements ControllerWrapper {
                         if (removeFriendRequest(currentSentRequest)) {
                             new Alert(AlertType.INFORMATION, "You have removed your request!").showAndWait();
                             sentRequests.remove(currentSentRequest);
-                            // sentRequestsTable.refresh();
                         }
                     }
                 });
             }
+        });
+
+        unblockUserkButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setContentText("Remove block on this user?");
+                alert.setHeaderText("Unblock User");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        if (unblockUser(currentBlocked)) {
+                            new Alert(AlertType.INFORMATION, "You have removed this user from your block list!").showAndWait();
+                            blockedData.remove(currentBlocked);
+                        }
+                    }
+                });
+            };
         });
     }
 
@@ -368,36 +351,43 @@ public class FriendsController implements ControllerWrapper {
         return currentUser.removeFriendRequest(removeTarget);
     }
 
+    private boolean unblockUser(UserData blockedUser) {
+        return currentUser.unblockUser(blockedUser.getUserId());
+    }
+
     private void initiateGetData() {
         getOnlineData = initiateGetUserDataTask(onlineData, "online");
+        getOnlineData.setPeriod(Duration.seconds(30));
+        getOnlineData.start();  // This task run upon entry
+
         getFriendData = initiateGetUserDataTask(friendData, "friends");
+        getFriendData.setPeriod(Duration.seconds(30));
+
         getBlockedData = initiateGetUserDataTask(blockedData, "blocked");
+        getBlockedData.setPeriod(Duration.seconds(30)); 
+
         getSentRequests = initiateGetFriendRequesstDataTask(sentRequests, "sentRequests");
+        getSentRequests.setPeriod(Duration.seconds(30));
+
         getReceivedRequests = initiateGetFriendRequesstDataTask(receivedRequests, "reveicedRequests");
+        getReceivedRequests.setPeriod(Duration.seconds(30));
     }
 
     private void handleSwitchTab(Tab tab) {
-        // pauseAllServices();
-
         if (tab == onlineTab) {
             System.out.println("onl");
-            getOnlineData.setPeriod(Duration.seconds(5));
             getOnlineData.restart();
         } else if (tab == friendsTab) {
             System.out.println("friend");
-            getFriendData.setPeriod(Duration.seconds(5));
             getFriendData.restart();
         } else if (tab == blockedUsersTab) {
             System.out.println("blocked");
-            getBlockedData.setPeriod(Duration.seconds(5)); 
             getBlockedData.restart();
         } else if (tab == sentRequestsTab) {
             System.out.println("sent");
-            getSentRequests.setPeriod(Duration.seconds(5));
             getSentRequests.restart();
         } else if (tab == receivedRequestsTab) {
             System.out.println("receiv");
-            getReceivedRequests.setPeriod(Duration.seconds(5));
             getReceivedRequests.restart();
         }
     }

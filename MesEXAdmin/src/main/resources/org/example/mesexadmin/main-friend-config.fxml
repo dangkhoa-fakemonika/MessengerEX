@@ -16,7 +16,7 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <Button layoutX="29.0" layoutY="28.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
+                  <Button fx:id="returnToMainButton" layoutX="29.0" layoutY="28.0" mnemonicParsing="false" text="Return to Main" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">

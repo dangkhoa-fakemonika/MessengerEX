@@ -35,6 +35,10 @@ public class SessionUser {
         myQuery = globalQuery;
         currentUser = new UserData();
     }
+
+    public boolean isLoggedIn() {
+        return currentUser.getStatus().equals("online");
+    }
                 
     public boolean loginSession(String username, String password){
         
@@ -152,6 +156,9 @@ public class SessionUser {
             newConvo.getMembersId().add(request.getReceiverId());
             myQuery.conversations().createConversation(newConvo);
 
+            //
+            currentUser.getFriend().add(request.getSenderId());
+
             return myQuery.requests().removeRequest(request.getRequestId());
         }
 
@@ -238,6 +245,11 @@ public class SessionUser {
         currentUser.getFriend().remove(targetId);
         currentUser.getBlocked().add(targetId);
         return myQuery.users().addBlock(currentUser.getUserId(), targetId);
+    }
+
+    public boolean unblockUser(ObjectId targetId) {
+        currentUser.getBlocked().remove(targetId);
+        return myQuery.users().removeBlock(currentUser.getUserId(), targetId);
     }
 
     public ArrayList<ConversationData> loadAllConversations(){
