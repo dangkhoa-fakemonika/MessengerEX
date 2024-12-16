@@ -32,7 +32,6 @@ import java.util.*;
 public class AppManagerController implements ControllerWrapper {
     static SceneManager sceneManager;
     static SessionUser currentUser;
-    PauseTransition pause;
 
     @FXML private TableView<ActivityData> userTable;
 
@@ -46,6 +45,7 @@ public class AppManagerController implements ControllerWrapper {
     static final String[] loginFilterKeys = {"None", "username", "displayName"};
     String currentLoginFilter = "None";
     @FXML private TextField loginFilterField;
+    PauseTransition loginPause;
 
     // Newly created accounts
     @FXML private TableView<UserData> newAccountTable;
@@ -60,6 +60,7 @@ public class AppManagerController implements ControllerWrapper {
     @FXML private DatePicker newAccountStartDate;
     @FXML private DatePicker newAccountEndDate;
     @FXML private CheckBox showAllNewAccounts;
+    PauseTransition newAccountPause;
 
     static final String[] monthNames = {"January", "February", "March", "April",
             "May", "June", "July", "August", "September", "October", "November", "December"};
@@ -97,6 +98,7 @@ public class AppManagerController implements ControllerWrapper {
     @FXML private ChoiceBox<String> socialCompare;
     static final String[] socialCompareKeys = {"None", "Equal to", "Greater than", "Lesser than"};
     String socialSelectedCompare = "None";
+    PauseTransition socialPause;
 
     @FXML private TableView<UserData> activeTable;
     @FXML private TextField activeFilterField;
@@ -110,6 +112,8 @@ public class AppManagerController implements ControllerWrapper {
     @FXML private ChoiceBox<String> activeCompare;
     @FXML private DatePicker activeStartDate;
     @FXML private DatePicker activeEndDate;
+    @FXML private CheckBox showAllActive;
+    PauseTransition activePause;
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         sceneManager.addScene("Main", "main-messaging.fxml");
@@ -118,7 +122,15 @@ public class AppManagerController implements ControllerWrapper {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        pause = new PauseTransition(Duration.millis(500));
+        loginPause = new PauseTransition(Duration.millis(500));
+        loginPause.setOnFinished((e) -> selectLoginDataFilter(null));
+        newAccountPause = new PauseTransition(Duration.millis(500));
+        newAccountPause.setOnFinished((e) -> selectNewAccountFilter(null));
+        socialPause = new PauseTransition(Duration.millis(500));
+        socialPause.setOnFinished((e) -> selectSocialTable(null));
+        activePause = new PauseTransition(Duration.millis(500));
+        activePause.setOnFinished((e) -> selectSocialTable(null));
+
         currentUser = Main.getCurrentUser();
         sceneManager = Main.getSceneManager();
 
@@ -128,9 +140,8 @@ public class AppManagerController implements ControllerWrapper {
         loginFilter.getItems().addAll(loginFilterKeys);
         loginFilter.setOnAction(this::selectLoginDataFilter);
         loginFilterField.textProperty().addListener((observableValue, o, n) -> {
-            pause.stop();
-            pause.setOnFinished((e) -> selectLoginDataFilter(null));
-            pause.playFromStart();
+            loginPause.stop();
+            loginPause.playFromStart();
         });
 
         newAccountUsernameCol.setCellValueFactory((a) -> new SimpleStringProperty(a.getValue().getUsername()));
@@ -139,9 +150,8 @@ public class AppManagerController implements ControllerWrapper {
         newAccountFilter.getItems().addAll(newAccountFilterKeys);
         newAccountFilter.setOnAction(this::selectNewAccountFilter);
         newAccountFilterField.textProperty().addListener((observableValue, o, n) -> {
-            pause.stop();
-            pause.setOnFinished((e) -> selectNewAccountFilter(null));
-            pause.playFromStart();
+            newAccountPause.stop();
+            newAccountPause.playFromStart();
         });
         showAllNewAccounts.setOnAction(this::selectNewAccountFilter);
         newAccountStartDate.setOnAction(this::selectNewAccountFilter);
@@ -169,9 +179,8 @@ public class AppManagerController implements ControllerWrapper {
         socialFilter.setOnAction(this::selectSocialTable);
         socialCompare.setOnAction(this::selectSocialTable);
         socialFilterField.textProperty().addListener(((observableValue, s, t1) -> {
-            pause.stop();
-            pause.setOnFinished((e) -> selectSocialTable(null));
-            pause.playFromStart();
+            socialPause.stop();
+            socialPause.playFromStart();
         }));
 
         socialCompareField.textProperty().addListener(new ChangeListener<String>() {
@@ -185,7 +194,8 @@ public class AppManagerController implements ControllerWrapper {
         });
 
         socialCompareField.textProperty().addListener(((observableValue, s, t1) -> {
-            selectSocialTable(null);
+            socialPause.stop();
+            socialPause.playFromStart();
         }));
 
 
