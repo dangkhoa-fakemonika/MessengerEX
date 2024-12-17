@@ -88,7 +88,10 @@ public class ConversationQuery {
 
     public ConversationData findExistingPrivateConversation(ObjectId id1, ObjectId id2){
         MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");
-        Document result = conversations.find(Filters.and(Filters.in("membersId", id1, id2))).first();
+        // Document result = conversations.find(Filters.and(Filters.in("membersId", id1, id2))).first();
+
+        Document query = new Document("type", "private").append("membersId", new Document("$all", Arrays.asList(id1, id2)));
+        Document result = conversations.find(query).first();
 
         if (result != null)
             return documentToConversation(result);

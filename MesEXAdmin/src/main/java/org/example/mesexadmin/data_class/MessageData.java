@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.types.ObjectId;
+import org.example.mesexadmin.ui.elements.MessageListComponent;
 
 import java.util.Date;
 
@@ -89,5 +90,15 @@ public class MessageData {
             .append("timeSent",this.timeSent.get())
             .append("conversationId",this.conversationId);
         return doc;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this)
+            return true;
+        if (!(object instanceof MessageData))
+            return false;
+        MessageData messageData = (MessageData) object;
+        return messageData.getMessageId().equals(this.messageId);
     }
 }

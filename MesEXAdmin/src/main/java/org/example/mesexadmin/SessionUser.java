@@ -312,8 +312,9 @@ public class SessionUser {
         }
 
         ConversationData getConvo = myQuery.conversations().findExistingPrivateConversation(findUser.getUserId(), currentUser.getUserId());
-        if (getConvo != null)
+        if (getConvo != null) {
             return false;
+        }
 
         ConversationData newConvo = new ConversationData();
         newConvo.setType("private");
@@ -359,6 +360,7 @@ public class SessionUser {
         newConv.getMembersId().add(currentUser.getUserId());
         newConv.getMembersId().add(ndUser.getUserId());
         newConv.getModeratorsId().add(currentUser.getUserId());
+        newConv.setDateCreated(new Date());
 
         return myQuery.conversations().createConversation(newConv);
     }

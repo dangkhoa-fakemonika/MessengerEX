@@ -16,4 +16,14 @@ public class MessageListComponent extends HBox {
     public MessageData getMessage(){
         return data;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this)
+            return true;
+        if (!(object instanceof MessageListComponent))
+            return false;
+        MessageListComponent messageListComponent = (MessageListComponent) object;
+        return messageListComponent.getMessage().equals(this.data);
+    }
 }

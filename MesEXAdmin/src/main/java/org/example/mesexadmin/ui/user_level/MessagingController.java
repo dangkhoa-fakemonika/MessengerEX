@@ -73,7 +73,8 @@ public class MessagingController implements ControllerWrapper {
 
     private ScheduledService<Void> updateChatList;
     private ScheduledService<Void> updateChat;
-    private boolean isSwitched;
+    private boolean tabSwitched;
+    private boolean chatSwitched;
 
     // Load from database
     static ObservableList<ConversationListComponent> privateItems = FXCollections.observableArrayList();
@@ -119,8 +120,11 @@ public class MessagingController implements ControllerWrapper {
             groupList.getFocusModel().focus(groupItems.indexOf(item));
         }
 
-        updateCurrentChat();
+        // updateCurrentChat();
+        // Debugging
         currentConversation = item.getConversation();
+        chatSwitched = true;
+        updateChat.restart();
 
         jumpToMessage = false;
         myTextArea.setDisable(false);
@@ -166,22 +170,40 @@ public class MessagingController implements ControllerWrapper {
     }
 
     private void updateCurrentChat() {
-        // TODO: Check when to clear chat | add more messages
+        if (currentConversation == null) {
+            messages.getItems().clear();
+            return;
+        }
+
         ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByConv(currentConversation.getConversationId());
         messagesList = FXCollections.observableArrayList();
         for (MessageData mQuery : messageQuery){
             messagesList.add(new MessageListComponent(mQuery));
         }
 
-        messages.getItems().clear();
-        messages.getItems().addAll(messagesList);
-        // TODO: Check when to jump with each update
-        messages.scrollTo(messagesList.size());
+        // TODO: Temporary setup for update when there is deleted message
+        if (chatSwitched || messagesList.size() < messages.getItems().size()) {
+            messages.getItems().clear();
+            messages.getItems().addAll(messagesList);
+            chatSwitched = false;
+        } else {
+            messagesList.stream().filter(message -> !messages.getItems().contains(message)).forEach(messages.getItems()::add);
+        }
+
+        ScrollBar scrollbar = (ScrollBar) messages.lookup(".scroll-bar:vertical");
+        if (scrollbar != null) {
+            double currentScrollPosition = scrollbar.getValue();
+            if (currentScrollPosition > 0.8)
+                messages.scrollTo(messages.getItems().size());
+        }
         // messages.refresh();
     }
 
     private void updateCurrentChatList() {
-        isSwitched = true;
+        if (tabSwitched) {
+            chatSwitched = true;
+            tabSwitched = false;
+        }
 
         if (currentTab == privateTab) {
             ArrayList<ConversationData> privateQuery = currentUser.loadPrivateConversations();
@@ -209,8 +231,6 @@ public class MessagingController implements ControllerWrapper {
         }
 
         updateChat.restart();
-
-        isSwitched = false;
     }
 
     void loadSearchResults(){
@@ -280,18 +300,15 @@ public class MessagingController implements ControllerWrapper {
                     @Override
                     protected Void call() throws Exception {
                         Platform.runLater(() -> {
-                            System.out.println(currentConversation);
-                            if (currentConversation != null) {
-                                System.out.println("refreshed");
-                                updateCurrentChat();
-                            }
+                            updateCurrentChat();
                         });
                         return null;
                     }
                 };
             }
         };
-        updateChat.setPeriod(Duration.seconds(1));
+        // updateChat.setPeriod(Duration.seconds(1));
+        updateChat.setPeriod(Duration.millis(500));
         updateChat.start();
 
         updateChatList = new ScheduledService<Void>() {
@@ -330,7 +347,11 @@ public class MessagingController implements ControllerWrapper {
                 if (c != null){
                     currentConversation = c.getConversation();
                     myLabel.setText("Selected Chat: " + currentConversation.getMembersName().toString());
+                    // updateCurrentChat.restart
+                    // Debug
+                    chatSwitched = true;
                     updateCurrentChat();
+
                     myTextArea.setDisable(false);
                     sendButton.setDisable(false);
                     optionButton.setDisable(false);
@@ -351,7 +372,10 @@ public class MessagingController implements ControllerWrapper {
                 if (c != null){
                     currentConversation = c.getConversation();
                     myLabel.setText("Selected Chat: " + currentConversation.getConversationName());
+
+                    chatSwitched = true;
                     updateCurrentChat();
+
                     myTextArea.setDisable(false);
                     sendButton.setDisable(false);
                     optionButton.setDisable(false);
@@ -637,7 +661,7 @@ public class MessagingController implements ControllerWrapper {
 
     private void handleSwitchTab(Tab tab) {
         if (tab == privateTab) {
-            System.out.println("private");
+            // System.out.println("private");
             currentTab = privateTab;
 
             groupList.getSelectionModel().clearSelection();
@@ -648,7 +672,7 @@ public class MessagingController implements ControllerWrapper {
             loadSearchResults();
 
         } else if (tab == groupTab) {
-            System.out.println("group");
+            // System.out.println("group");
             currentTab = groupTab;
 
             privateList.getSelectionModel().clearSelection();
@@ -658,13 +682,15 @@ public class MessagingController implements ControllerWrapper {
             addGroupTargetButton.setDisable(true);
             loadSearchResults();
         } else {
-            System.out.println("everyone");
+            // System.out.println("everyone");
             currentTab = everyoneTab;
 
             groupList.getSelectionModel().clearSelection();
             privateList.getSelectionModel().clearSelection();
         }
 
+        tabSwitched = true;
+        currentConversation = null;
         updateChatList.restart();
     }
 
