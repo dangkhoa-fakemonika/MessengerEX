@@ -69,7 +69,10 @@ public class MessagingController implements ControllerWrapper {
     @FXML private ListView<UserListComponent> searchUserList;
     @FXML private Button addPrivateTargetButton;
     @FXML private Button addGroupTargetButton;
-    
+
+    @FXML private TextField searchPrivateConversation;
+    @FXML private TextField searchGroupConversation;
+
     private ScheduledService<Void> updateChatList;
     private ScheduledService<Void> updateChat;
     private UserData currentChatTarget = null;
@@ -703,6 +706,30 @@ public class MessagingController implements ControllerWrapper {
 
         messagesTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             handleSwitchTab(newTab);
+        });
+
+        searchGroupConversation.textProperty().addListener((e) -> {
+            String text = searchGroupConversation.getText().trim();
+            int index = -1;
+            for (int i = 0; i < groupItems.size(); i ++)
+                if (groupItems.get(i).getDisplayData().matches(text)){
+                    index = i;
+                    break;
+                }
+            if (index != -1)
+                groupList.scrollTo(index);
+        });
+
+        searchPrivateConversation.textProperty().addListener((e) -> {
+            String text = searchPrivateConversation.getText().trim();
+            int index = -1;
+            for (int i = 0; i < privateItems.size(); i ++)
+                if (privateItems.get(i).getDisplayData().matches(text)){
+                    index = i;
+                    break;
+                }
+            if (index != -1)
+                groupList.scrollTo(index);
         });
     }
 

@@ -12,9 +12,11 @@ import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.ConversationData;
 import org.example.mesexadmin.ui.ControllerWrapper;
+import org.example.mesexadmin.ui.elements.ConversationListComponent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -23,9 +25,9 @@ public class ConversationController implements ControllerWrapper {
     static SessionUser currentUser;
 
     @FXML
-    private TableView<ConversationData> myGroupTable;
+    private TableView<ConversationListComponent> myGroupTable;
 
-    static ObservableList<ConversationData> myGroups = FXCollections.observableArrayList();
+    static ObservableList<ConversationListComponent> myGroups = FXCollections.observableArrayList();
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         sceneManager.addScene("Main", "main-messaging.fxml");
@@ -42,18 +44,6 @@ public class ConversationController implements ControllerWrapper {
         newAlert.setContentText("Leave this group?");
         newAlert.setHeaderText("Leave Group");
         newAlert.showAndWait();
-    }
-
-    public void addMember(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-add-member.fxml"));
-        Dialog<Objects> dialog = new Dialog<>();
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        DialogPane dialogPane = loader.load();
-        PopUpController popUpController = loader.getController();
-        popUpController.currentDialog = dialog;
-        dialog.setDialogPane(dialogPane);
-        dialog.showAndWait();
-        dialog.close();
     }
 
     public void addGroup(ActionEvent actionEvent) throws IOException {
@@ -81,7 +71,7 @@ public class ConversationController implements ControllerWrapper {
     }
 
     void refresh(){
-        myGroupTable.setItems(FXCollections.observableArrayList());
+        ArrayList<ConversationData> groupQuery = currentUser.loadGroupConversations();
     }
 
     @Override
@@ -93,5 +83,6 @@ public class ConversationController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
+        myGroupTable.setItems(myGroups);
     }
 }

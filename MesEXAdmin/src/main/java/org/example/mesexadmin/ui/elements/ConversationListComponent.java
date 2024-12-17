@@ -39,4 +39,8 @@ public class ConversationListComponent extends HBox{
         displayData.set(newDisplayData);
     }
 
+    public String getDisplayData(){
+        return displayData.get();
+    }
+
 }

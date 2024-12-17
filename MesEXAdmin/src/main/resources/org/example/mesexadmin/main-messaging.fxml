@@ -32,7 +32,6 @@
                                                                 <MenuItem fx:id="addFriendButton" mnemonicParsing="false" text="Add Friend" />
                                                                 <MenuItem fx:id="manageFriendButton" mnemonicParsing="false" text="Manage Friend" />
                                                                 <MenuItem fx:id="addGroupButton" mnemonicParsing="false" text="Create Group" />
-                                                                <MenuItem fx:id="manageGroupButton" mnemonicParsing="false" text="Manage Groups" />
                                                             </items>
                                                         </MenuButton>
                                                         <MenuButton layoutX="122.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" text="Account">
@@ -59,7 +58,8 @@
                                                 <content>
                                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                          <children>
-                                                            <ListView fx:id="privateList" layoutX="14.0" layoutY="94.0" prefHeight="454.4" prefWidth="228.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                            <ListView fx:id="privateList" layoutX="14.0" layoutY="44.0" prefHeight="410.0" prefWidth="229.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0" />
+                                                            <TextField fx:id="searchPrivateConversation" layoutX="7.0" layoutY="8.0" prefHeight="26.0" prefWidth="214.0" promptText="Find Private Chat..." />
                                                          </children>
                                                       </AnchorPane>
                                                 </content>
@@ -68,7 +68,8 @@
                                                 <content>
                                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                          <children>
-                                                            <ListView fx:id="groupList" layoutY="71.0" prefHeight="454.4" prefWidth="228.8" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                            <ListView fx:id="groupList" layoutY="44.0" prefHeight="410.0" prefWidth="229.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="44.0" />
+                                                            <TextField fx:id="searchGroupConversation" layoutX="7.0" layoutY="8.0" prefHeight="26.0" prefWidth="214.0" promptText="Find Group Chat..." />
                                                          </children>
                                                       </AnchorPane>
                                                 </content>
@@ -81,9 +82,9 @@
                                                               <items>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                                                      <children>
-                                                                        <TextField fx:id="searchUserField" layoutX="14.0" layoutY="14.0" prefHeight="26.0" prefWidth="205.0" promptText="Username or Display Name" />
-                                                                        <Button fx:id="addPrivateTargetButton" layoutX="14.0" layoutY="58.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="87.0" text="Private Chat" />
-                                                                        <Button fx:id="addGroupTargetButton" layoutX="129.0" layoutY="59.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" text="Group Chat" />
+                                                                        <TextField fx:id="searchUserField" layoutX="21.0" layoutY="14.0" prefHeight="26.0" prefWidth="191.0" promptText="Username or Display Name" />
+                                                                        <Button fx:id="addPrivateTargetButton" layoutX="21.0" layoutY="58.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="87.0" text="Chat Private" />
+                                                                        <Button fx:id="addGroupTargetButton" layoutX="117.0" layoutY="58.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="94.0" text="Make Group" />
                                                                      </children>
                                                                   </AnchorPane>
                                                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
