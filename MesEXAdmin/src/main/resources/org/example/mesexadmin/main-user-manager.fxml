@@ -2,86 +2,35 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesexadmin.ui.admin_level.UserManagerController">
    <children>
-      <SplitPane dividerPositions="0.1407085561497326" layoutX="170.0" layoutY="100.0" orientation="VERTICAL" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-               <children>
-                  <Button layoutX="23.0" layoutY="28.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
-                  <MenuButton layoutX="667.0" layoutY="28.0" mnemonicParsing="false" text="User's Detail">
-                    <items>
-                      <MenuItem mnemonicParsing="false" onAction="#changePassword" text="Change Password" />
-                        <MenuItem mnemonicParsing="false" onAction="#resetPassword" text="Password Reset" />
-                        <MenuItem mnemonicParsing="false" onAction="#editProfile" text="Edit Details" />
-                      <MenuItem mnemonicParsing="false" text="View Friend List" />
-                        <MenuItem mnemonicParsing="false" text="View Login History" />
-                    </items>
-                  </MenuButton>
-               </children>
-            </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-               <children>
-                  <TabPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <tabs>
-                        <Tab closable="false" text="All Users">
-                           <content>
-                              <AnchorPane>
-                                 <children>
-                                    <TableView fx:id="userTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
-                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" onAction="#removeUser" text="Delete User" />
-                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
-                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
-                                    <Button layoutX="560.0" layoutY="13.0" mnemonicParsing="false" onAction="#createNewProfile" text="Add User" />
-                                    <Button layoutX="633.0" layoutY="13.0" mnemonicParsing="false" onAction="#banUser" text="Ban User" />
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                        </Tab>
-                        <Tab closable="false" text="Spam Report">
-                           <content>
-                              <AnchorPane>
-                                 <children>
-                                    <TableView fx:id="spamTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
-                                    <Button layoutX="521.0" layoutY="13.0" mnemonicParsing="false" onAction="#unSpam" text="Unmark as Spam" />
-                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
-                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
-                                    <Button layoutX="635.0" layoutY="13.0" mnemonicParsing="false" onAction="#banUser" text="Ban User" />
-                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" onAction="#removeUser" text="Delete User" />
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                        </Tab>
-                        <Tab closable="false" text="Banned">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                          </content>
-                           <content>
-                              <AnchorPane>
-                                 <children>
-                                    <TableView fx:id="bannedTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
-                                    <Button layoutX="706.0" layoutY="13.0" mnemonicParsing="false" onAction="#removeUser" text="Delete User" />
-                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
-                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
-                                    <Button layoutX="621.0" layoutY="13.0" mnemonicParsing="false" onAction="#unbanUser" text="Unban User" />
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                        </Tab>
-                     </tabs>
-                  </TabPane>
-               </children>
-            </AnchorPane>
-        </items>
-      </SplitPane>
+      <Button layoutX="352.0" layoutY="540.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
+      <TableView fx:id="userTable" layoutX="55.0" layoutY="227.0" prefHeight="294.0" prefWidth="690.0">
+        <columns>
+          <TableColumn fx:id="usernameCol" prefWidth="168.0" text="Username" />
+          <TableColumn fx:id="displayNameCol" prefWidth="161.60003662109375" text="Display Name" />
+            <TableColumn fx:id="statusCol" prefWidth="135.99993896484375" text="Current Status" />
+            <TableColumn fx:id="dayCreatedCol" prefWidth="219.2000732421875" text="Day Created" />
+        </columns>
+      </TableView>
+      <ListView fx:id="friends" layoutX="356.0" layoutY="66.0" prefHeight="142.0" prefWidth="184.0" />
+      <ListView fx:id="loginTimes" layoutX="550.0" layoutY="67.0" prefHeight="141.0" prefWidth="194.0" />
+      <Button fx:id="resetPassword" layoutX="55.0" layoutY="138.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Reset Password" />
+      <Button fx:id="changePassword" layoutX="203.0" layoutY="138.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Change Password" />
+      <Button fx:id="editDetails" layoutX="55.0" layoutY="94.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Edit Details" />
+      <Button fx:id="addUser" layoutX="55.0" layoutY="52.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Add New User" />
+      <Button fx:id="deleteUser" layoutX="203.0" layoutY="94.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Delete User" />
+      <Button fx:id="banUser" layoutX="203.0" layoutY="52.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="120.0" text="Ban/Unban User" />
+      <TextField fx:id="filterField" layoutX="55.0" layoutY="178.0" prefHeight="26.0" prefWidth="170.0" promptText="Filter" />
+      <ChoiceBox fx:id="userFilter" layoutX="236.0" layoutY="178.0" prefHeight="26.0" prefWidth="86.0" />
+      <Label layoutX="356.0" layoutY="44.0" text="Friends" />
+      <Label layoutX="550.0" layoutY="44.0" text="Login Occurences" />
    </children>
 </AnchorPane>

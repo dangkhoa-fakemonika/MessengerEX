@@ -206,8 +206,6 @@ public class UserQuery {
         return allUserData;
     }
 
-
-
     // get friend/ban list
     public ArrayList<UserData> getUserList(ArrayList<ObjectId> idList){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");

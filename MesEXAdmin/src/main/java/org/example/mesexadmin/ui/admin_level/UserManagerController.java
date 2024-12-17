@@ -1,5 +1,8 @@
 package org.example.mesexadmin.ui.admin_level;
 
+import javafx.animation.PauseTransition;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -7,22 +10,21 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
-import org.example.mesexadmin.data_class.SpamTicketData;
+import org.example.mesexadmin.SessionUser;
+import org.example.mesexadmin.data_class.ActivityData;
 import org.example.mesexadmin.data_class.UserData;
 import org.example.mesexadmin.ui.ControllerWrapper;
+import org.example.mesexadmin.ui.elements.ActivityListComponent;
+import org.example.mesexadmin.ui.elements.UserListComponent;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -30,107 +32,126 @@ import java.util.ResourceBundle;
 public class UserManagerController implements ControllerWrapper {
     static SceneManager sceneManager;
     static UserData selectedUser;
-    static SpamTicketData selectedSpam;
-    static UserData selectedBanned;
+    static SessionUser currentUser;
 
     @FXML
     private TableView<UserData> userTable;
     @FXML
-    private TableView<SpamTicketData> spamTable;
+    private TableColumn<UserData, String> usernameCol;
     @FXML
-    private TableView<UserData> bannedTable;
+    private TableColumn<UserData, String> displayNameCol;
     @FXML
-    private Button
-    addUser, banUser1, banUser2, deleteUser1, deleteUser2, deleteUser3, unmarkSpam, unbanUser;
+    private TableColumn<UserData, String> statusCol;
     @FXML
-    private MenuButton detail;
+    private TableColumn<UserData, Date> dayCreatedCol;
+    @FXML
+    private Button addUser, banUser, deleteUser, editDetails, resetPassword, changePassword;
+    @FXML
+    private ListView<UserListComponent> friends;
+    @FXML
+    private ListView<ActivityListComponent> loginTimes;
+    @FXML
+    private ChoiceBox<String> userFilter;
+    final static ObservableList<String> filterOptions = FXCollections.observableArrayList("None", "username", "displayName", "status");
+    static String currentFilter;
+    @FXML
+    private TextField filterField;
 
-    final ObservableList<UserData> data = FXCollections.observableArrayList(
-            new UserData("FakeMonika", "fakemonika", "example@email.com", "Active"),
-            new UserData("KanCh", "kanch", "example@email.com", "Active"),
-            new UserData("Ryan Gosling", "him", "example@email.com", "Offline")
-    );
+    PauseTransition filterPause;
 
-    final ObservableList<SpamTicketData> spamData = FXCollections.observableArrayList(
-            new SpamTicketData("user2", "fakemonika4", "now"),
-            new SpamTicketData("user2", "kanch4", "now")
-    );
+    final ObservableList<UserData> userData = FXCollections.observableArrayList();
+    final ObservableList<UserListComponent> friendsData = FXCollections.observableArrayList();
+    final ObservableList<ActivityListComponent> loginData = FXCollections.observableArrayList();
 
-    final ObservableList<UserData> bannedData = FXCollections.observableArrayList(
-            new UserData("FakeMonika4", "fakemonika4", "example@email.com", "Banned"),
-            new UserData("KanCh4", "kanch4", "example@email.com", "Banned")
-    );
-
-    public ObservableList<TableColumn<UserData, String>> generateUserColumns(){
-        TableColumn<UserData, String> usernameCol;
-        TableColumn<UserData, String> nameCol;
-        TableColumn<UserData, String> emailCol;
-
-        TableColumn<UserData, String> statusCol;
-        TableColumn<UserData, String> cDateCol;
-
-        TableColumn<UserData, String> addressCol;
-        TableColumn<UserData, String> genderCol;
-        TableColumn<UserData, String> birthCol;
-
-
-        nameCol = new TableColumn<>("Name");
-        usernameCol = new TableColumn<>("Username");
-        emailCol = new TableColumn<>("Email");
-
-        statusCol = new TableColumn<>("Status");
-        cDateCol = new TableColumn<>("Date Created");
-
-        addressCol = new TableColumn<>("Address");
-        birthCol = new TableColumn<>("Date of Birth");
-        genderCol = new TableColumn<>("Gender");
-
-        usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("displayName"));
-        emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-
-        statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-        cDateCol.setCellValueFactory(new PropertyValueFactory<>("dateCreated"));
-
-        addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
-        birthCol.setCellValueFactory(new PropertyValueFactory<>("dateOfBirth"));
-        genderCol.setCellValueFactory(new PropertyValueFactory<>("gender"));
-
-        usernameCol.setMinWidth (100);
-        nameCol.setMinWidth (100);
-        emailCol.setMinWidth (100);
-
-        statusCol.setMinWidth (100);
-        cDateCol.setMinWidth (100);
-
-        addressCol.setMinWidth (100);
-        birthCol.setMinWidth (100);
-        genderCol.setMinWidth (100);
-
-        return FXCollections.observableArrayList(usernameCol, nameCol, emailCol, statusCol, cDateCol, addressCol, birthCol, genderCol);
-    }
-
-    public ObservableList<TableColumn<SpamTicketData, String>> generateSpamColumns(){
-        TableColumn<SpamTicketData, String> reporterCol = new TableColumn<>("Reporter");
-        reporterCol.setCellValueFactory(new PropertyValueFactory<>("reporterId"));
-        reporterCol.setMinWidth(100);
-
-        TableColumn<SpamTicketData, String> reportedCol = new TableColumn<>("Reported Account");
-        reportedCol.setCellValueFactory(new PropertyValueFactory<>("reportedId"));
-        reportedCol.setMinWidth(150);
-
-        TableColumn<SpamTicketData, String> timeCol = new TableColumn<>("Time");
-        timeCol.setCellValueFactory(new PropertyValueFactory<>("timeSent"));
-        timeCol.setMinWidth(100);
-
-        return FXCollections.observableArrayList(reportedCol, reporterCol, timeCol);
-    }
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         sceneManager.addScene("Main", "main-messaging.fxml");
         sceneManager.switchScene("Main");
     }
 
+    @Override
+    public void myInitialize() {
+        currentUser = Main.getCurrentUser();
+        userTable.setItems(userData);
+        userFilter.setValue("None");
+        filterField.setDisable(true);
+        friends.setItems(friendsData);
+        loginTimes.setItems(loginData);
+        banUser.setDisable(true);
+        deleteUser.setDisable(true);
+        editDetails.setDisable(true);
+        resetPassword.setDisable(true);
+        changePassword.setDisable(true);
+
+        loadUserData();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        sceneManager = Main.getSceneManager();
+
+        filterPause = new PauseTransition(Duration.millis(500));
+        filterPause.setOnFinished((e) -> updateData());
+
+        filterField.textProperty().addListener((e) -> {
+            filterPause.stop();
+            filterPause.playFromStart();
+        });
+
+        userFilter.setOnAction((e) -> updateData());
+
+        userTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
+            @Override
+            public void changed(ObservableValue<? extends UserData> observableValue, UserData userData, UserData t1) {
+                selectedUser = userTable.getSelectionModel().getSelectedItem();
+                if (selectedUser != null)
+                    loadSelectionData();
+            }
+        });
+
+        usernameCol.setCellValueFactory((a) -> new SimpleStringProperty(a.getValue().getUsername()));
+        displayNameCol.setCellValueFactory((a) -> new SimpleStringProperty(a.getValue().getDisplayName()));
+        statusCol.setCellValueFactory((a) -> new SimpleStringProperty(a.getValue().getStatus()));
+        dayCreatedCol.setCellValueFactory((a) -> new SimpleObjectProperty<>(a.getValue().getDateCreated()));
+
+        userFilter.setItems(filterOptions);
+    }
+
+    public void updateData(){
+        banUser.setDisable(true);
+        deleteUser.setDisable(true);
+        editDetails.setDisable(true);
+        resetPassword.setDisable(true);
+        changePassword.setDisable(true);
+        filterField.setDisable(userFilter.getValue().equals("None"));
+
+        String text = filterField.getText().trim();
+        currentFilter = userFilter.getValue();
+        if (!text.isEmpty()){
+            userData.setAll(currentUser.myQuery.users().getAllUsersFilter(currentFilter, text));
+        } else {
+            userData.setAll(currentUser.myQuery.users().getAllUsers());
+        }
+    }
+
+    public void loadSelectionData(){
+        banUser.setDisable(false);
+        deleteUser.setDisable(false);
+        editDetails.setDisable(false);
+        resetPassword.setDisable(false);
+        changePassword.setDisable(false);
+
+        ArrayList<UserData> getFriends = currentUser.myQuery.users().getUserList(selectedUser.getFriend());
+        ArrayList<ActivityData> getLogin = currentUser.myQuery.activities().viewUserLoginHistory(selectedUser.getUserId());
+        friendsData.clear();
+        getFriends.forEach((a) -> friendsData.add(new UserListComponent(a)));
+        loginData.clear();
+        getLogin.forEach((a) -> loginData.add(new ActivityListComponent(a)));
+    }
+
+    public void loadUserData(){
+        userData.setAll(currentUser.myQuery.users().getAllUsers());
+    }
 
     public void banUser(ActionEvent actionEvent) {
         Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -208,45 +229,4 @@ public class UserManagerController implements ControllerWrapper {
         dialog.showAndWait();
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        sceneManager = Main.getSceneManager();
-        userTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
-            @Override
-            public void changed(ObservableValue<? extends UserData> observableValue, UserData userData, UserData t1) {
-                selectedUser = userTable.getSelectionModel().getSelectedItem();
-            }
-        });
-        spamTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<SpamTicketData>() {
-            @Override
-            public void changed(ObservableValue<? extends SpamTicketData> observableValue, SpamTicketData userData, SpamTicketData t1) {
-                selectedSpam = spamTable.getSelectionModel().getSelectedItem();
-            }
-        });
-        bannedTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
-            @Override
-            public void changed(ObservableValue<? extends UserData> observableValue, UserData userData, UserData t1) {
-                selectedBanned = bannedTable.getSelectionModel().getSelectedItem();
-            }
-        });
-
-    }
-
-    @Override
-    public void myInitialize() {
-        userTable.setItems(FXCollections.observableArrayList());
-        spamTable.setItems(FXCollections.observableArrayList());
-        bannedTable.setItems(FXCollections.observableArrayList());
-        userTable.getColumns().clear();
-        spamTable.getColumns().clear();
-        bannedTable.getColumns().clear();
-
-
-        userTable.setItems(data);
-        userTable.getColumns().addAll(generateUserColumns());
-        spamTable.setItems(spamData);
-        spamTable.getColumns().addAll(generateSpamColumns());
-        bannedTable.setItems(bannedData);
-        bannedTable.getColumns().addAll(generateUserColumns());
-    }
 }

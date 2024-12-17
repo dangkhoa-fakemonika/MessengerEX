@@ -81,7 +81,6 @@ public class ConversationController implements ControllerWrapper {
     }
 
     void refresh(){
-
         myGroupTable.setItems(FXCollections.observableArrayList());
     }
 

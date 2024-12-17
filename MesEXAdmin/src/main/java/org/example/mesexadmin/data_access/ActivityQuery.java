@@ -15,6 +15,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 
 public class ActivityQuery {
     MongoManagement mongoManagement;
@@ -34,6 +35,16 @@ public class ActivityQuery {
         }
 
         return true;
+    }
+
+    public ArrayList<ActivityData> viewUserLoginHistory(ObjectId targetId){
+        MongoCollection<Document> activities = mongoManagement.database.getCollection("activities");
+        ArrayList<Document> results = new ArrayList<>();
+        activities.find(Filters.eq("userId", targetId)).into(results);
+
+        ArrayList<ActivityData> data = new ArrayList<>();
+        results.forEach((res) -> data.add(documentToActivity(res)));
+        return data;
     }
 
     public ArrayList<ActivityData> viewLoginHistoryAll(){
