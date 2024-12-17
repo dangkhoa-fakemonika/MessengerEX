@@ -166,7 +166,6 @@ public class FriendsController implements ControllerWrapper {
             if (currentUser.blockUser(removeTarget.getUserId())) {
                 onlineData.remove(removeTarget);
                 friendData.remove(removeTarget);
-                // blockedData.add(removeTarget);
                 new Alert(AlertType.INFORMATION, "You have blocked this user and removed them from your friendlist").showAndWait();
             }
         }
@@ -429,6 +428,7 @@ public class FriendsController implements ControllerWrapper {
             public void handle(ActionEvent arg0) {
                 try {
                     cancelAllTasks();
+                    friendManagementTabPane.getSelectionModel().select(onlineTab);
                     sceneManager.addScene("Main", "main-messaging.fxml");
                     sceneManager.switchScene("Main");
                 } catch (Exception e) {

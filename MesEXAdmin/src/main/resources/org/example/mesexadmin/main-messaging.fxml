@@ -118,9 +118,9 @@
                                         <Label fx:id="myLabel" layoutX="24.0" layoutY="23.0" text="Friend" />
                                         <MenuButton fx:id="optionButton" layoutX="440.0" layoutY="23.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="93.0" text="Configure">
                                             <items>
-                                                <MenuItem fx:id="seeMessagesButton" mnemonicParsing="false" onAction="#configureChatHistory" text="Messages" />
+                                                <MenuItem fx:id="seeMessagesButton" mnemonicParsing="false" text="Messages" />
                                                 <MenuItem fx:id="configureGroupButton" mnemonicParsing="false" onAction="#configureGroup" text="Group" />
-                                                <MenuItem fx:id="blockUserButton" mnemonicParsing="false" onAction="#blockUser" text="Block User" />
+                                                <MenuItem fx:id="blockUserButton" mnemonicParsing="false" text="Block User" />
                                                 <MenuItem fx:id="reportUserButton" mnemonicParsing="false" onAction="#reportUser" text="Report Spam" />
                                             </items>
                                         </MenuButton>

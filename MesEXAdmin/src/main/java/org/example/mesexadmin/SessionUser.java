@@ -365,6 +365,20 @@ public class SessionUser {
         return myQuery.conversations().createConversation(newConv);
     }
 
+    public UserData getChatTarget(ConversationData currentConversation) {
+        UserData result = null;
+        for (ObjectId id : currentConversation.getMembersId()) {
+            if (!currentUser.getUserId().equals(id)) {
+                result = myQuery.users().getUserById(id);
+            }
+        }
+        return result;
+    }
+
+    public boolean getBLockedStatus(ObjectId blocker) {
+        return myQuery.users().getUserById(blocker).getBlocked().contains(currentUser.getUserId());
+    }
+
     public boolean sendMessage(String content, ObjectId conversationId){
         MessageData messageData = new MessageData();
         messageData.setSenderId(currentUser.getUserId());

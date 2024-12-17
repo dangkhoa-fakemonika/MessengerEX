@@ -60,7 +60,6 @@ public class MessagingController implements ControllerWrapper {
     @FXML private Tab privateTab;
     @FXML private Tab groupTab;
     @FXML private Tab everyoneTab;
-    private Tab currentTab;
     @FXML private TabPane messagesTabPane;
     @FXML private MenuItem seeMessagesButton;
     @FXML private MenuItem configureGroupButton;
@@ -70,9 +69,11 @@ public class MessagingController implements ControllerWrapper {
     @FXML private ListView<UserListComponent> searchUserList;
     @FXML private Button addPrivateTargetButton;
     @FXML private Button addGroupTargetButton;
-
+    
     private ScheduledService<Void> updateChatList;
     private ScheduledService<Void> updateChat;
+    private UserData currentChatTarget = null;
+    private Tab currentTab;
     private boolean tabSwitched;
     private boolean chatSwitched;
 
@@ -86,9 +87,15 @@ public class MessagingController implements ControllerWrapper {
     static ConversationData jumpConversation = null;
     static MessageData jumpMessage = null;
 
-    public void addMessage(ActionEvent actionEvent){
-        if (!myTextArea.getText().trim().isEmpty()){
+    public void addMessage(ActionEvent actionEvent) {
+        if (!myTextArea.getText().trim().isEmpty()) {
             String msg = myTextArea.getText().trim();
+
+            if (currentUser.getBLockedStatus(currentChatTarget.getUserId())) {
+                new Alert(AlertType.INFORMATION, "You have been blocked by this user").showAndWait();
+                disableChat();
+                return;
+            }
 
             // Add Message processing here
             boolean res = currentUser.sendMessage(msg, currentConversation.getConversationId());
@@ -138,11 +145,9 @@ public class MessagingController implements ControllerWrapper {
             }
         }
 
-//        Platform.runLater(() -> {
         messages.requestFocus();
         messages.getFocusModel().focus(indexMessage);
         messages.getSelectionModel().select(indexMessage);
-//        });
     }
 
     public void addMessage() {
@@ -167,6 +172,14 @@ public class MessagingController implements ControllerWrapper {
     }
 
     private void updateCurrentChat() {
+
+        if (currentChatTarget == null || currentUser.getBLockedStatus(currentChatTarget.getUserId())) {
+            disableChat();
+            return;
+        } else {
+            enableChat();
+        }
+
         if (currentConversation == null) {
             messages.getItems().clear();
             return;
@@ -200,7 +213,7 @@ public class MessagingController implements ControllerWrapper {
             ArrayList<ConversationData> privateQuery = currentUser.loadPrivateConversations();
             privateItems = FXCollections.observableArrayList();
 
-            for (ConversationData cQuery : privateQuery){
+            for (ConversationData cQuery : privateQuery) {
                 privateItems.add(new ConversationListComponent(cQuery));
             }
 
@@ -210,7 +223,7 @@ public class MessagingController implements ControllerWrapper {
         } else if (currentTab == groupTab) {
             ArrayList<ConversationData> groupQuery = currentUser.loadGroupConversations();
             groupItems = FXCollections.observableArrayList();
-            for (ConversationData cQuery : groupQuery){
+            for (ConversationData cQuery : groupQuery) {
                 groupItems.add(new ConversationListComponent(cQuery));
             }
 
@@ -222,7 +235,21 @@ public class MessagingController implements ControllerWrapper {
         updateChat.restart();
     }
 
-    void loadSearchResults(){
+    private void disableChat() {
+        sendButton.setDisable(true);
+        myTextArea.setDisable(true);
+        myTextArea.setText("You can not chat with this user.");
+    }
+
+    private void enableChat() {
+        sendButton.setDisable(false);
+        myTextArea.setDisable(false);
+        if (myTextArea.getText().equals("You can not chat with this user."))
+            myTextArea.clear();
+    }
+
+
+    private void loadSearchResults(){
         selectedUser = null;
         addPrivateTargetButton.setDisable(true);
         addGroupTargetButton.setDisable(true);
@@ -276,8 +303,7 @@ public class MessagingController implements ControllerWrapper {
     public void myInitialize() {
         currentUser = Main.getCurrentUser();
         optionButton.setDisable(true);
-        sendButton.setDisable(true);
-        myTextArea.setDisable(true);
+        disableChat();
         myTextArea.clear();
         currentTab = privateTab;
 
@@ -335,13 +361,19 @@ public class MessagingController implements ControllerWrapper {
                 ConversationListComponent c =  privateList.getSelectionModel().getSelectedItem();
                 if (c != null){
                     currentConversation = c.getConversation();
-                    myLabel.setText("Selected Chat: " + currentConversation.getChatTarget(currentUser.getSessionUserData().getUsername()));
+
+                    currentChatTarget = currentUser.getChatTarget(currentConversation);
+
+                    myLabel.setText("Selected Chat: " + currentChatTarget.getUsername());
                     
                     chatSwitched = true;
                     updateCurrentChat();
 
-                    myTextArea.setDisable(false);
-                    sendButton.setDisable(false);
+                    if (currentUser.getBLockedStatus(currentChatTarget.getUserId()))
+                        disableChat();
+                    else
+                        enableChat();
+
                     optionButton.setDisable(false);
                     configureGroupButton.setDisable(true);
                     configureGroupButton.setVisible(false);
@@ -401,6 +433,11 @@ public class MessagingController implements ControllerWrapper {
                         myTextArea.appendText("\n");
                     }
                     else {
+                        if (currentUser.getBLockedStatus(currentChatTarget.getUserId())) {
+                            new Alert(AlertType.INFORMATION, "You have been blocked by this user").showAndWait();
+                            disableChat();
+                            return;
+                        }
                         addMessage();
                     }
                 }
@@ -473,7 +510,6 @@ public class MessagingController implements ControllerWrapper {
                         event.consume();
                     } else if (currentUser.createGroup(groupName, username)) {
                         new Alert(AlertType.INFORMATION, "Group created!").showAndWait();
-                        // refresh();
                         updateChatList.restart();
                         event.consume();
                     } else {
@@ -504,6 +540,36 @@ public class MessagingController implements ControllerWrapper {
             }
         });
 
+        seeMessagesButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    cancelAllTasks();
+                    sceneManager.addScene("ChatManagement", "main-chat-history-management.fxml");
+                    sceneManager.switchScene("ChatManagement");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            };
+        });
+
+        blockUserButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setContentText("Block this user?");
+                alert.setHeaderText("Block User");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        if (currentUser.blockUser(currentChatTarget.getUserId())) {
+                            new Alert(AlertType.INFORMATION, "You have blocked this user").showAndWait();
+                        }
+                    }
+                });
+            };
+        });
+
         logoutButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
@@ -515,6 +581,7 @@ public class MessagingController implements ControllerWrapper {
                     if (response == ButtonType.OK) {
                         if (currentUser.logoutSession()) {
                             try {
+                                cancelAllTasks();
                                 sceneManager.addScene("Login", "main-login.fxml");
                                 sceneManager.switchScene("Login");
                             } catch (Exception e) {
@@ -552,7 +619,6 @@ public class MessagingController implements ControllerWrapper {
                         event.consume();
                     } else if (currentUser.createPrivateConversation(username)) {
                         new Alert(AlertType.INFORMATION, "Private conversation created!").showAndWait();
-                        // refresh();
                         updateChatList.restart();
                         event.consume();
                     } else {
@@ -635,13 +701,6 @@ public class MessagingController implements ControllerWrapper {
             searchPause.playFromStart();
         });
 
-        // privateTab.setOnSelectionChanged((e) -> {
-        //     groupList.getSelectionModel().clearSelection();
-        //     searchUserList.getSelectionModel().clearSelection();
-        //     searchUserField.clear();
-        //     loadSearchResults();
-        // });
-
         messagesTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             handleSwitchTab(newTab);
         });
@@ -649,7 +708,6 @@ public class MessagingController implements ControllerWrapper {
 
     private void handleSwitchTab(Tab tab) {
         if (tab == privateTab) {
-            // System.out.println("private");
             currentTab = privateTab;
 
             groupList.getSelectionModel().clearSelection();
@@ -660,7 +718,6 @@ public class MessagingController implements ControllerWrapper {
             loadSearchResults();
 
         } else if (tab == groupTab) {
-            // System.out.println("group");
             currentTab = groupTab;
 
             privateList.getSelectionModel().clearSelection();
@@ -670,7 +727,6 @@ public class MessagingController implements ControllerWrapper {
             addGroupTargetButton.setDisable(true);
             loadSearchResults();
         } else {
-            // System.out.println("everyone");
             currentTab = everyoneTab;
 
             groupList.getSelectionModel().clearSelection();
@@ -717,26 +773,13 @@ public class MessagingController implements ControllerWrapper {
         sceneManager.switchScene("EditProfile");
     }
 
-    public void configureChatHistory(ActionEvent actionEvent) throws IOException {
-        sceneManager.addScene("ChatManagement", "main-chat-history-management.fxml");
-        sceneManager.switchScene("ChatManagement");
-    }
-
-    public void returnLogin(ActionEvent actionEvent) throws IOException {
-        sceneManager.addScene("Login", "main-login.fxml");
-        sceneManager.switchScene("Login");
-    }
-
     public void configureGroup(ActionEvent actionEvent) throws IOException {
         sceneManager.addScene("ThisGroupManager", "main-single-group-manager.fxml");
         sceneManager.switchScene("ThisGroupManager");
     }
 
-    public void blockUser(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Block this User?");
-        newAlert.setHeaderText("Block User");
-        newAlert.showAndWait();
+    private void cancelAllTasks() {
+        updateChat.cancel();
+        updateChatList.cancel();
     }
-
 }
