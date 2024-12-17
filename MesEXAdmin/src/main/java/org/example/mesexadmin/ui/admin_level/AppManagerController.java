@@ -261,14 +261,6 @@ public class AppManagerController implements ControllerWrapper {
         socialPause.setOnFinished((e) -> updateSocialData.restart());
         socialFilter.setOnAction((e) -> updateSocialData.restart());
         socialCompare.setOnAction((e) -> updateSocialData.restart());
-
-//        activePause.setOnFinished((e) -> selectSocialTable(null));
-//
-//        refreshLoginData();
-//        refreshNewAccountData();
-//        refreshRegisterBarChart();
-//        refreshActiveBarChart();
-//        refreshSocialTable();
     }
 
     private void initializeUpdateTask(){

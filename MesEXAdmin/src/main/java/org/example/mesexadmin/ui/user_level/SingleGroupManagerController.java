@@ -22,7 +22,6 @@ import org.example.mesexadmin.ui.elements.UserListComponent;
 import java.io.IOException;
 import java.net.URL;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -31,7 +30,7 @@ import java.util.ResourceBundle;
 public class SingleGroupManagerController implements ControllerWrapper {
     static SceneManager sceneManager;
     static SessionUser currentUser;
-    static ConversationData thisConversaion;
+    static ConversationData thisConversation;
 
     @FXML private ListView<UserListComponent> memberList;
     @FXML private ListView<UserListComponent> modList;
@@ -70,12 +69,12 @@ public class SingleGroupManagerController implements ControllerWrapper {
         memberList.getItems().clear();
         modList.getItems().clear();
 
-        ObjectId renewId = thisConversaion.getConversationId();
+        ObjectId renewId = thisConversation.getConversationId();
         ConversationData renewConversation = currentUser.myQuery.conversations().getConversation(renewId);
         if (renewConversation != null)
-            thisConversaion = renewConversation;
-        ArrayList<ObjectId> membersId = thisConversaion.getMembersId();
-        ArrayList<ObjectId> moderatorsId = thisConversaion.getModeratorsId();
+            thisConversation = renewConversation;
+        ArrayList<ObjectId> membersId = thisConversation.getMembersId();
+        ArrayList<ObjectId> moderatorsId = thisConversation.getModeratorsId();
         ArrayList<UserData> members = currentUser.myQuery.users().getUserList(membersId);
         ArrayList<UserData> moderators = currentUser.myQuery.users().getUserList(moderatorsId);
 
@@ -94,17 +93,16 @@ public class SingleGroupManagerController implements ControllerWrapper {
     @Override
     public void myInitialize() {
         currentUser = Main.getCurrentUser();
-        thisConversaion = MessagingController.currentConversation;
-
+        thisConversation = MessagingController.currentConversation;
 
         refresh();
-        if (!thisConversaion.getModeratorsId().contains(currentUser.getSessionUserData().getUserId())){
+        if (!thisConversation.getModeratorsId().contains(currentUser.getSessionUserData().getUserId())){
             addModButton.setDisable(true);
             removeMemberButton.setDisable(true);
         }
 
-        getDateCreated.setValue(Instant.ofEpochMilli(thisConversaion.getDateCreated().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
-        getGroupName.setText(thisConversaion.getConversationName());
+        getDateCreated.setValue(Instant.ofEpochMilli(thisConversation.getDateCreated().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
+        getGroupName.setText(thisConversation.getConversationName());
     }
 
     @Override
@@ -119,7 +117,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
                     modList.getSelectionModel().clearSelection();
                     selectedUser = u.getUser();
 
-                    if (thisConversaion.getModeratorsId().contains(currentUser.getSessionUserData().getUserId())){
+                    if (thisConversation.getModeratorsId().contains(currentUser.getSessionUserData().getUserId())){
                         addModButton.setDisable(false);
                         removeMemberButton.setDisable(false);
                     }
@@ -134,7 +132,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
                 if (u != null){
                     memberList.getSelectionModel().clearSelection();
                     selectedUser = u.getUser();
-                    if (thisConversaion.getModeratorsId().contains(currentUser.getSessionUserData().getUserId())) {
+                    if (thisConversation.getModeratorsId().contains(currentUser.getSessionUserData().getUserId())) {
                         addModButton.setDisable(true);
                         removeMemberButton.setDisable(false);
                     }
@@ -170,7 +168,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
                         event.consume();
                     } else{
                         UserData fetchUser = currentUser.myQuery.users().getUserByUsername(username);
-                        if (fetchUser != null && currentUser.myQuery.conversations().addMember(thisConversaion.getConversationId(), fetchUser.getUserId())) {
+                        if (fetchUser != null && currentUser.myQuery.conversations().addMember(thisConversation.getConversationId(), fetchUser.getUserId())) {
                             new Alert(Alert.AlertType.INFORMATION, username + " added!").showAndWait();
                             refresh();
                         } else {
@@ -196,7 +194,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
 
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
-                        if (currentUser.myQuery.conversations().addModerator(thisConversaion.getConversationId(), selectedUser.getUserId())) {
+                        if (currentUser.myQuery.conversations().addModerator(thisConversation.getConversationId(), selectedUser.getUserId())) {
                             new Alert(Alert.AlertType.INFORMATION, selectedUser.getUsername() + " added to mod!").showAndWait();
                             refresh();
                         }
@@ -218,7 +216,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
 
                     alert.showAndWait().ifPresent(response -> {
                         if (response == ButtonType.OK) {
-                            if (currentUser.myQuery.conversations().removeMember(thisConversaion.getConversationId(), selectedUser.getUserId())) {
+                            if (currentUser.myQuery.conversations().removeMember(thisConversation.getConversationId(), selectedUser.getUserId())) {
                                 new Alert(Alert.AlertType.INFORMATION, selectedUser.getUsername() + " added!").showAndWait();
                                 refresh();
                             }
@@ -243,7 +241,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
 
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
-                        if (currentUser.myQuery.conversations().removeMember(thisConversaion.getConversationId(), currentUser.getSessionUserData().getUserId())) {
+                        if (currentUser.myQuery.conversations().removeMember(thisConversation.getConversationId(), currentUser.getSessionUserData().getUserId())) {
                             try {
                                 new Alert(Alert.AlertType.INFORMATION, "You left.").showAndWait();
                                 sceneManager.addScene("Main", "main-login.fxml");
@@ -260,6 +258,45 @@ public class SingleGroupManagerController implements ControllerWrapper {
             }
         });
 
+        changeGroupName.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-change-group-name.fxml")));
+                Dialog<Objects> dialog = new Dialog<>();
+
+                try {
+                    DialogPane dialogPane = loader.load();
+                    dialog.setDialogPane(dialogPane);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                PopUpController popUpController = loader.getController();
+                ButtonType confirmButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.YES);
+                ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+                popUpController.setGroupName(thisConversation.getConversationName());
+
+                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+                confirmButton.addEventFilter(ActionEvent.ACTION, event -> {
+                    String groupName = popUpController.getGroupNameField();
+                    if (groupName.isEmpty()) {
+                        new Alert(Alert.AlertType.ERROR, "The field must not be empty!").showAndWait();
+                        event.consume();
+                    } else if (currentUser.myQuery.conversations().changeConversationName(thisConversation.getConversationId(), groupName)) {
+                        getGroupName.setText(groupName);
+                    } else{
+                        new Alert(Alert.AlertType.ERROR, "Can't change name at the moment.").showAndWait();
+                        event.consume();
+                    }
+
+                    popUpController.clearAllFields();
+                });
+
+                dialog.showAndWait();
+                dialog.close();
+            }
+        });
     }
 
 

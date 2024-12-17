@@ -2,7 +2,6 @@ package org.example.mesexadmin.ui.user_level;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,19 +25,14 @@ import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.FriendRequestData;
 import org.example.mesexadmin.data_class.UserData;
 import org.example.mesexadmin.ui.ControllerWrapper;
-import org.bson.Document;
-
-import com.mongodb.client.MongoCollection;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 public class FriendsController implements ControllerWrapper {
     private SceneManager sceneManager;
@@ -461,10 +455,10 @@ public class FriendsController implements ControllerWrapper {
         updateBlockedData = initiateGetUserDataTask(blockedData, "blocked");
         updateBlockedData.setPeriod(Duration.seconds(60)); 
 
-        updateSentRequests = initiateGetFriendRequesstDataTask(sentRequests, "sentRequests");
+        updateSentRequests = initiateGetFriendRequestDataTask(sentRequests, "sentRequests");
         updateSentRequests.setPeriod(Duration.seconds(60));
 
-        updateReceivedRequests = initiateGetFriendRequesstDataTask(receivedRequests, "reveicedRequests");
+        updateReceivedRequests = initiateGetFriendRequestDataTask(receivedRequests, "reveicedRequests");
         updateReceivedRequests.setPeriod(Duration.seconds(60));
     }
 
@@ -515,7 +509,7 @@ public class FriendsController implements ControllerWrapper {
         };
     }
 
-    private ScheduledService<Void> initiateGetFriendRequesstDataTask(ObservableList<FriendRequestData> data, String tab) {
+    private ScheduledService<Void> initiateGetFriendRequestDataTask(ObservableList<FriendRequestData> data, String tab) {
         return new ScheduledService<Void>() {
             @Override
             protected Task<Void> createTask() {
