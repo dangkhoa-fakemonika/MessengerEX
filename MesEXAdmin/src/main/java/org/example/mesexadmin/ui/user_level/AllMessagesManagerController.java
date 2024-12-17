@@ -79,6 +79,7 @@ public class AllMessagesManagerController implements ControllerWrapper {
     public void myInitialize() {
         jumpButton.setDisable(true);
         selectedMessage = null;
+        currentUser = Main.getCurrentUser();
 
         ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByUser(currentUser.getSessionUserData().getUserId());
         loadedMessages = FXCollections.observableArrayList();
@@ -95,7 +96,6 @@ public class AllMessagesManagerController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
-        currentUser = Main.getCurrentUser();
         fieldPause = new PauseTransition(Duration.millis(500));
         fieldPause.setOnFinished((e) -> updateMessages());
 

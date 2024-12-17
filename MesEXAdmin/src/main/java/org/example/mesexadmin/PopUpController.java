@@ -60,9 +60,15 @@ public class PopUpController implements Initializable {
         return groupNameField.getText();
     }
 
+    public void setUsername(String text){
+        usernameField.setText(text);
+        usernameField.setDisable(true);
+    }
+
     public void clearAllFields() {
         if (usernameField != null) {
             usernameField.clear();
+            usernameField.setDisable(false);
         }
         if (emailField != null) {
             emailField.clear();

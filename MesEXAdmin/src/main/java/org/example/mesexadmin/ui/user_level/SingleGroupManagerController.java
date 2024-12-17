@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
+import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.MessageData;
 import org.example.mesexadmin.data_class.UserData;
 import org.example.mesexadmin.ui.ControllerWrapper;
@@ -25,6 +26,7 @@ import java.util.ResourceBundle;
 
 public class SingleGroupManagerController implements ControllerWrapper {
     static SceneManager sceneManager;
+    static SessionUser currentUser;
 
     @FXML
     private ListView<UserListComponent> memberList;
@@ -114,6 +116,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
         memberList.getItems().clear();
         modList.getItems().clear();
         chat.getItems().clear();
+        currentUser = Main.getCurrentUser();
 
         memberList.getItems().addAll(observableList1);
         modList.getItems().addAll(observableList2);

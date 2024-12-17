@@ -1,5 +1,6 @@
 package org.example.mesexadmin.ui.elements;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import org.example.mesexadmin.Main;
@@ -10,20 +11,23 @@ import java.util.Objects;
 
 public class ConversationListComponent extends HBox{
     private final ConversationData data;
+    SimpleStringProperty displayData;
 
     public ConversationListComponent(ConversationData conversation) {
         data = conversation;
+        displayData = new SimpleStringProperty();
         UserData viewingUser = Main.getCurrentUser().getSessionUserData();
         // Set display data here
         if (Objects.equals(data.getType(), "private")){
             if (viewingUser.getUserId().equals(conversation.getMembersId().getFirst()))
-                this.getChildren().add(new Label(conversation.getMembersName().getLast().get()));
+                displayData.set(conversation.getMembersName().getLast().get());
             else
-                this.getChildren().add(new Label(conversation.getMembersName().getFirst().get()));
+                displayData.set(conversation.getMembersName().getFirst().get());
         }
 
         else
-            this.getChildren().add(new Label(data.getConversationName()));
+            displayData.set(data.getConversationName());
+        this.getChildren().add(new Label(displayData.get()));
     }
 
     public ConversationData getConversation(){
@@ -31,5 +35,8 @@ public class ConversationListComponent extends HBox{
         return data;
     }
 
+    public void setDisplayData(String newDisplayData){
+        displayData.set(newDisplayData);
+    }
 
 }

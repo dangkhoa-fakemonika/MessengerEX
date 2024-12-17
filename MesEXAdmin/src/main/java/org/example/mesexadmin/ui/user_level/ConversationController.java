@@ -87,13 +87,12 @@ public class ConversationController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-
+        currentUser = Main.getCurrentUser();
 
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
-        currentUser = Main.getCurrentUser();
     }
 }

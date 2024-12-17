@@ -237,7 +237,6 @@ public class FriendsController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
-        currentUser = Main.getCurrentUser();
 
         // Set up filter
         onlineFilter.getItems().addAll(userFilterKeys);

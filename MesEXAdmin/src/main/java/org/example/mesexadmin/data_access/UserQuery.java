@@ -195,6 +195,18 @@ public class UserQuery {
         return allUserData;
     }
 
+    public ArrayList<UserData> getAllUsersNameFilter(String token){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+        ArrayList<Document> results = new ArrayList<>();
+        users.find(Filters.or(Filters.regex("username", token, "i"), Filters.regex("displayName", token, "i"))).into(results);
+        ArrayList<UserData> allUserData = new ArrayList<>();
+        for (Document res : results){
+            allUserData.add(documentToUser(res));
+        }
+        return allUserData;
+    }
+
+
 
     // get friend/ban list
     public ArrayList<UserData> getUserList(ArrayList<ObjectId> idList){

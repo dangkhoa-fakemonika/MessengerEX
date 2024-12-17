@@ -15,6 +15,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.util.Duration;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
@@ -38,6 +39,7 @@ public class MessagingController implements ControllerWrapper {
     private SessionUser currentUser;
     static ConversationData currentConversation;
     static UserData selectedUser;
+    PauseTransition searchPause;
 
     @FXML private ListView<ConversationListComponent> privateList;
     @FXML private ListView<ConversationListComponent> groupList;
@@ -68,9 +70,10 @@ public class MessagingController implements ControllerWrapper {
 
 
     // Load from database
-    static ObservableList<ConversationListComponent> privateItems;
-    static ObservableList<ConversationListComponent> groupItems;
-    static ObservableList<MessageListComponent> messagesList;
+    static ObservableList<ConversationListComponent> privateItems = FXCollections.observableArrayList();
+    static ObservableList<ConversationListComponent> groupItems = FXCollections.observableArrayList();
+    static ObservableList<MessageListComponent> messagesList = FXCollections.observableArrayList();
+    static ObservableList<UserListComponent> searchUserItems = FXCollections.observableArrayList();
 
     public static boolean jumpToMessage = false;
     static ConversationData jumpConversation = null;
@@ -194,6 +197,28 @@ public class MessagingController implements ControllerWrapper {
         messages.refresh();
     }
 
+    void loadSearchResults(){
+        selectedUser = null;
+        addPrivateTargetButton.setDisable(true);
+        addGroupTargetButton.setDisable(true);
+
+        ArrayList<UserData> searchResults;
+
+        String token = searchUserField.getText().trim();
+        if (!token.isEmpty()){
+            searchResults = currentUser.myQuery.users().getAllUsersNameFilter(token);
+        }
+        else {
+            searchResults = new ArrayList<>();
+        }
+
+        searchUserItems.clear();
+        searchResults.forEach((a) -> searchUserItems.add(new UserListComponent(a)));
+        searchUserList.getItems().clear();
+        searchUserList.getItems().addAll(searchUserItems);
+        searchUserList.refresh();
+    }
+
     
     @Override
     public void myInitialize() {
@@ -202,8 +227,6 @@ public class MessagingController implements ControllerWrapper {
         sendButton.setDisable(true);
         myTextArea.setDisable(true);
         myTextArea.clear();
-
-
         currentUser = Main.getCurrentUser();
         refresh();
 
@@ -213,6 +236,8 @@ public class MessagingController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
+        searchPause = new PauseTransition(Duration.millis(500));
+        searchPause.setOnFinished((e) -> loadSearchResults());
 
         privateList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ConversationListComponent>() {
             @Override
@@ -253,6 +278,21 @@ public class MessagingController implements ControllerWrapper {
                     blockUserButton.setVisible(false);
                     reportUserButton.setDisable(true);
                     reportUserButton.setVisible(false);
+                }
+            }
+        });
+
+        searchUserList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserListComponent>() {
+            @Override
+            public void changed(ObservableValue<? extends UserListComponent> observableValue, UserListComponent userListComponent, UserListComponent t1) {
+                UserListComponent u = searchUserList.getSelectionModel().getSelectedItem();
+                if (u != null && !u.getUser().getUserId().equals(currentUser.getSessionUserData().getUserId())){
+                    selectedUser = u.getUser();
+                    addPrivateTargetButton.setDisable(false);
+                    addGroupTargetButton.setDisable(false);
+                } else {
+                    addPrivateTargetButton.setDisable(true);
+                    addGroupTargetButton.setDisable(true);
                 }
             }
         });
@@ -339,7 +379,6 @@ public class MessagingController implements ControllerWrapper {
                     } else if (currentUser.createGroup(groupName, username)) {
                         new Alert(AlertType.INFORMATION, "Group created!").showAndWait();
                         refresh();
-                        event.consume();
                     } else {
                         event.consume();
                     }
@@ -417,7 +456,6 @@ public class MessagingController implements ControllerWrapper {
                     } else if (currentUser.createPrivateConversation(username)) {
                         new Alert(AlertType.INFORMATION, "Private conversation created!").showAndWait();
                         refresh();
-                        event.consume();
                     } else {
                         new Alert(AlertType.ERROR, "Can't create conversation").showAndWait();
                         event.consume();
@@ -431,20 +469,83 @@ public class MessagingController implements ControllerWrapper {
             }
         });
 
+        addPrivateTargetButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setHeaderText("Create a private chat with " + selectedUser.getUsername() + " ?");
+                alert.setTitle("Create Private Chat");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        if (currentUser.createPrivateConversation(selectedUser.getUsername())) {
+                            refresh();
+                        } else {
+                            new Alert(AlertType.ERROR, "Can't connect to user").showAndWait();
+                        }
+                    }
+                });
+            }
+        });
+
+        addGroupTargetButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-create-group.fxml")));
+                Dialog<Objects> dialog = new Dialog<>();
+
+                try {
+                    DialogPane dialogPane = loader.load();
+                    dialog.setDialogPane(dialogPane);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                PopUpController popUpController = loader.getController();
+                ButtonType confirmButtonType = new ButtonType("Confirm", ButtonData.YES);
+                ButtonType cancelButtonType = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+                String username = selectedUser.getUsername();
+                popUpController.setUsername(username);
+
+                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+                confirmButton.addEventFilter(ActionEvent.ACTION, event -> {
+                    String groupName = popUpController.getGroupNameField();
+                    if (groupName.trim().isEmpty()) {
+                        new Alert(AlertType.ERROR, "The fields must not be empty!").showAndWait();
+                        event.consume();
+                    } else if (currentUser.createGroup(groupName, username)) {
+                        new Alert(AlertType.INFORMATION, "Group created!").showAndWait();
+                        refresh();
+                    } else {
+                        event.consume();
+                    }
+
+                    popUpController.clearAllFields();
+                });
+
+                dialog.showAndWait();
+                dialog.close();
+            }
+        });
+
+        searchUserField.textProperty().addListener((e) -> {
+            searchPause.stop();
+            searchPause.playFromStart();
+        });
+
         privateTab.setOnSelectionChanged((e) -> {
             groupList.getSelectionModel().clearSelection();
             searchUserList.getSelectionModel().clearSelection();
             searchUserField.clear();
-            addPrivateTargetButton.setDisable(true);
-            addGroupTargetButton.setDisable(true);
+            loadSearchResults();
         });
 
         groupTab.setOnSelectionChanged((e) -> {
             privateList.getSelectionModel().clearSelection();
             searchUserList.getSelectionModel().clearSelection();
             searchUserField.clear();
-            addPrivateTargetButton.setDisable(true);
-            addGroupTargetButton.setDisable(true);
+            loadSearchResults();
         });
 
         everyoneTab.setOnSelectionChanged((e) -> {

@@ -131,6 +131,7 @@ public class MessagesManagerController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
+        currentUser = Main.getCurrentUser();
         deleteOneButton.setDisable(true);
         jumpButton.setDisable(true);
         thisConversation = MessagingController.currentConversation;
@@ -152,7 +153,6 @@ public class MessagesManagerController implements ControllerWrapper {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         sceneManager = Main.getSceneManager();
-        currentUser = Main.getCurrentUser();
         fieldPause = new PauseTransition(Duration.millis(500));
         fieldPause.setOnFinished((e) -> updateMessages());
 
@@ -163,7 +163,7 @@ public class MessagesManagerController implements ControllerWrapper {
                     if (sM != null){
                         selectedMessage = sM.getMessage();
                         System.out.println(selectedMessage.getContent());
-                        deleteOneButton.setDisable(false);
+                        deleteOneButton.setDisable(!sM.getMessage().getSenderId().equals(currentUser.getSessionUserData().getUserId()));
                         jumpButton.setDisable(false);
                     }
                 }
