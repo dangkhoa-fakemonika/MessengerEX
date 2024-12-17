@@ -290,6 +290,17 @@ public class SessionUser {
         return convData;
     }
 
+    public ConversationData loadSingleGroup(ObjectId targetId){
+        ConversationData conv = myQuery.conversations().getConversation(targetId);
+        if (conv == null)
+            return null;
+        conv.getMembersId().forEach((id) ->
+                conv.getMembersName().add(new SimpleStringProperty(myQuery.users().getUserById(id).getUsername())));
+        conv.getModeratorsId().forEach((id) ->
+                conv.getModeratorsName().add(new SimpleStringProperty(myQuery.users().getUserById(id).getUsername())));
+        return conv;
+    }
+
     public int GetIndirectFriendsCount(ObjectId targetId){
         return myQuery.users().getFriendsOfFriends(targetId);
     }

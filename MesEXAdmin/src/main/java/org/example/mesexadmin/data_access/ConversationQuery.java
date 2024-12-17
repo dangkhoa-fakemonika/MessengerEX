@@ -147,14 +147,22 @@ public class ConversationQuery {
     }
 
     // remove person
-    public boolean removeMember(String con_id, String user_id){
+    public boolean removeMember(ObjectId con_id, ObjectId user_id){
         MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");
 
         try{
             conversations.updateOne(Filters.eq("_id", con_id) , Updates.pull("membersId", user_id));
+            conversations.updateOne(Filters.eq("_id", con_id) , Updates.pull("moderatorsId", user_id));
+
+
+
         }catch (MongoWriteException e){
             return false;
         }
+
+        Document res = conversations.find(Filters.and(Filters.eq("_id", con_id), Filters.size("membersId", 0))).first();
+        if (res != null)
+            return removeConversation(con_id);
 
         return true;
     }
