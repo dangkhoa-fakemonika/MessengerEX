@@ -124,6 +124,15 @@ public class ConversationData {
         this.conversationName.set(conversationName);
     }
 
+    public String getChatTarget(String currentUsername) {
+        String result = "";
+        for (SimpleStringProperty id : this.membersName) {
+            if (!id.get().equals(currentUsername))
+                result = id.get();
+        }
+        return result;
+    }
+
     public Document toDocument(){
         Document doc = new Document();
         doc.append("_id", this.conversationId)

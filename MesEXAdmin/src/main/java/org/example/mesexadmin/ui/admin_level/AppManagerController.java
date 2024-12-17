@@ -448,7 +448,7 @@ public class AppManagerController implements ControllerWrapper {
                             ArrayList<XYChart.Data<String, Number>> newData = getRegisterChartData();
                             years.setAll(newYearRange);
                             data.setAll(newData);
-//                            registerSelectYear.setValue(registerSelectedYear);
+                            // registerSelectYear.setValue(registerSelectedYear);
                         });
                         return null;
                     }
@@ -500,7 +500,7 @@ public class AppManagerController implements ControllerWrapper {
                             ArrayList<XYChart.Data<String, Number>> newData = getActiveChartData();
                             years.setAll(newYearRange);
                             data.setAll(newData);
-//                            activeSelectYear.setValue(activeSelectedYear);
+                            // activeSelectYear.setValue(activeSelectedYear);
                         });
                         return null;
                     }

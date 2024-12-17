@@ -94,7 +94,6 @@ public class MessagingController implements ControllerWrapper {
             boolean res = currentUser.sendMessage(msg, currentConversation.getConversationId());
             if (res) System.out.println("Message sent");
 
-//            messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
             myTextArea.setText("");
         }
     }
@@ -120,8 +119,6 @@ public class MessagingController implements ControllerWrapper {
             groupList.getFocusModel().focus(groupItems.indexOf(item));
         }
 
-        // updateCurrentChat();
-        // Debugging
         currentConversation = item.getConversation();
         chatSwitched = true;
         updateChat.restart();
@@ -181,22 +178,16 @@ public class MessagingController implements ControllerWrapper {
             messagesList.add(new MessageListComponent(mQuery));
         }
 
-        // TODO: Temporary setup for update when there is deleted message
+        // This works good
         if (chatSwitched || messagesList.size() < messages.getItems().size()) {
             messages.getItems().clear();
             messages.getItems().addAll(messagesList);
+            messages.scrollTo(messages.getItems().size());
             chatSwitched = false;
+            return;
         } else {
             messagesList.stream().filter(message -> !messages.getItems().contains(message)).forEach(messages.getItems()::add);
         }
-
-        ScrollBar scrollbar = (ScrollBar) messages.lookup(".scroll-bar:vertical");
-        if (scrollbar != null) {
-            double currentScrollPosition = scrollbar.getValue();
-            if (currentScrollPosition > 0.8)
-                messages.scrollTo(messages.getItems().size());
-        }
-        // messages.refresh();
     }
 
     private void updateCurrentChatList() {
@@ -225,8 +216,6 @@ public class MessagingController implements ControllerWrapper {
 
             groupList.getItems().clear();
             groupList.getItems().addAll(groupItems);
-
-        } else {
 
         }
 
@@ -346,9 +335,8 @@ public class MessagingController implements ControllerWrapper {
                 ConversationListComponent c =  privateList.getSelectionModel().getSelectedItem();
                 if (c != null){
                     currentConversation = c.getConversation();
-                    myLabel.setText("Selected Chat: " + currentConversation.getMembersName().toString());
-                    // updateCurrentChat.restart
-                    // Debug
+                    myLabel.setText("Selected Chat: " + currentConversation.getChatTarget(currentUser.getSessionUserData().getUsername()));
+                    
                     chatSwitched = true;
                     updateCurrentChat();
 
