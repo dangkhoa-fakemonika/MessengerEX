@@ -26,20 +26,9 @@
                </children></AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <TabPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <TabPane fx:id="appManagementTabPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <tabs>
-                        <Tab closable="false" text="All Activity">
-                           <content>
-                              <AnchorPane>
-                                 <children>
-                                    <TableView fx:id="userTable" layoutY="49.0" prefHeight="433.0" prefWidth="798.0" />
-                                    <TextField layoutX="6.0" layoutY="14.0" prefHeight="26.0" prefWidth="130.0" promptText="Filter" />
-                                    <ChoiceBox layoutX="151.0" layoutY="14.0" prefHeight="26.0" prefWidth="96.0" />
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                        </Tab>
-                        <Tab closable="false" text="Login History">
+                        <Tab fx:id="loginHistoryTab" closable="false" text="Login History">
                            <content>
                               <AnchorPane>
                                  <children>
@@ -55,7 +44,7 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="Recent New Accounts">
+                        <Tab fx:id="recentNewAccountsTab" closable="false" text="Recent New Accounts">
                            <content>
                               <AnchorPane>
                                  <children>
@@ -76,7 +65,7 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="New Account Stats">
+                        <Tab fx:id="newAccountStatsTab" closable="false" text="New Account Stats">
                            <content>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                  <children>
@@ -91,7 +80,7 @@
                                     <ChoiceBox fx:id="registerSelectYear" layoutX="688.0" layoutY="25.0" prefHeight="26.0" prefWidth="96.0" />
                                  </children></AnchorPane>
                            </content></Tab>
-                        <Tab closable="false" text="Login Statuses">
+                        <Tab fx:id="loginStatusesTab" closable="false" text="Login Statuses">
                            <content>
                               <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                  <children>
@@ -108,7 +97,7 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="Social Statuses">
+                        <Tab fx:id="socialStatusesTab" closable="false" text="Social Statuses">
                            <content>
                               <AnchorPane>
                                  <children>
@@ -127,7 +116,7 @@
                               </AnchorPane>
                            </content>
                         </Tab>
-                        <Tab closable="false" text="Users' Activity Statuses">
+                        <Tab fx:id="activityStatusesTab" closable="false" text="Users' Activity Statuses">
                            <content>
                               <AnchorPane>
                                  <children>
