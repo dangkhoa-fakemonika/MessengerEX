@@ -6,6 +6,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -16,6 +18,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
+
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
@@ -57,6 +60,7 @@ public class MessagingController implements ControllerWrapper {
     @FXML private Tab privateTab;
     @FXML private Tab groupTab;
     @FXML private Tab everyoneTab;
+    private Tab currentTab;
     @FXML private TabPane messagesTabPane;
     @FXML private MenuItem seeMessagesButton;
     @FXML private MenuItem configureGroupButton;
@@ -67,7 +71,9 @@ public class MessagingController implements ControllerWrapper {
     @FXML private Button addPrivateTargetButton;
     @FXML private Button addGroupTargetButton;
 
-
+    private ScheduledService<Void> updateChatList;
+    private ScheduledService<Void> updateChat;
+    private boolean isSwitched;
 
     // Load from database
     static ObservableList<ConversationListComponent> privateItems = FXCollections.observableArrayList();
@@ -113,7 +119,7 @@ public class MessagingController implements ControllerWrapper {
             groupList.getFocusModel().focus(groupItems.indexOf(item));
         }
 
-        chatSelection();
+        updateCurrentChat();
         currentConversation = item.getConversation();
 
         jumpToMessage = false;
@@ -138,7 +144,7 @@ public class MessagingController implements ControllerWrapper {
 //        });
     }
 
-    public void addMessage(){
+    public void addMessage() {
         if (!myTextArea.getText().trim().isEmpty()){
             String msg = myTextArea.getText().trim();
 
@@ -146,8 +152,9 @@ public class MessagingController implements ControllerWrapper {
             boolean res = currentUser.sendMessage(msg, currentConversation.getConversationId());
             if (res) System.out.println("Message sent");
 
-//            messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
+            // messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
             myTextArea.setText("");
+            updateChat.restart();
         }
     }
 
@@ -158,43 +165,52 @@ public class MessagingController implements ControllerWrapper {
         newAlert.showAndWait();
     }
 
-    void chatSelection(){
+    private void updateCurrentChat() {
+        // TODO: Check when to clear chat | add more messages
         ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByConv(currentConversation.getConversationId());
         messagesList = FXCollections.observableArrayList();
         for (MessageData mQuery : messageQuery){
             messagesList.add(new MessageListComponent(mQuery));
         }
+
         messages.getItems().clear();
         messages.getItems().addAll(messagesList);
+        // TODO: Check when to jump with each update
         messages.scrollTo(messagesList.size());
-        messages.refresh();
+        // messages.refresh();
     }
 
-    void refresh(){
-        ArrayList<ConversationData> privateQuery = currentUser.loadPrivateConversations();
-        privateItems = FXCollections.observableArrayList();
-        for (ConversationData cQuery : privateQuery){
-            privateItems.add(new ConversationListComponent(cQuery));
+    private void updateCurrentChatList() {
+        isSwitched = true;
+
+        if (currentTab == privateTab) {
+            ArrayList<ConversationData> privateQuery = currentUser.loadPrivateConversations();
+            privateItems = FXCollections.observableArrayList();
+
+            for (ConversationData cQuery : privateQuery){
+                privateItems.add(new ConversationListComponent(cQuery));
+            }
+
+            privateList.getItems().clear();
+            privateList.getItems().addAll(privateItems);
+
+        } else if (currentTab == groupTab) {
+            ArrayList<ConversationData> groupQuery = currentUser.loadGroupConversations();
+            groupItems = FXCollections.observableArrayList();
+            for (ConversationData cQuery : groupQuery){
+                groupItems.add(new ConversationListComponent(cQuery));
+            }
+
+            groupList.getItems().clear();
+            groupList.getItems().addAll(groupItems);
+
+        } else {
+
         }
 
-        privateList.getItems().clear();
-        privateList.getItems().addAll(privateItems);
+        updateChat.restart();
 
-        ArrayList<ConversationData> groupQuery = currentUser.loadGroupConversations();
-        groupItems = FXCollections.observableArrayList();
-        for (ConversationData cQuery : groupQuery){
-            groupItems.add(new ConversationListComponent(cQuery));
-        }
-
-        groupList.getItems().clear();
-        groupList.getItems().addAll(groupItems);
-
-        groupList.refresh();
-        privateList.refresh();
-        messagesList = FXCollections.observableArrayList();
-        messages.getItems().clear();
-        messages.scrollTo(messagesList.size());
-        messages.refresh();
+        isSwitched = false;
     }
 
     void loadSearchResults(){
@@ -220,6 +236,33 @@ public class MessagingController implements ControllerWrapper {
     }
 
     
+    // void refresh(){
+    //     ArrayList<ConversationData> privateQuery = currentUser.loadPrivateConversations();
+    //     privateItems = FXCollections.observableArrayList();
+    //     for (ConversationData cQuery : privateQuery){
+    //         privateItems.add(new ConversationListComponent(cQuery));
+    //     }
+
+    //     privateList.getItems().clear();
+    //     privateList.getItems().addAll(privateItems);
+
+    //     ArrayList<ConversationData> groupQuery = currentUser.loadGroupConversations();
+    //     groupItems = FXCollections.observableArrayList();
+    //     for (ConversationData cQuery : groupQuery){
+    //         groupItems.add(new ConversationListComponent(cQuery));
+    //     }
+
+    //     groupList.getItems().clear();
+    //     groupList.getItems().addAll(groupItems);
+
+    //     groupList.refresh();
+    //     privateList.refresh();
+    //     messagesList = FXCollections.observableArrayList();
+    //     messages.getItems().clear();
+    //     messages.scrollTo(messagesList.size());
+    //     messages.refresh();
+    // }
+
     @Override
     public void myInitialize() {
         currentUser = Main.getCurrentUser();
@@ -227,8 +270,49 @@ public class MessagingController implements ControllerWrapper {
         sendButton.setDisable(true);
         myTextArea.setDisable(true);
         myTextArea.clear();
+        currentTab = privateTab;
+
+        // Create service
+        updateChat = new ScheduledService<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        Platform.runLater(() -> {
+                            System.out.println(currentConversation);
+                            if (currentConversation != null) {
+                                System.out.println("refreshed");
+                                updateCurrentChat();
+                            }
+                        });
+                        return null;
+                    }
+                };
+            }
+        };
+        updateChat.setPeriod(Duration.seconds(1));
+        updateChat.start();
+
+        updateChatList = new ScheduledService<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        Platform.runLater(() -> {
+                            updateCurrentChatList();
+                        });
+                        return null;
+                    }
+                };
+            }
+        };
+        updateChatList.setPeriod(Duration.seconds(60));
+        updateChatList.start();
+
         currentUser = Main.getCurrentUser();
-        refresh();
+        // refresh();
 
         if (jumpToMessage) goToMessage();
     }
@@ -246,7 +330,7 @@ public class MessagingController implements ControllerWrapper {
                 if (c != null){
                     currentConversation = c.getConversation();
                     myLabel.setText("Selected Chat: " + currentConversation.getMembersName().toString());
-                    chatSelection();
+                    updateCurrentChat();
                     myTextArea.setDisable(false);
                     sendButton.setDisable(false);
                     optionButton.setDisable(false);
@@ -256,7 +340,6 @@ public class MessagingController implements ControllerWrapper {
                     blockUserButton.setVisible(true);
                     reportUserButton.setDisable(false);
                     reportUserButton.setVisible(true);
-
                 }
             }
         });
@@ -268,7 +351,7 @@ public class MessagingController implements ControllerWrapper {
                 if (c != null){
                     currentConversation = c.getConversation();
                     myLabel.setText("Selected Chat: " + currentConversation.getConversationName());
-                    chatSelection();
+                    updateCurrentChat();
                     myTextArea.setDisable(false);
                     sendButton.setDisable(false);
                     optionButton.setDisable(false);
@@ -378,7 +461,9 @@ public class MessagingController implements ControllerWrapper {
                         event.consume();
                     } else if (currentUser.createGroup(groupName, username)) {
                         new Alert(AlertType.INFORMATION, "Group created!").showAndWait();
-                        refresh();
+                        // refresh();
+                        updateChatList.restart();
+                        event.consume();
                     } else {
                         event.consume();
                     }
@@ -455,7 +540,9 @@ public class MessagingController implements ControllerWrapper {
                         event.consume();
                     } else if (currentUser.createPrivateConversation(username)) {
                         new Alert(AlertType.INFORMATION, "Private conversation created!").showAndWait();
-                        refresh();
+                        // refresh();
+                        updateChatList.restart();
+                        event.consume();
                     } else {
                         new Alert(AlertType.ERROR, "Can't create conversation").showAndWait();
                         event.consume();
@@ -479,7 +566,8 @@ public class MessagingController implements ControllerWrapper {
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
                         if (currentUser.createPrivateConversation(selectedUser.getUsername())) {
-                            refresh();
+                            // refresh();
+                            updateChat.restart();
                         } else {
                             new Alert(AlertType.ERROR, "Can't connect to user").showAndWait();
                         }
@@ -516,7 +604,8 @@ public class MessagingController implements ControllerWrapper {
                         event.consume();
                     } else if (currentUser.createGroup(groupName, username)) {
                         new Alert(AlertType.INFORMATION, "Group created!").showAndWait();
-                        refresh();
+                        // refresh();
+                        updateChat.restart();
                     } else {
                         event.consume();
                     }
@@ -534,25 +623,49 @@ public class MessagingController implements ControllerWrapper {
             searchPause.playFromStart();
         });
 
-        privateTab.setOnSelectionChanged((e) -> {
+        // privateTab.setOnSelectionChanged((e) -> {
+        //     groupList.getSelectionModel().clearSelection();
+        //     searchUserList.getSelectionModel().clearSelection();
+        //     searchUserField.clear();
+        //     loadSearchResults();
+        // });
+
+        messagesTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            handleSwitchTab(newTab);
+        });
+    }
+
+    private void handleSwitchTab(Tab tab) {
+        if (tab == privateTab) {
+            System.out.println("private");
+            currentTab = privateTab;
+
             groupList.getSelectionModel().clearSelection();
             searchUserList.getSelectionModel().clearSelection();
             searchUserField.clear();
+            addPrivateTargetButton.setDisable(true);
+            addGroupTargetButton.setDisable(true);
             loadSearchResults();
-        });
 
-        groupTab.setOnSelectionChanged((e) -> {
+        } else if (tab == groupTab) {
+            System.out.println("group");
+            currentTab = groupTab;
+
             privateList.getSelectionModel().clearSelection();
             searchUserList.getSelectionModel().clearSelection();
             searchUserField.clear();
+            addPrivateTargetButton.setDisable(true);
+            addGroupTargetButton.setDisable(true);
             loadSearchResults();
-        });
+        } else {
+            System.out.println("everyone");
+            currentTab = everyoneTab;
 
-        everyoneTab.setOnSelectionChanged((e) -> {
             groupList.getSelectionModel().clearSelection();
             privateList.getSelectionModel().clearSelection();
-        });
+        }
 
+        updateChatList.restart();
     }
 
     public void advanced(ActionEvent actionEvent) throws IOException{

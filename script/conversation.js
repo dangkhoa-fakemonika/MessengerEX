@@ -24,7 +24,7 @@ db.createCollection("conversations", {
                     items: { bsonType: "objectId" }
                 },
                 dateCreated: { bsonType: "date" },
-                lastMessageId: { bsonType: "objectId" }
+                lastMessageId: { bsonType: ["objectId", "null"] }
             }
         }
     },

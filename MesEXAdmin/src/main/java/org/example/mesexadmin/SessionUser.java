@@ -307,6 +307,7 @@ public class SessionUser {
         ConversationData newConvo = new ConversationData();
         newConvo.setType("private");
         newConvo.getMembersId().add(currentUser.getUserId());
+        newConvo.setDateCreated(new Date());
 
         newConvo.getMembersId().add(findUser.getUserId());
         return myQuery.conversations().createConversation(newConvo);

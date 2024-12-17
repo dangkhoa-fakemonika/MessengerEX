@@ -27,6 +27,7 @@ public class ConversationQuery {
         try {
             conversations.insertOne(newConvo.toDocument());
         } catch (MongoWriteException e){
+            e.printStackTrace();
             return false;
         }
         return true;
