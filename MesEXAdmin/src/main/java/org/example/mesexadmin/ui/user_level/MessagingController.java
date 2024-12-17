@@ -21,9 +21,11 @@ import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.ConversationData;
 import org.example.mesexadmin.data_class.MessageData;
+import org.example.mesexadmin.data_class.UserData;
 import org.example.mesexadmin.ui.ControllerWrapper;
 import org.example.mesexadmin.ui.elements.ConversationListComponent;
 import org.example.mesexadmin.ui.elements.MessageListComponent;
+import org.example.mesexadmin.ui.elements.UserListComponent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,6 +37,7 @@ public class MessagingController implements ControllerWrapper {
     private SceneManager sceneManager;
     private SessionUser currentUser;
     static ConversationData currentConversation;
+    static UserData selectedUser;
 
     @FXML private ListView<ConversationListComponent> privateList;
     @FXML private ListView<ConversationListComponent> groupList;
@@ -45,10 +48,24 @@ public class MessagingController implements ControllerWrapper {
     @FXML private MenuItem addFriendButton;
     @FXML private MenuItem logoutButton;
     @FXML private MenuItem addPrivateChat;
+    @FXML private MenuItem manageFriendButton;
+    @FXML private MenuItem addGroupButton;
+    @FXML private MenuItem manageGroupButton;
     @FXML private Button sendButton;
     @FXML private Tab privateTab;
     @FXML private Tab groupTab;
+    @FXML private Tab everyoneTab;
     @FXML private TabPane messagesTabPane;
+    @FXML private MenuItem seeMessagesButton;
+    @FXML private MenuItem configureGroupButton;
+    @FXML private MenuItem blockUserButton;
+    @FXML private MenuItem reportUserButton;
+    @FXML private TextField searchUserField;
+    @FXML private ListView<UserListComponent> searchUserList;
+    @FXML private Button addPrivateTargetButton;
+    @FXML private Button addGroupTargetButton;
+
+
 
     // Load from database
     static ObservableList<ConversationListComponent> privateItems;
@@ -103,7 +120,6 @@ public class MessagingController implements ControllerWrapper {
 
         MessageListComponent itemM = new MessageListComponent(jumpMessage);
         messages.scrollTo(itemM);
-        messages.getSelectionModel().select(itemM);
         int indexMessage = -1;
         for (int i = 0; i < messagesList.size(); i++){
             if (messagesList.get(i).getMessage().getMessageId().equals(jumpMessage.getMessageId())){
@@ -115,6 +131,7 @@ public class MessagingController implements ControllerWrapper {
 //        Platform.runLater(() -> {
         messages.requestFocus();
         messages.getFocusModel().focus(indexMessage);
+        messages.getSelectionModel().select(indexMessage);
 //        });
     }
 
@@ -129,18 +146,6 @@ public class MessagingController implements ControllerWrapper {
 //            messages.getItems().add(new MessageListComponent(new MessageData(msg, "sender_1", "rec_1")));
             myTextArea.setText("");
         }
-    }
-
-    public void addGroup(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-create-group.fxml"));
-        Dialog<Objects> dialog = new Dialog<>();
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        DialogPane dialogPane = loader.load();
-        PopUpController popUpController = loader.getController();
-        popUpController.currentDialog = dialog;
-        dialog.setDialogPane(dialogPane);
-        dialog.showAndWait();
-        dialog.close();
     }
 
     public void reportUser(ActionEvent actionEvent) {
@@ -196,6 +201,8 @@ public class MessagingController implements ControllerWrapper {
         optionButton.setDisable(true);
         sendButton.setDisable(true);
         myTextArea.setDisable(true);
+        myTextArea.clear();
+
 
         currentUser = Main.getCurrentUser();
         refresh();
@@ -218,6 +225,13 @@ public class MessagingController implements ControllerWrapper {
                     myTextArea.setDisable(false);
                     sendButton.setDisable(false);
                     optionButton.setDisable(false);
+                    configureGroupButton.setDisable(true);
+                    configureGroupButton.setVisible(false);
+                    blockUserButton.setDisable(false);
+                    blockUserButton.setVisible(true);
+                    reportUserButton.setDisable(false);
+                    reportUserButton.setVisible(true);
+
                 }
             }
         });
@@ -233,6 +247,12 @@ public class MessagingController implements ControllerWrapper {
                     myTextArea.setDisable(false);
                     sendButton.setDisable(false);
                     optionButton.setDisable(false);
+                    configureGroupButton.setDisable(false);
+                    configureGroupButton.setVisible(true);
+                    blockUserButton.setDisable(true);
+                    blockUserButton.setVisible(false);
+                    reportUserButton.setDisable(true);
+                    reportUserButton.setVisible(false);
                 }
             }
         });
@@ -291,6 +311,63 @@ public class MessagingController implements ControllerWrapper {
             }
         });
 
+        addGroupButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-create-group.fxml")));
+                Dialog<Objects> dialog = new Dialog<>();
+
+                try {
+                    DialogPane dialogPane = loader.load();
+                    dialog.setDialogPane(dialogPane);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                PopUpController popUpController = loader.getController();
+                ButtonType confirmButtonType = new ButtonType("Confirm", ButtonData.YES);
+                ButtonType cancelButtonType = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+
+                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+                confirmButton.addEventFilter(ActionEvent.ACTION, event -> {
+                    String username = popUpController.getUsernameField();
+                    String groupName = popUpController.getGroupNameField();
+                    if (username.isEmpty() || groupName.trim().isEmpty()) {
+                        new Alert(AlertType.ERROR, "The fields must not be empty!").showAndWait();
+                        event.consume();
+                    } else if (currentUser.createGroup(groupName, username)) {
+                        new Alert(AlertType.INFORMATION, "Group created!").showAndWait();
+                        refresh();
+                        event.consume();
+                    } else {
+                        event.consume();
+                    }
+
+                    popUpController.clearAllFields();
+                });
+
+                dialog.showAndWait();
+                dialog.close();
+            }
+        });
+
+        manageFriendButton.setOnAction((e) -> {
+            try {
+                friendsSettingScene(null);
+            } catch (IOException ex) {
+                e.consume();
+            }
+        });
+
+        manageGroupButton.setOnAction((e) -> {
+            try {
+                personalGroupManagementScene(null);
+            } catch (IOException ex) {
+                e.consume();
+            }
+        });
+
         logoutButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
@@ -339,6 +416,7 @@ public class MessagingController implements ControllerWrapper {
                         event.consume();
                     } else if (currentUser.createPrivateConversation(username)) {
                         new Alert(AlertType.INFORMATION, "Private conversation created!").showAndWait();
+                        refresh();
                         event.consume();
                     } else {
                         new Alert(AlertType.ERROR, "Can't create conversation").showAndWait();
@@ -352,6 +430,28 @@ public class MessagingController implements ControllerWrapper {
                 dialog.close();
             }
         });
+
+        privateTab.setOnSelectionChanged((e) -> {
+            groupList.getSelectionModel().clearSelection();
+            searchUserList.getSelectionModel().clearSelection();
+            searchUserField.clear();
+            addPrivateTargetButton.setDisable(true);
+            addGroupTargetButton.setDisable(true);
+        });
+
+        groupTab.setOnSelectionChanged((e) -> {
+            privateList.getSelectionModel().clearSelection();
+            searchUserList.getSelectionModel().clearSelection();
+            searchUserField.clear();
+            addPrivateTargetButton.setDisable(true);
+            addGroupTargetButton.setDisable(true);
+        });
+
+        everyoneTab.setOnSelectionChanged((e) -> {
+            groupList.getSelectionModel().clearSelection();
+            privateList.getSelectionModel().clearSelection();
+        });
+
     }
 
     public void advanced(ActionEvent actionEvent) throws IOException{

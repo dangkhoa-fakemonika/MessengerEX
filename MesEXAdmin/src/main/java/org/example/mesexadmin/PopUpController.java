@@ -27,6 +27,8 @@ public class PopUpController implements Initializable {
     @FXML private TextField singleTextField;
     @FXML private TextField usernameField;
     @FXML private TextField emailField;
+    @FXML private TextField groupNameField;
+
 
     public Dialog<Objects> currentDialog;
 
@@ -36,23 +38,6 @@ public class PopUpController implements Initializable {
         Stage stage = (Stage) currentDialog.getDialogPane().getScene().getWindow();
         stage.close();
     }
-//
-//    public void acceptCreateGroup(ActionEvent actionEvent){
-//        boolean res = currentUser.myQuery.conversations().createConversation(currentUser.getSessionUserData().getUserId(), "dummy dummy");
-//        if (res){
-//            System.out.println("New conversation created");
-//            closeDialog(actionEvent);
-//        }
-//
-//    }
-//
-//    public void acceptAddFriend(ActionEvent actionEvent){
-//        boolean res = currentUser.myQuery.users().addFriend(currentUser.getSessionUserData().getUserId(), new ObjectId());
-//        if (res){
-//            System.out.println("New conversation created");
-//            closeDialog(actionEvent);
-//        }
-//    }
 
     public void deleteAccount(ActionEvent actionEvent){
 
@@ -71,12 +56,20 @@ public class PopUpController implements Initializable {
         return emailField.getText();
     }
 
+    public String getGroupNameField() {
+        return groupNameField.getText();
+    }
+
     public void clearAllFields() {
         if (usernameField != null) {
             usernameField.clear();
         }
         if (emailField != null) {
             emailField.clear();
+        }
+
+        if (groupNameField != null){
+            groupNameField.clear();
         }
     }
 }

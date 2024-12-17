@@ -336,6 +336,21 @@ public class SessionUser {
         return returnData;
     }
 
+    public boolean createGroup(String groupName, String secondUser){
+        UserData ndUser = myQuery.users().getUserByUsername(secondUser);
+        if (ndUser == null)
+            return false;
+
+        ConversationData newConv = new ConversationData();
+        newConv.setType("group");
+        newConv.setConversationName(groupName);
+        newConv.getMembersId().add(currentUser.getUserId());
+        newConv.getMembersId().add(ndUser.getUserId());
+        newConv.getModeratorsId().add(currentUser.getUserId());
+
+        return myQuery.conversations().createConversation(newConv);
+    }
+
     public boolean sendMessage(String content, ObjectId conversationId){
         MessageData messageData = new MessageData();
         messageData.setSenderId(currentUser.getUserId());
