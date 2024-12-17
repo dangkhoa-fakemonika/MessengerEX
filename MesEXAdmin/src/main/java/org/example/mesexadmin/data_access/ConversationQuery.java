@@ -86,6 +86,20 @@ public class ConversationQuery {
         return data;
     }
 
+    public ArrayList<ConversationData> getAllGroupConversationWithFilter(String token){
+        MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");
+        ArrayList<Document> results = new ArrayList<>();
+        conversations.find(Filters.and(Filters.eq("type", "group"), Filters.regex("conversationName", token, "i"))).into(results);
+
+        ArrayList<ConversationData> data = new ArrayList<>();
+        for (Document res : results){
+            data.add(documentToConversation(res));
+        }
+
+        return data;
+    }
+
+
     public ConversationData findExistingPrivateConversation(ObjectId id1, ObjectId id2){
         MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");
         // Document result = conversations.find(Filters.and(Filters.in("membersId", id1, id2))).first();
@@ -166,6 +180,18 @@ public class ConversationQuery {
         Document res = conversations.find(Filters.and(Filters.eq("_id", con_id), Filters.size("membersId", 0))).first();
         if (res != null)
             return removeConversation(con_id);
+
+        return true;
+    }
+
+    public boolean changeConversationName(ObjectId con_id, String newName){
+        MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");
+
+        try{
+            conversations.updateOne(Filters.eq("_id", con_id) , Updates.set("conversationName", newName));
+        }catch (MongoWriteException e){
+            return false;
+        }
 
         return true;
     }
