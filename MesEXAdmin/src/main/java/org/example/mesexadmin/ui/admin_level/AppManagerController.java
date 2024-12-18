@@ -264,6 +264,9 @@ public class AppManagerController implements ControllerWrapper {
     }
 
     private void initializeUpdateTask(){
+        registerYearOptions.setAll(getRegisterChartYears());
+        activeYearOptions.setAll(getActiveChartYears());
+
         updateLoginData = initiateGetLoginDataTask(loginData);
         updateLoginData.setPeriod(Duration.seconds(60));
         updateLoginData.start();
@@ -271,10 +274,10 @@ public class AppManagerController implements ControllerWrapper {
         updateNewAccountData = initiateGetNewAccountDataTask(newAccountData);
         updateNewAccountData.setPeriod(Duration.seconds(60));
 
-        updateRegisterData = initiateRegisterChartTask(registerChartData, registerYearOptions);
+        updateRegisterData = initiateRegisterChartTask(registerChartData);
         updateRegisterData.setPeriod(Duration.seconds(60));
 
-        updateActiveData = initiateActiveChartTask(activeChartData, activeYearOptions);
+        updateActiveData = initiateActiveChartTask(activeChartData);
         updateActiveData.setPeriod(Duration.seconds(60));
 
         updateSocialData = initiateSocialDataTask(socialUserData);
@@ -428,7 +431,7 @@ public class AppManagerController implements ControllerWrapper {
         return result;
     }
 
-    private ScheduledService<Void> initiateRegisterChartTask(ObservableList<XYChart.Data<String, Number>> data, ObservableList<String> years){
+    private ScheduledService<Void> initiateRegisterChartTask(ObservableList<XYChart.Data<String, Number>> data){
         return new ScheduledService<Void>() {
             @Override
             protected Task<Void> createTask() {
@@ -438,7 +441,6 @@ public class AppManagerController implements ControllerWrapper {
                         Platform.runLater(() -> {
                             ArrayList<String> newYearRange = getRegisterChartYears();
                             ArrayList<XYChart.Data<String, Number>> newData = getRegisterChartData();
-                            years.setAll(newYearRange);
                             data.setAll(newData);
                             // registerSelectYear.setValue(registerSelectedYear);
                         });
@@ -480,7 +482,7 @@ public class AppManagerController implements ControllerWrapper {
         return result;
     }
 
-    private ScheduledService<Void> initiateActiveChartTask(ObservableList<XYChart.Data<String, Number>> data, ObservableList<String> years){
+    private ScheduledService<Void> initiateActiveChartTask(ObservableList<XYChart.Data<String, Number>> data){
         return new ScheduledService<Void>() {
             @Override
             protected Task<Void> createTask() {
@@ -490,7 +492,6 @@ public class AppManagerController implements ControllerWrapper {
                         Platform.runLater(() -> {
                             ArrayList<String> newYearRange = getActiveChartYears();
                             ArrayList<XYChart.Data<String, Number>> newData = getActiveChartData();
-                            years.setAll(newYearRange);
                             data.setAll(newData);
                             // activeSelectYear.setValue(activeSelectedYear);
                         });

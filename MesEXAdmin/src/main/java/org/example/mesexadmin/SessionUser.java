@@ -327,8 +327,8 @@ public class SessionUser {
         newConvo.setType("private");
         newConvo.getMembersId().add(currentUser.getUserId());
         newConvo.setDateCreated(new Date());
-
         newConvo.getMembersId().add(findUser.getUserId());
+        newConvo.setConversationName("private conversation");
         return myQuery.conversations().createConversation(newConvo);
     }
 

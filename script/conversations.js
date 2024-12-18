@@ -4,13 +4,13 @@ db.createCollection("conversations", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["type", "name", "membersId", "dateCreated"],
+            required: ["type", "conversationName", "membersId", "dateCreated"],
             properties: {
                 type: {
                     bsonType: "string",
                     enum: ["private", "group"]
                 },
-                name: {
+                conversationName: {
                     bsonType: "string",
                     minLength: 3,
                     maxLength: 50
@@ -23,8 +23,7 @@ db.createCollection("conversations", {
                     bsonType: "array",
                     items: { bsonType: "objectId" }
                 },
-                dateCreated: { bsonType: "date" },
-                lastMessageId: { bsonType: ["objectId", "null"] }
+                dateCreated: { bsonType: "date" }
             }
         }
     },

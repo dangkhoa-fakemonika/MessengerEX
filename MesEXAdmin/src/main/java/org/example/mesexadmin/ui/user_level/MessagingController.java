@@ -695,6 +695,7 @@ public class MessagingController implements ControllerWrapper {
                         // refresh();
                         updateChat.restart();
                     } else {
+                        new Alert(AlertType.ERROR, "Can't create group.").showAndWait();
                         event.consume();
                     }
 
@@ -823,6 +824,9 @@ public class MessagingController implements ControllerWrapper {
 
             groupList.getSelectionModel().clearSelection();
             privateList.getSelectionModel().clearSelection();
+            addPrivateTargetButton.setDisable(true);
+            addGroupTargetButton.setDisable(true);
+            optionButton.setDisable(true);
         }
 
         tabSwitched = true;

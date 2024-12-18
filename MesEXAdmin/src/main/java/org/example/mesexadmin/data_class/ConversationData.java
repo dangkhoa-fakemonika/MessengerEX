@@ -108,8 +108,7 @@ public class ConversationData {
 
     public Document toDocument(){
         Document doc = new Document();
-        doc.append("_id", this.conversationId)
-        .append("dateCreated", this.dateCreated.get())
+        doc.append("dateCreated", this.dateCreated.get())
         .append("conversationName", this.conversationName.get())
         .append("membersId", this.membersId)
         .append("moderatorsId", this.moderatorsId)
