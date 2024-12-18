@@ -58,13 +58,6 @@ public class SingleGroupManagerController implements ControllerWrapper {
         sceneManager.switchScene("ChatManagement");
     }
 
-    public void deleteGroup(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Delete this group?");
-        newAlert.setHeaderText("Delete Group");
-        newAlert.showAndWait();
-    }
-
     void refresh(){
         memberList.getItems().clear();
         modList.getItems().clear();

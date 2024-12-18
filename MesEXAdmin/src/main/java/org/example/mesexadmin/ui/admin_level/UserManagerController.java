@@ -8,6 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
@@ -115,6 +116,231 @@ public class UserManagerController implements ControllerWrapper {
         dayCreatedCol.setCellValueFactory((a) -> new SimpleObjectProperty<>(a.getValue().getDateCreated()));
 
         userFilter.setItems(filterOptions);
+
+        banUser.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                if (!selectedUser.getStatus().equals("banned")){
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setHeaderText("Ban " + selectedUser.getUsername() + " ?");
+                    alert.setTitle("Ban User");
+
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                            if (currentUser.myQuery.users().changeUserStatus(selectedUser.getUserId(), "banned")) {
+                                new Alert(Alert.AlertType.INFORMATION, selectedUser.getUsername() + " is banned").showAndWait();
+                                updateData();
+                            }
+                            else {
+                                new Alert(Alert.AlertType.ERROR, "Can't ban user.").showAndWait();
+                            }
+                        }
+                    });
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setHeaderText("Remove ban from " + selectedUser.getUsername() + " ?");
+                    alert.setTitle("Unban User");
+
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                            if (currentUser.myQuery.users().changeUserStatus(selectedUser.getUserId(), "offline")) {
+                                new Alert(Alert.AlertType.INFORMATION, selectedUser.getUsername() + " is un-banned").showAndWait();
+                                updateData();
+                            }
+                            else {
+                                new Alert(Alert.AlertType.ERROR, "Can't un-ban user.").showAndWait();
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        deleteUser.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-delete-user.fxml")));
+                Dialog<Objects> dialog = new Dialog<>();
+
+                try {
+                    DialogPane dialogPane = loader.load();
+                    dialog.setDialogPane(dialogPane);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                PopUpController popUpController = loader.getController();
+                ButtonType confirmButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.YES);
+                ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+
+                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+                confirmButton.addEventFilter(ActionEvent.ACTION, event -> {
+                    String username = popUpController.getUsernameField();
+                    if (username.isEmpty()) {
+                        new Alert(Alert.AlertType.ERROR, "The field must not be empty!").showAndWait();
+                        event.consume();
+                    } else{
+                        if (username.equals(selectedUser.getUsername()) && currentUser.myQuery.users().removeUserFromSystem(selectedUser.getUserId())) {
+                            new Alert(Alert.AlertType.INFORMATION, username + " deleted!").showAndWait();
+                            updateData();
+                        } else {
+                            new Alert(Alert.AlertType.ERROR, "Can't delete user.").showAndWait();
+                            event.consume();
+                        }
+                    }
+
+                    popUpController.clearAllFields();
+                });
+
+                dialog.showAndWait();
+                dialog.close();
+            }
+        });
+
+        resetPassword.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setHeaderText("Reset " + selectedUser.getUsername() + "'s password via email?");
+                alert.setTitle("Reset Password");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        if (currentUser.resetUserPassword(selectedUser)) {
+                            new Alert(Alert.AlertType.INFORMATION, selectedUser.getUsername() + "'s password is reset.").showAndWait();
+                        }
+                        else {
+                            new Alert(Alert.AlertType.ERROR, "Can't reset user's password").showAndWait();
+                        }
+                    }
+                });
+            }
+        });
+
+        addUser.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-add-user.fxml")));
+                Dialog<Objects> dialog = new Dialog<>();
+
+                try {
+                    DialogPane dialogPane = loader.load();
+                    dialog.setDialogPane(dialogPane);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                PopUpController popUpController = loader.getController();
+                ButtonType confirmButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.YES);
+                ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+
+                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+                confirmButton.addEventFilter(ActionEvent.ACTION, event -> {
+                    UserData getUser = popUpController.createUserFromInfo();
+                    if (getUser.getUsername().isEmpty() || getUser.getEmail().isEmpty()) {
+                        new Alert(Alert.AlertType.ERROR, "The fields must not be empty!").showAndWait();
+                        event.consume();
+                    } else if (popUpController.validatePasswordInput()) {
+                        new Alert(Alert.AlertType.ERROR, "Invalid password fields").showAndWait();
+                        event.consume();
+                    } else {
+                        if (currentUser.myQuery.users().insertUser(getUser)) {
+                            new Alert(Alert.AlertType.INFORMATION, "New user added!").showAndWait();
+                            updateData();
+                        } else {
+                            new Alert(Alert.AlertType.ERROR, "Can't add user.").showAndWait();
+                            event.consume();
+                        }
+                    }
+
+                    popUpController.clearAllFields();
+                });
+
+                dialog.showAndWait();
+                dialog.close();
+            }
+        });
+
+        editDetails.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-modify-user.fxml")));
+                Dialog<Objects> dialog = new Dialog<>();
+
+                try {
+                    DialogPane dialogPane = loader.load();
+                    dialog.setDialogPane(dialogPane);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                PopUpController popUpController = loader.getController();
+                popUpController.loadUserInfo(selectedUser);
+                ButtonType confirmButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.YES);
+                ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+
+                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+                confirmButton.addEventFilter(ActionEvent.ACTION, event -> {
+                    UserData getUser = popUpController.applyUserEdit(selectedUser);
+                    if (currentUser.myQuery.users().updateUser(getUser)) {
+                        new Alert(Alert.AlertType.INFORMATION, "User info modified!").showAndWait();
+                        updateData();
+                    } else {
+                        new Alert(Alert.AlertType.ERROR, "Can't update user's data.").showAndWait();
+                        event.consume();
+                    }
+
+                    popUpController.clearAllFields();
+                });
+
+                dialog.showAndWait();
+                dialog.close();
+            }
+        });
+
+        changePassword.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-change-user-password.fxml")));
+                Dialog<Objects> dialog = new Dialog<>();
+
+                try {
+                    DialogPane dialogPane = loader.load();
+                    dialog.setDialogPane(dialogPane);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                PopUpController popUpController = loader.getController();
+                ButtonType confirmButtonType = new ButtonType("Confirm", ButtonBar.ButtonData.YES);
+                ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+                dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, cancelButtonType);
+
+                final Button confirmButton = (Button) dialog.getDialogPane().lookupButton(confirmButtonType);
+                confirmButton.addEventFilter(ActionEvent.ACTION, event -> {
+                    if (popUpController.validatePasswordInput()) {
+                        new Alert(Alert.AlertType.ERROR, "Invalid password fields").showAndWait();
+                        event.consume();
+                    } else {
+                        if (currentUser.myQuery.users().changeUserPassword(selectedUser.getUserId(), popUpController.getHashedPassword())) {
+                            new Alert(Alert.AlertType.INFORMATION, "Password changed!").showAndWait();
+                            updateData();
+                        } else {
+                            new Alert(Alert.AlertType.ERROR, "Can't change user's password").showAndWait();
+                            event.consume();
+                        }
+                    }
+
+                    popUpController.clearAllFields();
+                });
+
+                dialog.showAndWait();
+                dialog.close();
+            }
+        });
     }
 
     public void updateData(){
@@ -152,81 +378,4 @@ public class UserManagerController implements ControllerWrapper {
     public void loadUserData(){
         userData.setAll(currentUser.myQuery.users().getAllUsers());
     }
-
-    public void banUser(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Ban this user?");
-        newAlert.setHeaderText("Ban User");
-        newAlert.showAndWait();
-    }
-
-    public void unbanUser(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Remove ban this user?");
-        newAlert.setHeaderText("Unban User");
-        newAlert.showAndWait();
-    }
-
-    public void resetPassword(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Send reset request to user's email?");
-        newAlert.setHeaderText("Reset User's Password");
-        newAlert.showAndWait();
-    }
-
-    public void unSpam(ActionEvent actionEvent) {
-        Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        newAlert.setContentText("Unmark this user as spam?");
-        newAlert.setHeaderText("Unmark as spam");
-        newAlert.showAndWait();
-    }
-
-    public void editProfile(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-modify-user.fxml"));
-        Dialog<Objects> dialog = new Dialog<>();
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        DialogPane dialogPane = loader.load();
-        PopUpController popUpController = loader.getController();
-        popUpController.currentDialog = dialog;
-        dialog.setDialogPane(dialogPane);
-        dialog.showAndWait();
-        dialog.close();
-    }
-
-    public void createNewProfile(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-add-user.fxml"));
-        Dialog<Objects> dialog = new Dialog<>();
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        DialogPane dialogPane = loader.load();
-        PopUpController popUpController = loader.getController();
-        popUpController.currentDialog = dialog;
-        dialog.setDialogPane(dialogPane);
-        dialog.showAndWait();
-        dialog.close();
-    }
-
-    public void removeUser(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-delete-member.fxml"));
-        Dialog<Objects> dialog = new Dialog<>();
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        DialogPane dialogPane = loader.load();
-        PopUpController popUpController = loader.getController();
-        popUpController.currentDialog = dialog;
-        dialog.setDialogPane(dialogPane);
-        dialog.showAndWait();
-        dialog.close();
-    }
-
-
-    public void changePassword(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-reset-password.fxml"));
-        Dialog<Objects> dialog = new Dialog<>();
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-        DialogPane dialogPane = loader.load();
-        PopUpController popUpController = loader.getController();
-        popUpController.currentDialog = dialog;
-        dialog.setDialogPane(dialogPane);
-        dialog.showAndWait();
-    }
-
 }

@@ -12,8 +12,6 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 
-import javax.print.Doc;
-import java.awt.*;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -58,6 +56,19 @@ public class UserQuery {
             return documentToUser(user);
 
         return null;
+    }
+
+    public boolean changeUserPassword(ObjectId id, String newHashedPassword){
+        MongoCollection<Document> users = mongoManagement.database.getCollection("users");
+
+        try {
+            users.updateOne(Filters.eq("_id", id), Updates.set("passwordHash", newHashedPassword));
+        } catch (MongoWriteException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
     public boolean updateUser(UserData user){
@@ -143,17 +154,12 @@ public class UserQuery {
 
     public boolean removeUserFromSystem(ObjectId id){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
-        MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");
-        MongoCollection<Document> activities = mongoManagement.database.getCollection("activities");
-        MongoCollection<Document> requests = mongoManagement.database.getCollection("requests");
+//        MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");
+//        MongoCollection<Document> activities = mongoManagement.database.getCollection("activities");
+//        MongoCollection<Document> requests = mongoManagement.database.getCollection("requests");
 
         try {
             users.deleteOne(Filters.eq("_id", id));
-//            conversations.deleteMany(Filters.eq("_id", id));
-//            activities.deleteMany(Filters.eq("_id", id));
-//            requests.deleteMany(Filters.eq("_id", id));
-
-
         } catch (MongoWriteException e) {
             return false;
         }

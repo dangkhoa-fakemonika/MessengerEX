@@ -388,6 +388,15 @@ public class SessionUser {
 
         return myQuery.messages().postMessage(messageData);
     }
+
+    public boolean resetUserPassword(UserData user){
+        String newPassword = generatePassword();
+        if (sendResetPasswordEmail(user.getEmail(), newPassword)){
+            String hashedPassword = hashPassword(newPassword);
+            return myQuery.users().changeUserPassword(user.getUserId(), hashedPassword);
+        }
+        return false;
+    }
                 
     private static boolean sendResetPasswordEmail(String emailTo, String newPassword) {
         Properties props = new Properties();
@@ -440,7 +449,7 @@ public class SessionUser {
         return password.toString();
     }
 
-    private String hashPassword(String password) {
+    public static String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes());

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
+@Deprecated
 public class ConversationController implements ControllerWrapper {
     static SceneManager sceneManager;
     static SessionUser currentUser;

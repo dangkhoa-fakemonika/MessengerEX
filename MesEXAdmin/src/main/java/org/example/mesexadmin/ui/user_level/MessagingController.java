@@ -55,7 +55,7 @@ public class MessagingController implements ControllerWrapper {
     @FXML private MenuItem addPrivateChat;
     @FXML private MenuItem manageFriendButton;
     @FXML private MenuItem addGroupButton;
-    @FXML private MenuItem manageGroupButton;
+//    @FXML private MenuItem manageGroupButton;
     @FXML private Button sendButton;
     @FXML private Tab privateTab;
     @FXML private Tab groupTab;
@@ -535,13 +535,13 @@ public class MessagingController implements ControllerWrapper {
             }
         });
 
-        manageGroupButton.setOnAction((e) -> {
-            try {
-                personalGroupManagementScene(null);
-            } catch (IOException ex) {
-                e.consume();
-            }
-        });
+//        manageGroupButton.setOnAction((e) -> {
+//            try {
+//                personalGroupManagementScene(null);
+//            } catch (IOException ex) {
+//                e.consume();
+//            }
+//        });
 
         seeMessagesButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -712,7 +712,7 @@ public class MessagingController implements ControllerWrapper {
             String text = searchGroupConversation.getText().trim();
             int index = -1;
             for (int i = 0; i < groupItems.size(); i ++)
-                if (groupItems.get(i).getDisplayData().matches(text)){
+                if (groupItems.get(i).getDisplayData().matches(".*" + text + ".*")){
                     index = i;
                     break;
                 }
@@ -724,7 +724,7 @@ public class MessagingController implements ControllerWrapper {
             String text = searchPrivateConversation.getText().trim();
             int index = -1;
             for (int i = 0; i < privateItems.size(); i ++)
-                if (privateItems.get(i).getDisplayData().matches(text)){
+                if (privateItems.get(i).getDisplayData().matches(".*" + text + ".*")){
                     index = i;
                     break;
                 }
