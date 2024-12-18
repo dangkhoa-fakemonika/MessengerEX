@@ -112,27 +112,29 @@ public class AppManagerController implements ControllerWrapper {
     String socialSelectedCompare = "None";
     PauseTransition socialPause;
 
-    @FXML private TableView<UserData> activeTable;
-    @FXML private TextField activeFilterField;
-    @FXML private TextField activeCompareField;
-    @FXML private TableColumn<UserData, String> activeUsernameCol;
-    @FXML private TableColumn<UserData, Integer> activeTotalLoginCol;
-    @FXML private TableColumn<UserData, Integer> activeTotalPrivateChatCol;
-    @FXML private TableColumn<UserData, Integer> activeTotalGroupChatCol;
-    @FXML private TableColumn<UserData, Integer> activeTotalMessageSentCol;
-    @FXML private ChoiceBox<String> activeColumn;
-    @FXML private ChoiceBox<String> activeCompare;
-    @FXML private DatePicker activeStartDate;
-    @FXML private DatePicker activeEndDate;
-    @FXML private CheckBox showAllActive;
-    PauseTransition activePause;
-
+    @FXML private TableView<UserData> actionTable;
+    final ObservableList<UserData> actionData = FXCollections.observableArrayList();
+    @FXML private TextField actionFilterField;
+    @FXML private TextField actionCompareField;
+    @FXML private TableColumn<UserData, String> actionUsernameCol;
+    @FXML private TableColumn<UserData, Date> actionDateCreatedCol;
+    @FXML private TableColumn<UserData, Integer> actionTotalActivityCol;
+    @FXML private ChoiceBox<String> actionCompare;
+    @FXML private DatePicker actionStartDate;
+    @FXML private DatePicker actionEndDate;
+    @FXML private CheckBox showAllAction;
+    @FXML private ChoiceBox<String> actionSelection;
+    final ObservableList<String> actionSelectionOptions = FXCollections.observableArrayList("Login Occurrences", "Group Chats", "Private Chats");
+    String selectedAction = "Login Occurrences";
+    String actionSelectedCompare = "None";
+    PauseTransition actionPause;
 
     private ScheduledService<Void> updateLoginData;
     private ScheduledService<Void> updateNewAccountData;
     private ScheduledService<Void> updateRegisterData;
     private ScheduledService<Void> updateActiveData;
     private ScheduledService<Void> updateSocialData;
+    private ScheduledService<Void> updateActionData;
 
     public void returnToMain(ActionEvent actionEvent) throws IOException {
         cancelAllTask();
@@ -145,7 +147,7 @@ public class AppManagerController implements ControllerWrapper {
         loginPause = new PauseTransition(Duration.millis(500));
         newAccountPause = new PauseTransition(Duration.millis(500));
         socialPause = new PauseTransition(Duration.millis(500));
-        activePause = new PauseTransition(Duration.millis(500));
+        actionPause = new PauseTransition(Duration.millis(500));
 
         sceneManager = Main.getSceneManager();
 
@@ -218,6 +220,34 @@ public class AppManagerController implements ControllerWrapper {
         appManagementTabPane.getSelectionModel().selectedItemProperty().addListener(((observableValue, tab, t1) -> {
             handleSwitchTab(t1);
         }));
+
+        actionUsernameCol.setCellValueFactory((a) -> new SimpleStringProperty(a.getValue().getUsername()));
+        actionDateCreatedCol.setCellValueFactory((a) -> new SimpleObjectProperty<Date>(a.getValue().getDateCreated()));
+        actionTotalActivityCol.setCellValueFactory((a) -> new SimpleObjectProperty<Integer>(currentUser.countUserActions(a.getValue().getUserId(), selectedAction)));
+        actionCompare.getItems().addAll(socialCompareKeys);
+        actionSelection.setItems(actionSelectionOptions);
+        actionTable.setItems(actionData);
+
+        actionCompareField.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue,
+                                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    socialCompareField.setText(newValue.replaceAll("\\D", ""));
+                }
+            }
+        });
+
+        actionCompareField.textProperty().addListener(((observableValue, s, t1) -> {
+            actionPause.stop();
+            actionPause.playFromStart();
+        }));
+
+        actionFilterField.textProperty().addListener(((observableValue, s, t1) -> {
+            actionPause.stop();
+            actionPause.playFromStart();
+        }));
+
     }
 
     @Override
@@ -226,6 +256,7 @@ public class AppManagerController implements ControllerWrapper {
 
         loginFilterField.setDisable(true);
         loginFilter.setValue("None");
+
         newAccountFilterField.setDisable(true);
         newAccountFilter.setValue("None");
         showAllNewAccounts.setSelected(true);
@@ -233,16 +264,27 @@ public class AppManagerController implements ControllerWrapper {
         newAccountEndDate.setDisable(true);
         newAccountStartDate.setValue(LocalDate.now().minusYears(2));
         newAccountEndDate.setValue(LocalDate.now());
+
         registerSelectYear.setValue("All");
         registerSelectedYear = "All";
         activeSelectYear.setValue("All");
         activeSelectedYear = "All";
+
         socialSelectedFilter = "None";
         socialSelectedCompare = "None";
         socialFilter.setValue("None");
         socialCompare.setValue("None");
         socialFilterField.setDisable(true);
         socialCompareField.setDisable(true);
+
+        actionCompare.setValue("None");
+        actionCompareField.setDisable(true);
+        actionStartDate.setDisable(true);
+        actionEndDate.setDisable(true);
+        actionStartDate.setValue(LocalDate.now().minusYears(2));
+        actionEndDate.setValue(LocalDate.now());
+        showAllAction.setSelected(true);
+        actionSelection.setValue("Login Occurrences");
 
         initializeUpdateTask();
 
@@ -261,6 +303,13 @@ public class AppManagerController implements ControllerWrapper {
         socialPause.setOnFinished((e) -> updateSocialData.restart());
         socialFilter.setOnAction((e) -> updateSocialData.restart());
         socialCompare.setOnAction((e) -> updateSocialData.restart());
+
+        actionPause.setOnFinished((e) -> updateActionData.restart());
+        actionCompare.setOnAction((e) -> updateActionData.restart());
+        actionStartDate.setOnAction((e) -> updateActionData.restart());
+        actionEndDate.setOnAction((e) -> updateActionData.restart());
+        showAllAction.setOnAction((e) -> updateActionData.restart());
+        actionSelection.setOnAction((e) -> updateActionData.restart());
     }
 
     private void initializeUpdateTask(){
@@ -283,6 +332,8 @@ public class AppManagerController implements ControllerWrapper {
         updateSocialData = initiateSocialDataTask(socialUserData);
         updateSocialData.setPeriod(Duration.seconds(60));
 
+        updateActionData = initiateActionDataTask(actionData);
+        updateActionData.setPeriod(Duration.seconds(60));
     }
 
     private void handleSwitchTab(Tab newTab){
@@ -291,6 +342,7 @@ public class AppManagerController implements ControllerWrapper {
         if (newTab == newAccountStatsTab) updateRegisterData.restart();
         if (newTab == loginStatusesTab) updateActiveData.restart();
         if (newTab == socialStatusesTab) updateSocialData.restart();
+        if (newTab == activityStatusesTab) updateActionData.restart();
     }
 
     private ArrayList<ActivityData> getLoginDataList(){
@@ -439,7 +491,7 @@ public class AppManagerController implements ControllerWrapper {
                     @Override
                     protected Void call() throws Exception {
                         Platform.runLater(() -> {
-                            ArrayList<String> newYearRange = getRegisterChartYears();
+//                            ArrayList<String> newYearRange = getRegisterChartYears();
                             ArrayList<XYChart.Data<String, Number>> newData = getRegisterChartData();
                             data.setAll(newData);
                             // registerSelectYear.setValue(registerSelectedYear);
@@ -490,7 +542,7 @@ public class AppManagerController implements ControllerWrapper {
                     @Override
                     protected Void call() throws Exception {
                         Platform.runLater(() -> {
-                            ArrayList<String> newYearRange = getActiveChartYears();
+//                            ArrayList<String> newYearRange = getActiveChartYears();
                             ArrayList<XYChart.Data<String, Number>> newData = getActiveChartData();
                             data.setAll(newData);
                             // activeSelectYear.setValue(activeSelectedYear);
@@ -539,11 +591,77 @@ public class AppManagerController implements ControllerWrapper {
         };
     }
 
+    private ArrayList<UserData> getActionDataList(){
+        ArrayList<UserData> newAction;
+
+        Date startDate;
+
+        if (actionStartDate.getValue() != null){
+            startDate = Date.from(actionStartDate.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        } else {
+            startDate = new Date();
+        }
+
+
+        Date endDate;
+        if (actionEndDate.getValue() != null){
+            endDate = Date.from(actionEndDate.getValue().plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        } else {
+            endDate = new Date();
+        }
+
+        String filterText = actionFilterField.getText().trim();
+
+        if (showAllAction.isSelected()){
+            newAction = currentUser.myQuery.users().getNewUsersWithFilters("username", filterText);
+        }
+
+        else {
+            if (!filterText.isEmpty()) {
+                newAction = currentUser.myQuery.users().getNewUsersWithFilters("username", filterText, startDate, endDate);
+            } else {
+                newAction = currentUser.myQuery.users().getNewUsers(startDate, endDate);
+            }
+        }
+
+        selectedAction = actionSelection.getValue();
+        actionSelectedCompare = actionCompare.getValue();
+        if (actionCompareField.getText().isEmpty())
+            newAction = currentUser.actionFilter(newAction, selectedAction, actionSelectedCompare, null);
+        else
+            newAction = currentUser.actionFilter(newAction, selectedAction, actionSelectedCompare,Integer.parseInt(actionCompareField.getText()));
+
+        return newAction;
+    }
+
+    private ScheduledService<Void> initiateActionDataTask(ObservableList<UserData> data){
+        return new ScheduledService<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        Platform.runLater(() -> {
+                            ArrayList<UserData> newData = getActionDataList();
+                            data.setAll(newData);
+                            actionStartDate.setDisable(showAllAction.isSelected());
+                            actionEndDate.setDisable(showAllAction.isSelected());
+                            actionCompareField.setDisable(actionCompare.getValue().equals("None"));
+                        });
+                        return null;
+                    }
+                };
+            }
+        };
+    }
+
+
     private void cancelAllTask(){
         updateActiveData.cancel();
         updateRegisterData.cancel();
         updateSocialData.cancel();
         updateLoginData.cancel();
         updateNewAccountData.cancel();
+        updateActionData.cancel();
     }
 }

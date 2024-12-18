@@ -120,23 +120,22 @@
                            <content>
                               <AnchorPane>
                                  <children>
-                                    <TableView fx:id="activeTable" layoutY="49.0" prefHeight="433.0" prefWidth="798.0">
+                                    <TableView fx:id="actionTable" layoutX="256.0" layoutY="7.0" prefHeight="468.0" prefWidth="532.0">
                                        <columns>
-                                          <TableColumn fx:id="activeUsernameCol" prefWidth="238.3999908566475" text="Username" />
-                                          <TableColumn fx:id="activeTotalLoginCol" prefWidth="132.00001525878906" text="Total Login" />
-                                          <TableColumn fx:id="activeTotalPrivateChatCol" prefWidth="156.800048828125" text="Total Private Chat" />
-                                          <TableColumn fx:id="activeTotalGroupChatCol" prefWidth="128.0" text="Total Group Chat" />
-                                          <TableColumn fx:id="activeTotalMessageSentCol" prefWidth="147.199951171875" text="Total Message Sent" />
+                                          <TableColumn fx:id="actionUsernameCol" prefWidth="168.00002747774124" text="Username" />
+                                          <TableColumn fx:id="actionDateCreatedCol" prefWidth="180.79994201660156" text="Date Created" />
+                                          <TableColumn fx:id="actionTotalActivityCol" prefWidth="180.00006103515625" text="Total Activities" />
                                        </columns></TableView>
-                                    <TextField fx:id="activeFilterField" layoutX="6.0" layoutY="14.0" prefHeight="26.0" prefWidth="107.0" promptText="Find Username" />
-                                    <Label layoutX="124.0" layoutY="18.0" text="From" />
-                                    <Label layoutX="299.0" layoutY="18.0" text="To" />
-                                    <DatePicker fx:id="activeStartDate" layoutX="161.0" layoutY="14.0" prefHeight="26.0" prefWidth="132.0" />
-                                    <DatePicker fx:id="activeEndDate" layoutX="320.0" layoutY="14.0" prefHeight="26.0" prefWidth="132.0" />
-                                    <ChoiceBox fx:id="activeColumn" layoutX="579.0" layoutY="15.0" prefHeight="26.0" prefWidth="72.0" />
-                                    <ChoiceBox fx:id="activeCompare" layoutX="661.0" layoutY="15.0" prefHeight="26.0" prefWidth="68.0" />
-                                    <TextField fx:id="activeCompareField" layoutX="738.0" layoutY="15.0" prefHeight="26.0" prefWidth="50.0" promptText="Count" />
-                                    <CheckBox fx:id="showAllActive" layoutX="471.0" layoutY="18.0" mnemonicParsing="false" text="Show All" />
+                                    <TextField fx:id="actionFilterField" layoutX="25.0" layoutY="41.0" prefHeight="26.0" prefWidth="209.0" promptText="Find Username" />
+                                    <Label layoutX="39.0" layoutY="134.0" text="From" />
+                                    <Label layoutX="39.0" layoutY="174.0" text="To" />
+                                    <DatePicker fx:id="actionStartDate" layoutX="103.0" layoutY="130.0" prefHeight="26.0" prefWidth="132.0" />
+                                    <DatePicker fx:id="actionEndDate" layoutX="103.0" layoutY="170.0" prefHeight="26.0" prefWidth="132.0" />
+                                    <ChoiceBox fx:id="actionCompare" layoutX="32.0" layoutY="214.0" prefHeight="26.0" prefWidth="82.0" />
+                                    <TextField fx:id="actionCompareField" layoutX="126.0" layoutY="214.0" prefHeight="26.0" prefWidth="108.0" promptText="Count Filter" />
+                                    <CheckBox fx:id="showAllAction" layoutX="32.0" layoutY="92.0" mnemonicParsing="false" text="Show All" />
+                                    <ChoiceBox fx:id="actionSelection" layoutX="32.0" layoutY="287.0" prefHeight="26.0" prefWidth="196.0" />
+                                    <Label layoutX="32.0" layoutY="255.0" text="Selected Activity" />
                                  </children>
                               </AnchorPane>
                            </content>

@@ -2,10 +2,8 @@ package org.example.mesexadmin.data_access;
 
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
-import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.example.mesexadmin.MongoManagement;

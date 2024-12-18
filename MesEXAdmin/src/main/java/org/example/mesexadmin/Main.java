@@ -46,7 +46,8 @@ public class Main extends Application {
     public static SceneManager getSceneManager() {
         return sceneManager;
     }
-    public static SessionUser getCurrentUser() { 
+    public static SessionUser getCurrentUser() {
+        currentUser.updateCurrentUserData();
         return currentUser;
     }
 }
