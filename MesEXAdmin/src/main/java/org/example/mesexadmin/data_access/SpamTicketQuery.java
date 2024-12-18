@@ -25,7 +25,6 @@ public class SpamTicketQuery {
     }
 
     public ArrayList<SpamTicketData> getSpamTicketDetails() {
-        // Test query
 
         MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_tickets");
         ArrayList<Document> results = new ArrayList<>();
@@ -33,13 +32,16 @@ public class SpamTicketQuery {
             Arrays.asList(
 
                 Aggregates.lookup("users", "reporterId", "_id", "reporterDetails"),
-                Aggregates.lookup("users", "reportedId", "_id", "reportedUserDetails"),
+                Aggregates.lookup("users", "reportedUserId", "_id", "reportedUserDetails"),
+                
+                Aggregates.unwind("$reporterDetails"),
+                Aggregates.unwind("$reportedUserDetails"),
 
-                Aggregates.project(Projections.fields(
-                    Projections.include("reporterId", "reportedUserId"),
+                Aggregates.project(Projections.fields( 
+                    Projections.include("reporterId", "reportedUserId", "timeSent"),
                     Projections.computed("reporterUsername", "$reporterDetails.username"),
-                    Projections.computed("reportedUsername", "$reportedUserDetails.username"),
-                    Projections.computed("reportedEmail", "$reportedUserDetails.email")
+                    Projections.computed("username", "$reportedUserDetails.username"),
+                    Projections.computed("email", "$reportedUserDetails.email")
                 ))
             )
         ).into(results);
@@ -60,16 +62,19 @@ public class SpamTicketQuery {
         tickets.aggregate(
                 Arrays.asList(
 
-                        Aggregates.lookup("users", "reporterId", "_id", "reporterDetails"),
-                        Aggregates.lookup("users", "reportedId", "_id", "reportedUserDetails"),
+                    Aggregates.lookup("users", "reporterId", "_id", "reporterDetails"),
+                    Aggregates.lookup("users", "reportedUserId", "_id", "reportedUserDetails"),
+                    
+                    Aggregates.unwind("$reporterDetails"),
+                    Aggregates.unwind("$reportedUserDetails"),
 
-                        Aggregates.project(Projections.fields(
-                                Projections.include("reporterId", "reportedUserId"),
-                                Projections.computed("reporterUsername", "$reporterDetails.username"),
-                                Projections.computed("username", "$reportedUserDetails.username"),
-                                Projections.computed("email", "$reportedUserDetails.email")
-                        )),
-                        Aggregates.match(Filters.regex(key, token, "i"))
+                    Aggregates.project(Projections.fields(
+                            Projections.include("reporterId", "reportedUserId", "timeSent"),
+                            Projections.computed("reporterUsername", "$reporterDetails.username"),
+                            Projections.computed("username", "$reportedUserDetails.username"),
+                            Projections.computed("email", "$reportedUserDetails.email")
+                    )),
+                    Aggregates.match(Filters.regex(key, token, "i"))
                 )
         ).into(results);
 
@@ -88,6 +93,7 @@ public class SpamTicketQuery {
         try {
             tickets.insertOne(spamTicketData.toDocument());
         } catch (MongoWriteException e){
+            e.printStackTrace();
             return false;
         }
 
@@ -100,6 +106,7 @@ public class SpamTicketQuery {
         try {
             tickets.deleteOne(Filters.eq("_id", id));
         } catch (MongoWriteException e){
+            e.printStackTrace();
             return false;
         }
 
@@ -109,10 +116,10 @@ public class SpamTicketQuery {
     public SpamTicketData documentToSpamTicket(Document ticket){
         SpamTicketData spamTicket = new SpamTicketData();
         spamTicket.setTicketId(ticket.getObjectId("_id"));
-        spamTicket.setReportedId(ticket.getObjectId("reportedId"));
+        spamTicket.setReportedId(ticket.getObjectId("reportedUserId"));
         spamTicket.setReportedName(ticket.getString("username"));
         spamTicket.setReporterId(ticket.getObjectId("reporterId"));
-        spamTicket.setReporterName(ticket.getString("reporterName"));
+        spamTicket.setReporterName(ticket.getString("reporterUsername"));
         spamTicket.setTimeSent(ticket.getDate("timeSent"));
         spamTicket.setReportedEmail(ticket.getString("email"));
         return spamTicket;

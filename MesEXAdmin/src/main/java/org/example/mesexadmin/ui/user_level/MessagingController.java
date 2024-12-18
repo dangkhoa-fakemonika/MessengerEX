@@ -749,12 +749,10 @@ public class MessagingController implements ControllerWrapper {
                 alert.showAndWait().ifPresent(response -> {
                     if (response == ButtonType.OK) {
                         ObjectId target;
-                        if (currentUser.getSessionUserData().getUserId().equals(currentConversation.getMembersId().getFirst()))
-                            target = currentConversation.getMembersId().getLast();
-                        else
-                            target = currentConversation.getMembersId().getFirst();
+                        target = currentChatTarget.getUserId();
+
                         if (currentUser.reportUser(target)) {
-                            new Alert(AlertType.ERROR, "User reported").showAndWait();
+                            new Alert(AlertType.INFORMATION, "User reported").showAndWait();
                             updateChat.restart();
                         } else {
                             new Alert(AlertType.ERROR, "Can't report user").showAndWait();

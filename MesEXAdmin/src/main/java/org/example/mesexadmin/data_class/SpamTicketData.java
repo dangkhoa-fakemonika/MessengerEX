@@ -90,7 +90,7 @@ public class SpamTicketData {
 
     public Document toDocument(){
         Document doc = new Document();
-        doc.append("reportedId", this.reportedId).append("reporterId", this.reporterId).append("timeSent", this.timeSent.get());
+        doc.append("reportedUserId", this.reportedId).append("reporterId", this.reporterId).append("timeSent", this.timeSent.get());
         return doc;
     }
 }
