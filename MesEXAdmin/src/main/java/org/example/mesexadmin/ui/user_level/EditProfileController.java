@@ -240,6 +240,10 @@ public class EditProfileController implements ControllerWrapper {
                 }
 
                 if (isChanged) {
+                    // Sync before saving
+                    UserData syncUser = currentUser.myQuery.users().getUserById(currentUser.getSessionUserData().getUserId());
+                    currentUser.getSessionUserData().setFriend(syncUser.getFriend());
+                    
                     if (currentUser.myQuery.users().updateUser(userData)) {
                         new Alert(AlertType.INFORMATION, "Update profile success!").showAndWait();
                         nameField.setText(name);
