@@ -43,7 +43,7 @@ db.createCollection("users", {
                 },
                 status: { 
                     bsonType: "string",
-                    enum: ["online", "offline", "locked"]
+                    enum: ["online", "offline", "banned"]
                 },
                 lastLogin: { bsonType: ["date", "null"] },
                 dateCreated: { bsonType: "date" }

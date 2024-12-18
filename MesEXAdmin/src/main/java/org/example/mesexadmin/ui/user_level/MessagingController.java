@@ -96,7 +96,7 @@ public class MessagingController implements ControllerWrapper {
 
             if (currentUser.getBLockedStatus(currentChatTarget.getUserId())) {
                 new Alert(AlertType.INFORMATION, "You have been blocked by this user").showAndWait();
-                disableChat();
+                updateCurrentChat();
                 return;
             }
 
@@ -175,17 +175,22 @@ public class MessagingController implements ControllerWrapper {
     }
 
     private void updateCurrentChat() {
-
-        if (currentChatTarget == null || currentUser.getBLockedStatus(currentChatTarget.getUserId())) {
-            disableChat();
-            return;
-        } else {
-            enableChat();
-        }
-
+        boolean isBlocked = false;
+        
         if (currentConversation == null) {
             messages.getItems().clear();
+            disableChat();
             return;
+        }
+
+        if (currentChatTarget != null)
+            isBlocked = currentUser.getBLockedStatus(currentChatTarget.getUserId());
+
+        if (isBlocked) {
+            disableChat();
+            myTextArea.setText("You can not chat with this user.");
+        } else {
+            enableChat();
         }
 
         ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByConv(currentConversation.getConversationId());
@@ -201,9 +206,10 @@ public class MessagingController implements ControllerWrapper {
             messages.scrollTo(messages.getItems().size());
             chatSwitched = false;
             return;
-        } else {
+        } else if (isBlocked) {
+            return;
+        } else
             messagesList.stream().filter(message -> !messages.getItems().contains(message)).forEach(messages.getItems()::add);
-        }
     }
 
     private void updateCurrentChatList() {
@@ -241,7 +247,6 @@ public class MessagingController implements ControllerWrapper {
     private void disableChat() {
         sendButton.setDisable(true);
         myTextArea.setDisable(true);
-        myTextArea.setText("You can not chat with this user.");
     }
 
     private void enableChat() {
@@ -372,9 +377,10 @@ public class MessagingController implements ControllerWrapper {
                     chatSwitched = true;
                     updateCurrentChat();
 
-                    if (currentUser.getBLockedStatus(currentChatTarget.getUserId()))
+                    if (currentUser.getBLockedStatus(currentChatTarget.getUserId())){
                         disableChat();
-                    else
+                        myTextArea.setText("You can not chat with this user.");
+                    } else
                         enableChat();
 
                     optionButton.setDisable(false);
@@ -436,11 +442,11 @@ public class MessagingController implements ControllerWrapper {
                         myTextArea.appendText("\n");
                     }
                     else {
-                        if (currentUser.getBLockedStatus(currentChatTarget.getUserId())) {
-                            new Alert(AlertType.INFORMATION, "You have been blocked by this user").showAndWait();
-                            disableChat();
-                            return;
-                        }
+                        // if (currentUser.getBLockedStatus(currentChatTarget.getUserId())) {
+                        //     new Alert(AlertType.INFORMATION, "You have been blocked by this user").showAndWait();
+                        //     update
+                        //     return;
+                        // }
                         addMessage();
                     }
                 }
@@ -738,6 +744,8 @@ public class MessagingController implements ControllerWrapper {
     private void handleSwitchTab(Tab tab) {
         if (tab == privateTab) {
             currentTab = privateTab;
+            currentConversation = null;
+            currentChatTarget = null;
 
             groupList.getSelectionModel().clearSelection();
             searchUserList.getSelectionModel().clearSelection();
@@ -748,6 +756,8 @@ public class MessagingController implements ControllerWrapper {
 
         } else if (tab == groupTab) {
             currentTab = groupTab;
+            currentConversation = null;
+            currentChatTarget = null;
 
             privateList.getSelectionModel().clearSelection();
             searchUserList.getSelectionModel().clearSelection();
@@ -757,6 +767,8 @@ public class MessagingController implements ControllerWrapper {
             loadSearchResults();
         } else {
             currentTab = everyoneTab;
+            currentConversation = null;
+            currentChatTarget = null;
 
             groupList.getSelectionModel().clearSelection();
             privateList.getSelectionModel().clearSelection();
