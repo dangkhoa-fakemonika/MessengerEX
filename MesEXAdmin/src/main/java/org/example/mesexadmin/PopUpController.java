@@ -75,6 +75,7 @@ public class PopUpController implements Initializable {
     public void loadUserInfo(UserData data){
         usernameField.setText(data.getUsername());
         usernameField.setDisable(true);
+        address.setText(data.getEmail());
         displayNameField.setText(data.getDisplayName());
         if (data.getDateOfBirth() != null)
             datePicker.setValue(Instant.ofEpochMilli(data.getDateOfBirth().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
@@ -116,9 +117,9 @@ public class PopUpController implements Initializable {
     }
 
     public boolean validatePasswordInput(){
-        return (!passwordField.getText().isEmpty()
-                && !repeatPasswordField.getText().isEmpty()
-                && passwordField.getText().equals(repeatPasswordField.getText()));
+        return (passwordField.getText().isEmpty()
+                || repeatPasswordField.getText().isEmpty()
+                || !passwordField.getText().equals(repeatPasswordField.getText()));
     }
 
     public void clearAllFields() {
