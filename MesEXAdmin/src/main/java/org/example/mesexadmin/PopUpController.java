@@ -81,10 +81,10 @@ public class PopUpController implements Initializable {
             datePicker.setValue(Instant.ofEpochMilli(data.getDateOfBirth().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
         if (!data.getGender().isEmpty()){
             if (data.getGender().equals("male")){
-                isMale.arm();
+                isMale.setSelected(true);
             }
             else if (data.getGender().equals("female")){
-                isFemale.arm();
+                isFemale.setSelected(true);
             }
         }
 
@@ -95,9 +95,9 @@ public class PopUpController implements Initializable {
         data.setAddress(address.getText());
         if (datePicker.getValue() != null)
             data.setDateOfBirth(Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        if (isMale.isArmed())
+        if (isMale.isSelected())
             data.setGender("male");
-        else if (isFemale.isArmed())
+        else if (isFemale.isSelected())
             data.setGender("female");
         return data;
     }

@@ -71,6 +71,10 @@ public class SessionUser {
         return true;
     }
 
+    public void updateCurrentUserData(){
+        currentUser = myQuery.users().getUserById(currentUser.getUserId());
+    }
+
     public boolean logoutSession(){
         currentUser.setStatus("offline");
 
@@ -405,6 +409,41 @@ public class SessionUser {
             return myQuery.users().changeUserPassword(user.getUserId(), hashedPassword);
         }
         return false;
+    }
+
+    public int countUserActions(ObjectId userId, String action){
+        switch (action) {
+            case "Login Occurrences" -> {
+                return myQuery.activities().viewUserLoginHistory(userId).size();
+            }
+            case "Messages" -> {
+                return myQuery.messages().lookUpByUser(userId).size();
+            }
+            case "Group Chats" -> {
+                return myQuery.conversations().getUserGroupConversation(userId).size();
+            }
+            case "Private Chats" -> {
+                return myQuery.conversations().getUserPrivateConversation(userId).size();
+            }
+            default -> {
+                return 0;
+            }
+        }
+    }
+
+    public ArrayList<UserData> actionFilter(ArrayList<UserData> inputData, String action, String filterRange, Integer value){
+        if (filterRange.equals("None") || value == null) return inputData;
+
+        ArrayList<UserData> returnData = new ArrayList<>();
+        inputData.forEach((a) -> {
+            int actionCount = countUserActions(a.getUserId(), action);
+            if ((Objects.equals(filterRange, "Equal to") && actionCount == value) ||
+                    (Objects.equals(filterRange, "Greater than") && actionCount > value) ||
+                    (Objects.equals(filterRange, "Lesser than") && actionCount < value))
+                returnData.add(a);
+        });
+
+        return returnData;
     }
                 
     private static boolean sendResetPasswordEmail(String emailTo, String newPassword) {
