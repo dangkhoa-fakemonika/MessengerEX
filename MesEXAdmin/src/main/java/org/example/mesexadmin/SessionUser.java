@@ -25,10 +25,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 public class SessionUser {
+    private final static String serviceEmail = Main.appProperties.getProperty("mail");
+    private final static String appPassword = Main.appProperties.getProperty("password");
     private UserData currentUser;
     public GlobalQuery myQuery;
 
-    public SessionUser(GlobalQuery globalQuery){
+    public SessionUser(GlobalQuery globalQuery) {
         myQuery = globalQuery;
         currentUser = new UserData();
     }
@@ -37,7 +39,7 @@ public class SessionUser {
         return currentUser.getStatus().equals("online");
     }
                 
-    public boolean loginSession(String username, String password){
+    public boolean loginSession(String username, String password) {
         
         UserData userData = myQuery.users().getUserByUsername(username);
         
@@ -414,8 +416,8 @@ public class SessionUser {
         props.put("mail.smtp.ssl.protocols", "TLSv1.2");
         props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
-        final String emailFrom = null; // Email goes here
-        final String appPassword = null; // App password goes 
+        final String emailFrom = serviceEmail; // Email goes here
+        final String authPassword = appPassword; // App password goes 
 
         String subject = "Reset password for account with email: " + emailTo;
         String body = newPassword;
@@ -423,7 +425,7 @@ public class SessionUser {
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(emailFrom, appPassword);
+                return new PasswordAuthentication(emailFrom, authPassword);
             }
         });
 

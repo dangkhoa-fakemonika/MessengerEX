@@ -5,21 +5,41 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import org.example.mesexadmin.data_access.GlobalQuery;
 
 public class Main extends Application {
     public static GlobalQuery globalQuery;
+    public static Properties appProperties;
     private static SceneManager sceneManager;
     private static SessionUser currentUser;
 
     @Override
+    public void init() {
+        try {
+            InputStream input = null;
+            appProperties = new Properties();
+            input = new FileInputStream("app.properties");
+            appProperties.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
     public void start(Stage primaryStage) throws Exception {
+        globalQuery = new GlobalQuery(new MongoManagement());
+        currentUser = new SessionUser(globalQuery);
 
         sceneManager = new SceneManager(primaryStage);
         sceneManager.addScene("Login", "main-login.fxml");
         sceneManager.switchScene("Login");
-//        sceneManager.addScene("Main", "main-messaging.fxml");
-//        sceneManager.switchScene("Main");
+
         primaryStage.setOnCloseRequest(event -> {
             event.consume();
 
@@ -38,9 +58,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        globalQuery = new GlobalQuery(new MongoManagement(""));
-        currentUser = new SessionUser(globalQuery);
-        launch(args);
+        launch();
     }
 
     public static SceneManager getSceneManager() {
