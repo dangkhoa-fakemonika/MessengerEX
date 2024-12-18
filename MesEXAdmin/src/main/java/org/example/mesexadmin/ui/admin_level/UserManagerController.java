@@ -353,7 +353,8 @@ public class UserManagerController implements ControllerWrapper {
 
         String text = filterField.getText().trim();
         currentFilter = userFilter.getValue();
-        if (!text.isEmpty()){
+
+        if (!text.isEmpty() && !userFilter.getValue().equals("None")){
             userData.setAll(currentUser.myQuery.users().getAllUsersFilter(currentFilter, text));
         } else {
             userData.setAll(currentUser.myQuery.users().getAllUsers());

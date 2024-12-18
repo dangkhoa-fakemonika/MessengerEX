@@ -38,7 +38,8 @@ public class SpamTicketQuery {
                 Aggregates.project(Projections.fields(
                     Projections.include("reporterId", "reportedUserId"),
                     Projections.computed("reporterUsername", "$reporterDetails.username"),
-                    Projections.computed("reportedUsername", "$reportedUserDetails.username")
+                    Projections.computed("reportedUsername", "$reportedUserDetails.username"),
+                    Projections.computed("reportedEmail", "$reportedUserDetails.email")
                 ))
             )
         ).into(results);
@@ -49,8 +50,37 @@ public class SpamTicketQuery {
         }
 
         return spamData;
-
     }
+
+    public ArrayList<SpamTicketData> getSpamTicketDetailsFilter(String key, String token) {
+        // Test query
+
+        MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_ticket");
+        ArrayList<Document> results = new ArrayList<>();
+        tickets.aggregate(
+                Arrays.asList(
+
+                        Aggregates.lookup("users", "reporterId", "_id", "reporterDetails"),
+                        Aggregates.lookup("users", "reportedId", "_id", "reportedUserDetails"),
+
+                        Aggregates.project(Projections.fields(
+                                Projections.include("reporterId", "reportedUserId"),
+                                Projections.computed("reporterUsername", "$reporterDetails.username"),
+                                Projections.computed("username", "$reportedUserDetails.username"),
+                                Projections.computed("email", "$reportedUserDetails.email")
+                        )),
+                        Aggregates.match(Filters.regex(key, token, "i"))
+                )
+        ).into(results);
+
+        ArrayList<SpamTicketData> spamData = new ArrayList<>();
+        for (Document res : results){
+            spamData.add(documentToSpamTicket(res));
+        }
+
+        return spamData;
+    }
+
 
     public boolean addSpamTicket(SpamTicketData spamTicketData){
         MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_ticket");
@@ -80,10 +110,11 @@ public class SpamTicketQuery {
         SpamTicketData spamTicket = new SpamTicketData();
         spamTicket.setTicketId(ticket.getObjectId("_id"));
         spamTicket.setReportedId(ticket.getObjectId("reportedId"));
-        spamTicket.setReportedName(ticket.getString("reportedName"));
+        spamTicket.setReportedName(ticket.getString("username"));
         spamTicket.setReporterId(ticket.getObjectId("reporterId"));
         spamTicket.setReporterName(ticket.getString("reporterName"));
         spamTicket.setTimeSent(ticket.getDate("timeSent"));
+        spamTicket.setReportedEmail(ticket.getString("email"));
         return spamTicket;
     }
 }

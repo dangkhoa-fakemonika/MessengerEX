@@ -26,7 +26,7 @@ public class GlobalQuery {
     }
 
     public SpamTicketQuery spams(){
-        return null;
+        return new SpamTicketQuery(myMongo);
     }
 
     public ActivityQuery activities(){

@@ -14,9 +14,16 @@ public class SpamTicketData {
     SimpleStringProperty reportedName;
     SimpleStringProperty reporterName;
     SimpleObjectProperty<Date> timeSent;
+    SimpleStringProperty reportedEmail;
 
     public SpamTicketData(){
-
+        ticketId = new ObjectId();
+        reportedId = new ObjectId();
+        reporterId = new ObjectId();
+        reportedName = new SimpleStringProperty();
+        reporterName = new SimpleStringProperty();
+        timeSent = new SimpleObjectProperty<>(null);
+        reportedEmail = new SimpleStringProperty();
     }
 
     public SpamTicketData(String reporter, String reportID, String time){
@@ -35,6 +42,10 @@ public class SpamTicketData {
 
     public ObjectId getTicketId() {
         return ticketId;
+    }
+
+    public String getReportedEmail() {
+        return reportedEmail.get();
     }
 
     public String getReportedName() {
@@ -59,6 +70,10 @@ public class SpamTicketData {
 
     public void setTicketId(ObjectId ticketId) {
         this.ticketId = ticketId;
+    }
+
+    public void setReportedEmail(String reportedEmail) {
+        this.reportedEmail.set(reportedEmail);
     }
 
     public void setReportedName(String reportedName) {

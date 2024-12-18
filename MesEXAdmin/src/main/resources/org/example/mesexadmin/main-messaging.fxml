@@ -45,6 +45,7 @@
                                                                 <MenuItem mnemonicParsing="false" onAction="#appManagementScene" text="Manage App" />
                                                                 <MenuItem mnemonicParsing="false" onAction="#userManagementScene" text="Manage Users" />
                                                                 <MenuItem mnemonicParsing="false" onAction="#groupManagementScene" text="Manage Chats" />
+                                                <MenuItem mnemonicParsing="false" onAction="#spamManagementScene" text="Manage Spam" />
                                                             </items>
                                                         </MenuButton>
                                           <Button fx:id="advancedButton" layoutX="15.0" layoutY="61.0" mnemonicParsing="false" onAction="#advanced" prefHeight="26.0" prefWidth="87.0" text="Advanced" />

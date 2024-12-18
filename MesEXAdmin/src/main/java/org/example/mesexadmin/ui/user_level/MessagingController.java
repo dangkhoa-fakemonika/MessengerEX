@@ -731,6 +731,8 @@ public class MessagingController implements ControllerWrapper {
             if (index != -1)
                 groupList.scrollTo(index);
         });
+
+//        blockUserButton
     }
 
     private void handleSwitchTab(Tab tab) {
@@ -790,9 +792,9 @@ public class MessagingController implements ControllerWrapper {
         sceneManager.switchScene("AppManagement");
     }
 
-    public void personalGroupManagementScene(ActionEvent actionEvent) throws IOException{
-        sceneManager.addScene("MyGroupManagement", "main-convo-config.fxml");
-        sceneManager.switchScene("MyGroupManagement");
+    public void spamManagementScene(ActionEvent actionEvent) throws IOException{
+        sceneManager.addScene("SpamManagement", "main-spam-manager.fxml");
+        sceneManager.switchScene("SpamManagement");
     }
 
     public void profileScene(ActionEvent actionEvent) throws IOException{
