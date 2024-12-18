@@ -1,4 +1,4 @@
-db = connect('mongodb://localhost/messenger-ex');
+db = connect('mongodb://localhost/messenger-ex-app');
 
 db.createCollection("activities", {
     validator: {

@@ -3,6 +3,7 @@ package org.example.mesexadmin.ui.elements;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import org.bson.types.ObjectId;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.data_class.ConversationData;
 import org.example.mesexadmin.data_class.UserData;
@@ -12,6 +13,7 @@ import java.util.Objects;
 public class ConversationListComponent extends HBox{
     private final ConversationData data;
     SimpleStringProperty displayData;
+    ObjectId oppositeId;
 
     public ConversationListComponent(ConversationData conversation) {
         data = conversation;
@@ -19,10 +21,14 @@ public class ConversationListComponent extends HBox{
         UserData viewingUser = Main.getCurrentUser().getSessionUserData();
         // Set display data here
         if (Objects.equals(data.getType(), "private")){
-            if (viewingUser.getUserId().equals(conversation.getMembersId().getFirst()))
+            if (viewingUser.getUserId().equals(conversation.getMembersId().getFirst())){
                 displayData.set(conversation.getMembersName().getLast().get());
-            else
+                oppositeId = conversation.getMembersId().getLast();
+            }
+            else{
                 displayData.set(conversation.getMembersName().getFirst().get());
+                oppositeId = conversation.getMembersId().getFirst();
+            }
         }
 
         else
@@ -41,6 +47,10 @@ public class ConversationListComponent extends HBox{
 
     public String getDisplayData(){
         return displayData.get();
+    }
+
+    public ObjectId getOppositeId(){
+        return oppositeId;
     }
 
 }

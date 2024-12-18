@@ -19,7 +19,6 @@ public class ConversationData {
     ArrayList<SimpleStringProperty> membersName;
     ArrayList<SimpleStringProperty> moderatorsName;
 
-    ObjectId lastMessageId;
     SimpleStringProperty type;
 
     public ConversationData() {
@@ -30,7 +29,6 @@ public class ConversationData {
         moderatorsId = new ArrayList<>();
         membersName = new ArrayList<>();
         moderatorsName = new ArrayList<>();
-        lastMessageId = null;
         type = new SimpleStringProperty();
     }
 
@@ -48,10 +46,6 @@ public class ConversationData {
 
     public Date getDateCreated() {
         return dateCreated.get();
-    }
-
-    public ObjectId getLastMessageId() {
-        return lastMessageId.get();
     }
 
     public String getConversationName() {
@@ -104,18 +98,6 @@ public class ConversationData {
         this.moderatorsName = moderatorsName;
     }
 
-    public void addIDs(SimpleStringProperty[] newIDs){
-
-    }
-
-    public void removeID(String id){
-
-    }
-
-    public void setLastMessageId(ObjectId lastMessageId) {
-        this.lastMessageId = lastMessageId;
-    }
-
     public void setType(String type) {
         this.type.set(type);
     }
@@ -131,7 +113,6 @@ public class ConversationData {
         .append("conversationName", this.conversationName.get())
         .append("membersId", this.membersId)
         .append("moderatorsId", this.moderatorsId)
-        .append("lastMessageId", this.lastMessageId)
         .append("type", this.type.get());
 
         return doc;

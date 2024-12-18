@@ -19,6 +19,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 
+import org.bson.types.ObjectId;
 import org.example.mesexadmin.Main;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
@@ -738,7 +739,57 @@ public class MessagingController implements ControllerWrapper {
                 groupList.scrollTo(index);
         });
 
-//        blockUserButton
+        reportUserButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setHeaderText("Report this person for spamming?");
+                alert.setTitle("Spam Report");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        ObjectId target;
+                        if (currentUser.getSessionUserData().getUserId().equals(currentConversation.getMembersId().getFirst()))
+                            target = currentConversation.getMembersId().getLast();
+                        else
+                            target = currentConversation.getMembersId().getFirst();
+                        if (currentUser.reportUser(target)) {
+                            new Alert(AlertType.ERROR, "User reported").showAndWait();
+                            updateChat.restart();
+                        } else {
+                            new Alert(AlertType.ERROR, "Can't report user").showAndWait();
+                        }
+                    }
+                });
+            }
+        });
+
+        blockUserButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                Alert alert = new Alert(AlertType.CONFIRMATION);
+                alert.setHeaderText("Block this user?");
+                alert.setTitle("Block User");
+
+                alert.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        ObjectId target;
+                        if (currentUser.getSessionUserData().getUserId().equals(currentConversation.getMembersId().getFirst()))
+                            target = currentConversation.getMembersId().getLast();
+                        else
+                            target = currentConversation.getMembersId().getFirst();
+                        if (currentUser.blockUser(target)) {
+                            new Alert(AlertType.ERROR, "User blocked").showAndWait();
+                            updateChat.restart();
+                        } else {
+                            new Alert(AlertType.ERROR, "Can't block user").showAndWait();
+                        }
+                    }
+                });
+            }
+        });
+
+
     }
 
     private void handleSwitchTab(Tab tab) {

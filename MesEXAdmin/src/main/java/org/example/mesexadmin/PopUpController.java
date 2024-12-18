@@ -116,9 +116,9 @@ public class PopUpController implements Initializable {
     }
 
     public boolean validatePasswordInput(){
-        return (!passwordField.toString().isEmpty()
-                && !repeatPasswordField.toString().isEmpty()
-                && passwordField.toString().equals(repeatPasswordField.toString()));
+        return (!passwordField.getText().isEmpty()
+                && !repeatPasswordField.getText().isEmpty()
+                && passwordField.getText().equals(repeatPasswordField.getText()));
     }
 
     public void clearAllFields() {

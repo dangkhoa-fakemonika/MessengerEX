@@ -12,6 +12,7 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 
+import javax.print.Doc;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -152,14 +153,25 @@ public class UserQuery {
         return true;
     }
 
-    public boolean removeUserFromSystem(ObjectId id){
+    public boolean removeUserFromSystem(ObjectId targetId){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
-//        MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");
-//        MongoCollection<Document> activities = mongoManagement.database.getCollection("activities");
-//        MongoCollection<Document> requests = mongoManagement.database.getCollection("requests");
+        MongoCollection<Document> conversations = mongoManagement.database.getCollection("conversations");
+        MongoCollection<Document> activities = mongoManagement.database.getCollection("activities");
+        MongoCollection<Document> friend_requests = mongoManagement.database.getCollection("friend_requests");
+        MongoCollection<Document> spams = mongoManagement.database.getCollection("spam_tickets");
+        MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
 
         try {
-            users.deleteOne(Filters.eq("_id", id));
+            // Goodbye, cruel world
+            conversations.updateMany(Filters.in("membersId", targetId),Updates.pull("membersId", targetId));
+            conversations.updateMany(Filters.in("moderatorsId", targetId),Updates.pull("moderatorsId", targetId));
+            activities.deleteMany(Filters.eq("userId", targetId));
+            friend_requests.deleteMany(Filters.eq("receiverId", targetId));
+            friend_requests.deleteMany(Filters.eq("senderId", targetId));
+            spams.deleteMany(Filters.eq("reporterId", targetId));
+            spams.deleteMany(Filters.eq("reportedId", targetId));
+            messages.deleteMany(Filters.eq("senderId", targetId));
+            users.deleteOne(Filters.eq("_id", targetId));
         } catch (MongoWriteException e) {
             return false;
         }

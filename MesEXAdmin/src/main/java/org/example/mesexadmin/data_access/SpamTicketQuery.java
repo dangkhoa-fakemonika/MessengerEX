@@ -27,7 +27,7 @@ public class SpamTicketQuery {
     public ArrayList<SpamTicketData> getSpamTicketDetails() {
         // Test query
 
-        MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_ticket");
+        MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_tickets");
         ArrayList<Document> results = new ArrayList<>();
         tickets.aggregate(
             Arrays.asList(
@@ -55,7 +55,7 @@ public class SpamTicketQuery {
     public ArrayList<SpamTicketData> getSpamTicketDetailsFilter(String key, String token) {
         // Test query
 
-        MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_ticket");
+        MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_tickets");
         ArrayList<Document> results = new ArrayList<>();
         tickets.aggregate(
                 Arrays.asList(
@@ -83,7 +83,7 @@ public class SpamTicketQuery {
 
 
     public boolean addSpamTicket(SpamTicketData spamTicketData){
-        MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_ticket");
+        MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_tickets");
 
         try {
             tickets.insertOne(spamTicketData.toDocument());
@@ -95,7 +95,7 @@ public class SpamTicketQuery {
     }
 
     public boolean removeSpamTicket(ObjectId id){
-        MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_ticket");
+        MongoCollection<Document> tickets = mongoManagement.database.getCollection("spam_tickets");
 
         try {
             tickets.deleteOne(Filters.eq("_id", id));

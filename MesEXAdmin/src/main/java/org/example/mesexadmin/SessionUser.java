@@ -256,6 +256,13 @@ public class SessionUser {
         return myQuery.users().removeBlock(currentUser.getUserId(), targetId);
     }
 
+    public boolean reportUser(ObjectId targetId){
+        SpamTicketData newTicket = new SpamTicketData();
+        newTicket.setReporterId(currentUser.getUserId());
+        newTicket.setReportedId(targetId);
+        newTicket.setTimeSent(new Date());
+        return myQuery.spams().addSpamTicket(newTicket);
+    }
 
     public ArrayList<ConversationData> loadAllConversations(){
         ArrayList<ConversationData> convData = myQuery.conversations().getUserAllConversation(currentUser.getUserId());

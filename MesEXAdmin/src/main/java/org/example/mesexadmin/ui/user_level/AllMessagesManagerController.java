@@ -80,6 +80,7 @@ public class AllMessagesManagerController implements ControllerWrapper {
         jumpButton.setDisable(true);
         selectedMessage = null;
         currentUser = Main.getCurrentUser();
+        filterField.clear();
 
         ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByUser(currentUser.getSessionUserData().getUserId());
         loadedMessages = FXCollections.observableArrayList();

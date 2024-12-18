@@ -232,8 +232,6 @@ public class ConversationQuery {
         convo.setType(convoDoc.getString("type"));
         convo.setMembersId(new ArrayList<>(convoDoc.getList("membersId", ObjectId.class)));
         convo.setModeratorsId(new ArrayList<>(convoDoc.getList("moderatorsId", ObjectId.class)));
-        convo.setLastMessageId(convoDoc.getObjectId("lastMessageId"));
-
 
         return convo;
     }

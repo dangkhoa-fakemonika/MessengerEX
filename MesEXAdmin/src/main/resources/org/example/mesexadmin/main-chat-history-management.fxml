@@ -18,7 +18,6 @@
                   <Button fx:id="deleteAllButton" layoutX="35.0" layoutY="159.0" mnemonicParsing="false" onAction="#deleteAllMessages" text="Delete All Messages" />
                   <Button fx:id="deleteOneButton" layoutX="35.0" layoutY="111.0" mnemonicParsing="false" onAction="#deleteOneMessage" text="Delete Message" />
                   <Label fx:id="title" layoutX="69.0" layoutY="27.0" text="Conversation 1" />
-                  <Button fx:id="reportUserButton" layoutX="34.0" layoutY="65.0" mnemonicParsing="false" onAction="#reportUser" text="Report User as Spam" />
                   <Button layoutX="61.0" layoutY="535.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
                   <Button fx:id="jumpButton" layoutX="35.0" layoutY="273.0" mnemonicParsing="false" text="Go To Message" />
                </children>

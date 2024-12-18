@@ -1,2 +1,2 @@
 @echo off
-mongosh --f activity_monitor.js --f conversation.js --f  friend_request.js --f  message.js --f  spam_ticket.js --f user.js --f index.js
+mongosh --f activities.js --f conversation.js --f  friend_requests.js --f  message.js --f  spam_tickets.js --f user.js --f index.js
