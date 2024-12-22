@@ -2,3 +2,16 @@ git/
 src/
 22127028_22127200_Group12/
 *.properties
+22127028_22127200_GroupID12/22127028_22127200_Report.pdf
+22127028_22127200_GroupID12/BaoCaoTuDanhGia_Nhom12.xlsx
+22127028_22127200_GroupID12/release/README.txt
+22127028_22127200_GroupID12/script/activities.js
+22127028_22127200_GroupID12/script/conversations.js
+22127028_22127200_GroupID12/script/friend_requests.js
+22127028_22127200_GroupID12/script/index.js
+22127028_22127200_GroupID12/script/messages.js
+22127028_22127200_GroupID12/script/run.bat
+22127028_22127200_GroupID12/script/spam_tickets.js
+22127028_22127200_GroupID12/script/users.js
+release/messenger-ex-admin/messenger-ex-admin.jar
+release/messenger-ex/messenger-ex.jar
