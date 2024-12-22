@@ -76,6 +76,7 @@ public class SessionUser {
     }
 
     public boolean logoutSession(){
+        updateCurrentUserData();
         currentUser.setStatus("offline");
 
         if (!myQuery.users().updateUser(currentUser)) {
