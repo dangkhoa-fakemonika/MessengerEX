@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Properties;
 
 public class SessionUser {
@@ -45,6 +46,11 @@ public class SessionUser {
             new Alert(AlertType.ERROR, "Incorrect password!").showAndWait();
             return false;
         }
+
+        if (Objects.equals(userData.getStatus(), "banned")) {
+            new Alert(AlertType.ERROR, "You are banned from using the app. Sorry.").showAndWait();
+            return false;
+        }
         
         userData.setStatus("online");
         userData.setLastLogin(new Date());
@@ -72,7 +78,8 @@ public class SessionUser {
 
     public boolean logoutSession(){
         updateCurrentUserData();
-        currentUser.setStatus("offline");
+        if (!Objects.equals(currentUser.getStatus(), "banned"))
+            currentUser.setStatus("offline");
 
         if (!myQuery.users().updateUser(currentUser)) {
             return false;

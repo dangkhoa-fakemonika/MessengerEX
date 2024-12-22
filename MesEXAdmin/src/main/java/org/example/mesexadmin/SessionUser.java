@@ -47,12 +47,22 @@ public class SessionUser {
             new Alert(AlertType.ERROR, "Username does not exist!").showAndWait();
             return false;
         }
-        
+
         if (!userData.getPasswordHashed().equals(hashPassword(password))) {
             new Alert(AlertType.ERROR, "Incorrect password!").showAndWait();
             return false;
         }
-        
+
+        if (!Objects.equals(userData.getRole(), "admin")) {
+            new Alert(AlertType.ERROR, "Account isn't an admin.").showAndWait();
+            return false;
+        }
+
+        if (Objects.equals(userData.getStatus(), "banned")) {
+            new Alert(AlertType.ERROR, "You are banned from using the app. Sorry.").showAndWait();
+            return false;
+        }
+
         userData.setStatus("online");
         userData.setLastLogin(new Date());
 
@@ -79,7 +89,8 @@ public class SessionUser {
 
     public boolean logoutSession(){
         updateCurrentUserData();
-        currentUser.setStatus("offline");
+        if (!Objects.equals(currentUser.getStatus(), "banned"))
+            currentUser.setStatus("offline");
 
         if (!myQuery.users().updateUser(currentUser)) {
             return false;
