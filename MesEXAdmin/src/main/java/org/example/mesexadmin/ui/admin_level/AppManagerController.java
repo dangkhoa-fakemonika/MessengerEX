@@ -655,7 +655,6 @@ public class AppManagerController implements ControllerWrapper {
         };
     }
 
-
     private void cancelAllTask(){
         updateActiveData.cancel();
         updateRegisterData.cancel();

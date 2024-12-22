@@ -356,8 +356,8 @@ public class FriendsController implements ControllerWrapper {
                     if (response == ButtonType.OK) {
                         if (acceptFriendRequest()) {
                             new Alert(AlertType.INFORMATION, "You have accepted a friend request!").showAndWait();
-                            receivedRequests.remove(currentReceivedRequest);
                         }
+                        receivedRequests.remove(currentReceivedRequest);
                     }
                 });
             }
@@ -374,8 +374,8 @@ public class FriendsController implements ControllerWrapper {
                     if (response == ButtonType.OK) {
                         if (removeFriendRequest(currentReceivedRequest)) {
                             new Alert(AlertType.INFORMATION, "You have rejected a friend request!").showAndWait();
-                            receivedRequests.remove(currentReceivedRequest);
                         }
+                        receivedRequests.remove(currentReceivedRequest);
                     }
                 });
             }
@@ -392,8 +392,8 @@ public class FriendsController implements ControllerWrapper {
                     if (response == ButtonType.OK) {
                         if (removeFriendRequest(currentSentRequest)) {
                             new Alert(AlertType.INFORMATION, "You have removed your request!").showAndWait();
-                            sentRequests.remove(currentSentRequest);
                         }
+                        sentRequests.remove(currentSentRequest);
                     }
                 });
             }
@@ -410,8 +410,8 @@ public class FriendsController implements ControllerWrapper {
                     if (response == ButtonType.OK) {
                         if (unblockUser(currentBlocked)) {
                             new Alert(AlertType.INFORMATION, "You have removed this user from your block list!").showAndWait();
-                            blockedData.remove(currentBlocked);
                         }
+                        blockedData.remove(currentBlocked);
                     }
                 });
             };
@@ -464,11 +464,13 @@ public class FriendsController implements ControllerWrapper {
 
     private void handleSwitchTab(Tab tab) {
         if (tab == onlineTab) {
+            currentUser.updateCurrentUserData();
             currentFilter = onlineFilter;
             currentFilterField = onlineFilterField;
             updateOnlineData.restart();
 
         } else if (tab == friendsTab) {
+            currentUser.updateCurrentUserData();
             currentFilter = friendsFilter;
             currentFilterField = friendsFilterField;
             updateFriendData.restart();

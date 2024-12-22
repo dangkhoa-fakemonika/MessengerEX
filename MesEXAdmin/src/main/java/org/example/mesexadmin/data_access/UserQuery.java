@@ -1,9 +1,7 @@
 package org.example.mesexadmin.data_access;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.client.model.*;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.example.mesexadmin.MongoManagement;
 import org.example.mesexadmin.data_class.UserData;
@@ -12,7 +10,6 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.UpdateResult;
 
-import javax.print.Doc;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;

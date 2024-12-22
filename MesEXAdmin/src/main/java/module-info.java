@@ -1,11 +1,11 @@
 module org.example.mesexadmin {
-    requires transitive javafx.controls;
-    requires javafx.fxml;
-    requires transitive javafx.base;
     requires java.naming;
-    requires transitive mongo.java.driver;
-    requires jakarta.mail;
     requires java.desktop;
+    requires javafx.fxml;
+    requires jakarta.mail;
+    requires transitive javafx.controls;
+    requires transitive javafx.base;
+    requires transitive mongo.java.driver;
 
     exports org.example.mesexadmin;
     exports org.example.mesexadmin.data_class;

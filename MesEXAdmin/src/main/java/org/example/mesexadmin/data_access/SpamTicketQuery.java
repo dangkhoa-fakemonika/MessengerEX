@@ -9,13 +9,10 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.example.mesexadmin.MongoManagement;
 
-import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Projections;
 import org.example.mesexadmin.data_class.SpamTicketData;
-
-import javax.print.Doc;
 
 public class SpamTicketQuery {
     MongoManagement mongoManagement;

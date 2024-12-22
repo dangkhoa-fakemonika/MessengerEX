@@ -3,9 +3,7 @@ package org.example.mesexadmin.data_access;
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Projections;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -14,8 +12,6 @@ import org.example.mesexadmin.data_class.FriendRequestData;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class FriendRequestQuery {

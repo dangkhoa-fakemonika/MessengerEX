@@ -18,7 +18,6 @@ import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.ConversationData;
 import org.example.mesexadmin.data_class.UserData;
 import org.example.mesexadmin.ui.ControllerWrapper;
-import org.example.mesexadmin.ui.elements.ConversationListComponent;
 import org.example.mesexadmin.ui.elements.UserListComponent;
 
 import java.io.IOException;

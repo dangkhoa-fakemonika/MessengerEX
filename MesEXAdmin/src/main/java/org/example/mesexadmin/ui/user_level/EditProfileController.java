@@ -4,13 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
@@ -21,7 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
+
 import org.example.mesexadmin.App;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
@@ -29,15 +24,12 @@ import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.UserData;
 import org.example.mesexadmin.ui.ControllerWrapper;
 
-//import javax.mail.Session;
-
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 public class EditProfileController implements ControllerWrapper {
@@ -83,27 +75,12 @@ public class EditProfileController implements ControllerWrapper {
         dialog.showAndWait();
     }
 
-    public void sendEmail(){
-        String receiver = "mcfacebook911@gmail.com";
-        String sender = "amoungus69@sussy.com";
-        String host = "127.0.0.1";
-        Properties properties = System.getProperties();
-//        Session session = Session.de
-    }
-
     public void resetPassword(ActionEvent actionEvent) {
         Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
         newAlert.setContentText("Send reset request to your email?");
         newAlert.setHeaderText("Reset Password");
         newAlert.showAndWait();
     }
-
-    // public void changeEmail(ActionEvent actionEvent) {
-    //     Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
-    //     newAlert.setContentText("Send email change request to user's email?");
-    //     newAlert.setHeaderText("Change Email");
-    //     newAlert.showAndWait();
-    // }
 
     @Override
     public void myInitialize() {

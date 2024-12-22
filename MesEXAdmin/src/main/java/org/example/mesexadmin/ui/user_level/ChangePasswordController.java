@@ -3,23 +3,17 @@ package org.example.mesexadmin.ui.user_level;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.text.Text;
 
 import org.example.mesexadmin.App;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
-import org.example.mesexadmin.data_class.UserData;
 import org.example.mesexadmin.ui.ControllerWrapper;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class ChangePasswordController implements ControllerWrapper {

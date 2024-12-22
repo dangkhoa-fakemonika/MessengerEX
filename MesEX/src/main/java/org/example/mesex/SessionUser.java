@@ -15,7 +15,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Properties;
 
 public class SessionUser {
@@ -66,7 +65,9 @@ public class SessionUser {
     }
 
     public void updateCurrentUserData(){
-        currentUser = myQuery.users().getUserById(currentUser.getUserId());
+        UserData updatedData = myQuery.users().getUserById(currentUser.getUserId());
+        if (updatedData != null)
+            currentUser = updatedData;
     }
 
     public boolean logoutSession(){
@@ -145,20 +146,29 @@ public class SessionUser {
         return myQuery.requests().insertFriendRequest(request);
     }
 
-    public boolean acceptFriendRequest(FriendRequestData request) {
+    public boolean acceptFriendRequest(FriendRequestData inputRequest) {
+        FriendRequestData request = myQuery.requests().getSingleRequest(inputRequest.getSenderId(), inputRequest.getReceiverId());
+        
+        if (request == null) {
+            new Alert(AlertType.INFORMATION, "This request no longer exists!").showAndWait();
+            return false;
+        }
         
         if (myQuery.users().addFriend(request.getSenderId(), request.getReceiverId())) {
-
-            //
             currentUser.getFriend().add(request.getSenderId());
-
             return myQuery.requests().removeRequest(request.getRequestId());
         }
 
         return false;
     }
 
-    public boolean removeFriendRequest(FriendRequestData request) {
+    public boolean removeFriendRequest(FriendRequestData inputRequest) {
+        FriendRequestData request = myQuery.requests().getSingleRequest(inputRequest.getSenderId(), inputRequest.getReceiverId());
+        if (request == null) {
+            new Alert(AlertType.INFORMATION, "This request no longer exists!").showAndWait();
+            return false;
+        }
+
         return myQuery.requests().removeRequest(request.getRequestId());
     }
 

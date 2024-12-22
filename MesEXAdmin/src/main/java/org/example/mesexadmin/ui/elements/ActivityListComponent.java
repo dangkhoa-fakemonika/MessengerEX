@@ -4,7 +4,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import org.example.mesexadmin.data_class.ActivityData;
-import org.example.mesexadmin.data_class.UserData;
 
 public class ActivityListComponent extends HBox {
     private final ActivityData data;
