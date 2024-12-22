@@ -278,6 +278,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
                         event.consume();
                     } else if (currentUser.myQuery.conversations().changeConversationName(thisConversation.getConversationId(), groupName)) {
                         getGroupName.setText(groupName);
+                        thisConversation.setConversationName(groupName);
                     } else{
                         new Alert(Alert.AlertType.ERROR, "Can't change name at the moment.").showAndWait();
                         event.consume();

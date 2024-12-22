@@ -75,7 +75,7 @@ public class PopUpController implements Initializable {
     public void loadUserInfo(UserData data){
         usernameField.setText(data.getUsername());
         usernameField.setDisable(true);
-        address.setText(data.getEmail());
+        address.setText(data.getAddress());
         displayNameField.setText(data.getDisplayName());
         if (data.getDateOfBirth() != null)
             datePicker.setValue(Instant.ofEpochMilli(data.getDateOfBirth().getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
