@@ -267,7 +267,7 @@ public class MessagingController implements ControllerWrapper {
 
         String token = searchUserField.getText().trim();
         if (!token.isEmpty()){
-            searchResults = currentUser.myQuery.users().getAllUsersNameFilter(token);
+            searchResults = currentUser.myQuery.users().getAllUsersNameFilter(token, currentUser.getSessionUserData().getUserId());
         }
         else {
             searchResults = new ArrayList<>();

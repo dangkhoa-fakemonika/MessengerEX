@@ -64,10 +64,10 @@ public class MessagesManagerController implements ControllerWrapper {
     public void deleteAllMessages(ActionEvent actionEvent) {
         Alert newAlert = new Alert(Alert.AlertType.CONFIRMATION);
         newAlert.setContentText("Delete all messages");
-        newAlert.setHeaderText("Delete all messages in the chat?");
+        newAlert.setHeaderText("Delete all messages in the chat (Yours only)?");
         newAlert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                if (currentUser.myQuery.messages().removeAllByGroup(thisConversation.getConversationId())){
+                if (currentUser.myQuery.messages().removeAllByGroupWithUser(thisConversation.getConversationId(), currentUser.getSessionUserData().getUserId())){
                     ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByConv(thisConversation.getConversationId());
                     loadedMessages = FXCollections.observableArrayList();
                     for (MessageData mQuery : messageQuery){

@@ -213,10 +213,13 @@ public class UserQuery {
         return allUserData;
     }
 
-    public ArrayList<UserData> getAllUsersNameFilter(String token){
+    public ArrayList<UserData> getAllUsersNameFilter(String token, ObjectId currentId){
         MongoCollection<Document> users = mongoManagement.database.getCollection("users");
         ArrayList<Document> results = new ArrayList<>();
-        users.find(Filters.or(Filters.regex("username", token, "i"), Filters.regex("displayName", token, "i"))).into(results);
+        users.find(Filters.and(
+                Filters.or(Filters.regex("username", token, "i"), Filters.regex("displayName", token, "i")),
+                Filters.not(Filters.in("blocked", currentId))
+            )).into(results);
         ArrayList<UserData> allUserData = new ArrayList<>();
         for (Document res : results){
             allUserData.add(documentToUser(res));

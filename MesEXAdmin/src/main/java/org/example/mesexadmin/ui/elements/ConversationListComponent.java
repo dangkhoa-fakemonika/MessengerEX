@@ -29,6 +29,7 @@ public class ConversationListComponent extends HBox{
                 displayData.set(conversation.getMembersName().getFirst().get());
                 oppositeId = conversation.getMembersId().getFirst();
             }
+            data.setConversationName(displayData.get() + "'s private chat");
         }
 
         else

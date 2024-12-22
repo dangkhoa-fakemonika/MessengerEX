@@ -45,7 +45,7 @@ public class LoginController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        currentUser = App.getCurrentUser();
+        currentUser = App.getCurrentUser(true);
     }
 
     @Override

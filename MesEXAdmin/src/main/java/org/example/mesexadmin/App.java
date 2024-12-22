@@ -65,7 +65,12 @@ public class App extends Application {
         return sceneManager;
     }
     public static SessionUser getCurrentUser() {
-        // currentUser.updateCurrentUserData();
+        currentUser.updateCurrentUserData();
         return currentUser;
     }
+
+    public static SessionUser getCurrentUser(boolean isAnonymous) {
+        return currentUser;
+    }
+
 }

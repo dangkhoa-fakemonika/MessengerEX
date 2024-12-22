@@ -134,6 +134,19 @@ public class MessageQuery {
         return true;
     }
 
+    public boolean removeAllByGroupWithUser(ObjectId id, ObjectId userId){
+        MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
+
+        try {
+            messages.deleteMany(Filters.and(Filters.eq("conversationId", id), Filters.eq("senderId", userId)) );
+        } catch (MongoWriteException e){
+            return false;
+        }
+
+        return true;
+    }
+
+
     public int countChatOccurrences(ObjectId targetId, String type){
         MongoCollection<Document> messages = mongoManagement.database.getCollection("messages");
 

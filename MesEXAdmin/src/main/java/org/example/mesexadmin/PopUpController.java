@@ -44,7 +44,7 @@ public class PopUpController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        currentUser = App.getCurrentUser();
+        currentUser = App.getCurrentUser(true);
         if (isMale != null && isFemale != null){
             isMale.setToggleGroup(toggleGroup);
             isFemale.setToggleGroup(toggleGroup);
