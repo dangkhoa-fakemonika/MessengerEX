@@ -20,7 +20,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.Duration;
 
 import org.bson.types.ObjectId;
-import org.example.mesexadmin.Main;
+import org.example.mesexadmin.App;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
@@ -310,7 +310,7 @@ public class MessagingController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        currentUser = Main.getCurrentUser();
+        currentUser = App.getCurrentUser();
         optionButton.setDisable(true);
         disableChat();
         myTextArea.clear();
@@ -352,7 +352,7 @@ public class MessagingController implements ControllerWrapper {
         updateChatList.setPeriod(Duration.seconds(60));
         updateChatList.start();
 
-        currentUser = Main.getCurrentUser();
+        currentUser = App.getCurrentUser();
         // refresh();
 
         if (jumpToMessage) goToMessage();
@@ -360,7 +360,7 @@ public class MessagingController implements ControllerWrapper {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        sceneManager = Main.getSceneManager();
+        sceneManager = App.getSceneManager();
         searchPause = new PauseTransition(Duration.millis(500));
         searchPause.setOnFinished((e) -> loadSearchResults());
 
@@ -457,7 +457,7 @@ public class MessagingController implements ControllerWrapper {
         addFriendButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-add.fxml")));
+                FXMLLoader loader = new FXMLLoader((App.class.getResource("pop-up-add.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
                 
                 try {
@@ -496,7 +496,7 @@ public class MessagingController implements ControllerWrapper {
         addGroupButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-create-group.fxml")));
+                FXMLLoader loader = new FXMLLoader((App.class.getResource("pop-up-create-group.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
 
                 try {
@@ -606,7 +606,7 @@ public class MessagingController implements ControllerWrapper {
         addPrivateChat.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-create-private.fxml")));
+                FXMLLoader loader = new FXMLLoader((App.class.getResource("pop-up-create-private.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
 
                 try {
@@ -667,7 +667,7 @@ public class MessagingController implements ControllerWrapper {
         addGroupTargetButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-create-group.fxml")));
+                FXMLLoader loader = new FXMLLoader((App.class.getResource("pop-up-create-group.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
 
                 try {

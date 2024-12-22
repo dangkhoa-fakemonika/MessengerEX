@@ -25,8 +25,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 public class SessionUser {
-    private final static String serviceEmail = Main.appProperties.getProperty("mail");
-    private final static String appPassword = Main.appProperties.getProperty("password");
+    private final static String serviceEmail = App.appProperties.getProperty("mail");
+    private final static String appPassword = App.appProperties.getProperty("password");
     private UserData currentUser;
     public GlobalQuery myQuery;
 

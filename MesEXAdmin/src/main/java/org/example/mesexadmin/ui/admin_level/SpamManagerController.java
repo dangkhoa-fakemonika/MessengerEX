@@ -12,7 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Duration;
-import org.example.mesexadmin.Main;
+import org.example.mesexadmin.App;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.SpamTicketData;
@@ -44,7 +44,7 @@ public class SpamManagerController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        currentUser = Main.getCurrentUser();
+        currentUser = App.getCurrentUser();
         removeSpam.setDisable(true);
         banUser.setDisable(true);
         currentFilter = "None";
@@ -55,7 +55,7 @@ public class SpamManagerController implements ControllerWrapper {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        sceneManager = Main.getSceneManager();
+        sceneManager = App.getSceneManager();
         spamTable.setItems(spamData);
         spamFilter.setItems(filterOptions);
         filterPause = new PauseTransition(Duration.millis(500));

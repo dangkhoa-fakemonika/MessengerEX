@@ -18,7 +18,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
 
-import org.example.mesexadmin.Main;
+import org.example.mesexadmin.App;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
@@ -129,7 +129,7 @@ public class FriendsController implements ControllerWrapper {
     private HashMap<String, String> filterMap = new HashMap<>();
 
     public void addFriend(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("pop-up-add.fxml"));
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("pop-up-add.fxml"));
         Dialog<Objects> dialog = new Dialog<>();
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         DialogPane dialogPane = loader.load();
@@ -192,7 +192,7 @@ public class FriendsController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        currentUser = Main.getCurrentUser();
+        currentUser = App.getCurrentUser();
 
         filterMap.put("online", "None");
         filterMap.put("blocked", "None");
@@ -229,7 +229,7 @@ public class FriendsController implements ControllerWrapper {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        sceneManager = Main.getSceneManager();
+        sceneManager = App.getSceneManager();
 
         // Set up filter
         onlineFilter.getItems().addAll(userFilterKeys);

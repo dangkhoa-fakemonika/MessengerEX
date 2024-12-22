@@ -18,7 +18,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.util.Duration;
-import org.example.mesexadmin.Main;
+import org.example.mesexadmin.App;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.ActivityData;
@@ -149,7 +149,7 @@ public class AppManagerController implements ControllerWrapper {
         socialPause = new PauseTransition(Duration.millis(500));
         actionPause = new PauseTransition(Duration.millis(500));
 
-        sceneManager = Main.getSceneManager();
+        sceneManager = App.getSceneManager();
 
         loginDateCol.setCellValueFactory((a) -> new SimpleObjectProperty<>(a.getValue().getLoginDate()));
         loginUsernameCol.setCellValueFactory((a) -> new SimpleStringProperty(a.getValue().getUsername()));
@@ -252,7 +252,7 @@ public class AppManagerController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        currentUser = Main.getCurrentUser();
+        currentUser = App.getCurrentUser();
 
         loginFilterField.setDisable(true);
         loginFilter.setValue("None");

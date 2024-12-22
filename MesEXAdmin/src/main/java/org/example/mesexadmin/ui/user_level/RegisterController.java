@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.PasswordField;
 
-import org.example.mesexadmin.Main;
+import org.example.mesexadmin.App;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.ui.ControllerWrapper;
 
@@ -30,7 +30,7 @@ public class RegisterController implements ControllerWrapper {
     @FXML private PasswordField confirmPasswordField;
 
     public RegisterController() {
-        sceneManager = Main.getSceneManager();
+        sceneManager = App.getSceneManager();
     }
 
     public void loginScene(ActionEvent actionEvent) throws IOException {
@@ -122,7 +122,7 @@ public class RegisterController implements ControllerWrapper {
             return false;
         }
 
-        return Main.getCurrentUser().registerUser(username, email, password);
+        return App.getCurrentUser().registerUser(username, email, password);
     }
 
     private void clearField() {

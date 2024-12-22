@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Duration;
 import org.bson.types.ObjectId;
-import org.example.mesexadmin.Main;
+import org.example.mesexadmin.App;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.ConversationData;
@@ -55,7 +55,7 @@ public class ConversationManagerController implements ControllerWrapper {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        sceneManager = Main.getSceneManager();
+        sceneManager = App.getSceneManager();
         searchPause = new PauseTransition(Duration.millis(500));
         searchPause.setOnFinished((e) -> loadFilter());
 
@@ -106,7 +106,7 @@ public class ConversationManagerController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        currentUser = Main.getCurrentUser();
+        currentUser = App.getCurrentUser();
         groupsTable.setItems(groupData);
         membersList.setItems(membersData);
         moderatorsList.setItems(moderatorsData);

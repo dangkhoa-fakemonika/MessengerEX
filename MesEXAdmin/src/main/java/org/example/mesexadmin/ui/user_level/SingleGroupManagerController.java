@@ -10,7 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import org.bson.types.ObjectId;
-import org.example.mesexadmin.Main;
+import org.example.mesexadmin.App;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
@@ -85,7 +85,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        currentUser = Main.getCurrentUser();
+        currentUser = App.getCurrentUser();
         thisConversation = MessagingController.currentConversation;
 
         refresh();
@@ -100,7 +100,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        sceneManager = Main.getSceneManager();
+        sceneManager = App.getSceneManager();
 
         memberList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserListComponent>() {
             @Override
@@ -138,7 +138,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
         addMemberButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-add-member.fxml")));
+                FXMLLoader loader = new FXMLLoader((App.class.getResource("pop-up-add-member.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
 
                 try {
@@ -254,7 +254,7 @@ public class SingleGroupManagerController implements ControllerWrapper {
         changeGroupName.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-change-group-name.fxml")));
+                FXMLLoader loader = new FXMLLoader((App.class.getResource("pop-up-change-group-name.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
 
                 try {

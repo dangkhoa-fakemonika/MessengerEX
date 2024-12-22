@@ -11,7 +11,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Duration;
-import org.example.mesexadmin.Main;
+import org.example.mesexadmin.App;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
 import org.example.mesexadmin.data_class.ConversationData;
@@ -79,7 +79,7 @@ public class AllMessagesManagerController implements ControllerWrapper {
     public void myInitialize() {
         jumpButton.setDisable(true);
         selectedMessage = null;
-        currentUser = Main.getCurrentUser();
+        currentUser = App.getCurrentUser();
         filterField.clear();
 
         ArrayList<MessageData> messageQuery = currentUser.myQuery.messages().lookUpByUser(currentUser.getSessionUserData().getUserId());
@@ -96,7 +96,7 @@ public class AllMessagesManagerController implements ControllerWrapper {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        sceneManager = Main.getSceneManager();
+        sceneManager = App.getSceneManager();
         fieldPause = new PauseTransition(Duration.millis(500));
         fieldPause.setOnFinished((e) -> updateMessages());
 

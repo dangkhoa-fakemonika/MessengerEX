@@ -43,6 +43,16 @@
       <groupId>org.eclipse.angus</groupId>
       <artifactId>angus-mail</artifactId>
       <version>2.0.3</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>jakarta.mail-api</artifactId>
+          <groupId>jakarta.mail</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jakarta.activation-api</artifactId>
+          <groupId>jakarta.activation</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- <dependency>

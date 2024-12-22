@@ -4,7 +4,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.example.mesexadmin.ui.elements.MessageListComponent;
 
 import java.util.Date;
 

@@ -13,7 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.util.Duration;
-import org.example.mesexadmin.Main;
+import org.example.mesexadmin.App;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
@@ -72,7 +72,7 @@ public class UserManagerController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        currentUser = Main.getCurrentUser();
+        currentUser = App.getCurrentUser();
         userTable.setItems(userData);
         userFilter.setValue("None");
         filterField.setDisable(true);
@@ -89,7 +89,7 @@ public class UserManagerController implements ControllerWrapper {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        sceneManager = Main.getSceneManager();
+        sceneManager = App.getSceneManager();
 
         filterPause = new PauseTransition(Duration.millis(500));
         filterPause.setOnFinished((e) -> updateData());
@@ -159,7 +159,7 @@ public class UserManagerController implements ControllerWrapper {
         deleteUser.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-delete-user.fxml")));
+                FXMLLoader loader = new FXMLLoader((App.class.getResource("pop-up-delete-user.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
 
                 try {
@@ -221,7 +221,7 @@ public class UserManagerController implements ControllerWrapper {
         addUser.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-add-user.fxml")));
+                FXMLLoader loader = new FXMLLoader((App.class.getResource("pop-up-add-user.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
 
                 try {
@@ -266,7 +266,7 @@ public class UserManagerController implements ControllerWrapper {
         editDetails.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-modify-user.fxml")));
+                FXMLLoader loader = new FXMLLoader((App.class.getResource("pop-up-modify-user.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
 
                 try {
@@ -304,7 +304,7 @@ public class UserManagerController implements ControllerWrapper {
         changePassword.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-change-user-password.fxml")));
+                FXMLLoader loader = new FXMLLoader((App.class.getResource("pop-up-change-user-password.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
 
                 try {

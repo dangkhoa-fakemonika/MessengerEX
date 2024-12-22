@@ -2,7 +2,6 @@ package org.example.mesexadmin.data_class;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +34,8 @@ public class UserData {
     // public SimpleListProperty<SimpleStringProperty> blocked;
 
     public UserData() {
+
+        userId = new ObjectId();
 
         username = new SimpleStringProperty("");
         email = new SimpleStringProperty("");

@@ -8,7 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 
-import org.example.mesexadmin.Main;
+import org.example.mesexadmin.App;
 import org.example.mesexadmin.PopUpController;
 import org.example.mesexadmin.SceneManager;
 import org.example.mesexadmin.SessionUser;
@@ -45,12 +45,12 @@ public class LoginController implements ControllerWrapper {
 
     @Override
     public void myInitialize() {
-        currentUser = Main.getCurrentUser();
+        currentUser = App.getCurrentUser();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        sceneManager = Main.getSceneManager();
+        sceneManager = App.getSceneManager();
 
         // Adding event handler using anonymous inner class (not lambda)
         switchToRegisterButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -90,7 +90,7 @@ public class LoginController implements ControllerWrapper {
         resetPasswordButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent arg0) {
-                FXMLLoader loader = new FXMLLoader((Main.class.getResource("pop-up-reset-password.fxml")));
+                FXMLLoader loader = new FXMLLoader((App.class.getResource("pop-up-reset-password.fxml")));
                 Dialog<Objects> dialog = new Dialog<>();
                 
                 try {

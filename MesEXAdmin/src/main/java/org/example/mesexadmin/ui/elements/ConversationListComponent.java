@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import org.bson.types.ObjectId;
-import org.example.mesexadmin.Main;
+import org.example.mesexadmin.App;
 import org.example.mesexadmin.data_class.ConversationData;
 import org.example.mesexadmin.data_class.UserData;
 
@@ -18,7 +18,7 @@ public class ConversationListComponent extends HBox{
     public ConversationListComponent(ConversationData conversation) {
         data = conversation;
         displayData = new SimpleStringProperty();
-        UserData viewingUser = Main.getCurrentUser().getSessionUserData();
+        UserData viewingUser = App.getCurrentUser().getSessionUserData();
         // Set display data here
         if (Objects.equals(data.getType(), "private")){
             if (viewingUser.getUserId().equals(conversation.getMembersId().getFirst())){
