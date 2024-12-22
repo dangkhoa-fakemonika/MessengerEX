@@ -46,7 +46,7 @@ public class UserData {
         gender = new SimpleStringProperty("male");
         
         status = new SimpleStringProperty("offline");
-        role = new SimpleStringProperty("admin");
+        role = new SimpleStringProperty("user");
         dateCreated = new SimpleObjectProperty<Date>(null);
         lastLogin = new SimpleObjectProperty<Date>(null);
         

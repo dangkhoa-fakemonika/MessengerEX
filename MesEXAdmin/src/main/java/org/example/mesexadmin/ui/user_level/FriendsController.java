@@ -313,7 +313,7 @@ public class FriendsController implements ControllerWrapper {
         onlineFriendTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UserData>() {
             @Override
             public void changed(ObservableValue<? extends UserData> observableValue, UserData userData, UserData t1) {
-                currentOnline = onlineFriendTable.getSelectionModel().getSelectedItem();
+                currentOnline = onlineFriendTable.getSelectionModel().getSelectedItem();    
             }
         });
 
