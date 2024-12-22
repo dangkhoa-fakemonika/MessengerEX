@@ -1,92 +1,101 @@
 package org.example.mesex.data_class;
 
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Date;
 
 public class ConversationData {
 
-    public SimpleStringProperty dateCreated;
-    public SimpleStringProperty conversationName;
-    public SimpleListProperty<SimpleStringProperty> membersId;
-    public SimpleListProperty<SimpleStringProperty> moderatorsId;
-    public SimpleStringProperty lastMessageId;
-    public SimpleStringProperty type;
+    ObjectId conversationId;
+    SimpleObjectProperty<Date> dateCreated;
+    SimpleStringProperty conversationName;
+
+    ArrayList<ObjectId> membersId;
+    ArrayList<ObjectId> moderatorsId;
+    ArrayList<SimpleStringProperty> membersName;
+    ArrayList<SimpleStringProperty> moderatorsName;
+
+    SimpleStringProperty type;
+
+    public ConversationData() {
+        conversationId = new ObjectId();
+        dateCreated = new SimpleObjectProperty<>();
+        conversationName = new SimpleStringProperty();
+        membersId = new ArrayList<>();
+        moderatorsId = new ArrayList<>();
+        membersName = new ArrayList<>();
+        moderatorsName = new ArrayList<>();
+        type = new SimpleStringProperty();
+    }
 
     public ConversationData(String newGroupName, String newHostID){
-        dateCreated = new SimpleStringProperty("b");
+        dateCreated = new SimpleObjectProperty<Date>(null);
         conversationName = new SimpleStringProperty(newGroupName);
-        ObservableList<SimpleStringProperty> observableList = FXCollections.observableArrayList(new ArrayList<>());
-        membersId = new SimpleListProperty<>(observableList);
-        membersId.add(new SimpleStringProperty(newHostID));
-        ObservableList<SimpleStringProperty> observableList1 = FXCollections.observableArrayList(new ArrayList<>());
-        moderatorsId = new SimpleListProperty<>(observableList1);
-        lastMessageId = new SimpleStringProperty("a");
+        membersId = null;
+        moderatorsId = null;
         type = new SimpleStringProperty("chat");
     }
 
-    public String getMembersId() {
-        StringBuilder res =  new StringBuilder();
-        for (SimpleStringProperty i : membersId){
-            if (!i.getValueSafe().trim().isEmpty())
-                res.append(i.getValueSafe()).append(", ");
-        }
-
-        return !res.isEmpty() ? res.toString() : "Empty Group";
+    public ObjectId getConversationId() {
+        return conversationId;
     }
 
-    public String getDateCreated() {
+    public Date getDateCreated() {
         return dateCreated.get();
-    }
-
-    public String getLastMessageId() {
-        return lastMessageId.get();
     }
 
     public String getConversationName() {
         return conversationName.get();
     }
 
-    public String getModeratorsId() {
-        StringBuilder res =  new StringBuilder();
-        for (SimpleStringProperty i : moderatorsId){
-            if (!i.getValueSafe().trim().isEmpty())
-                res.append(i.getValueSafe()).append(", ");
-        }
+    public ArrayList<SimpleStringProperty> getModeratorsName() {
+        return moderatorsName;
+    }
 
-        return !res.isEmpty() ? res.toString() : "No Admin";
+    public ArrayList<SimpleStringProperty> getMembersName() {
+        return membersName;
+    }
+
+    public ArrayList<ObjectId> getMembersId() {
+        return membersId;
+    }
+
+    public ArrayList<ObjectId> getModeratorsId() {
+        return moderatorsId;
+    }
+
+    public void setConversationId(ObjectId conversationId) {
+        this.conversationId = conversationId;
     }
 
     public String getType() {
         return type.get();
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated.set(dateCreated);
     }
 
-    public void setModeratorsId(String moderatorsId) {
+    public void setModeratorsId(ArrayList<ObjectId>  moderatorsId) {
 //        this.hostsId.set(hostsId);
+        this.moderatorsId = moderatorsId;
     }
 
-    public void setMembersId(String membersId) {
+    public void setMembersId(ArrayList<ObjectId> membersId) {
 //        this.participantIDs.set(participantIDs);
+        this.membersId = membersId;
     }
 
-    public void addIDs(SimpleStringProperty[] newIDs){
-        membersId.addAll(Arrays.asList(newIDs));
+    public void setMembersName(ArrayList<SimpleStringProperty> membersName) {
+        this.membersName = membersName;
     }
 
-    public void removeID(String id){
-        membersId.remove(new SimpleStringProperty(id));
-    }
-
-    public void setLastMessageId(String lastMessageId) {
-        this.lastMessageId.set(lastMessageId);
+    public void setModeratorsName(ArrayList<SimpleStringProperty> moderatorsName) {
+        this.moderatorsName = moderatorsName;
     }
 
     public void setType(String type) {
@@ -95,5 +104,16 @@ public class ConversationData {
 
     public void setConversationName(String conversationName) {
         this.conversationName.set(conversationName);
+    }
+
+    public Document toDocument(){
+        Document doc = new Document();
+        doc.append("dateCreated", this.dateCreated.get())
+        .append("conversationName", this.conversationName.get())
+        .append("membersId", this.membersId)
+        .append("moderatorsId", this.moderatorsId)
+        .append("type", this.type.get());
+
+        return doc;
     }
 }

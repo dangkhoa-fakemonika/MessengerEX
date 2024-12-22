@@ -1,59 +1,103 @@
 package org.example.mesex.data_class;
 
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+
+import java.util.Date;
 
 public class MessageData {
-    public SimpleStringProperty senderId;
-    public SimpleStringProperty receiverId;
-    public SimpleStringProperty content;
-    public SimpleStringProperty timeSent;
-    public SimpleStringProperty conversationId;
+    ObjectId messageId;
+    ObjectId senderId;
+    SimpleStringProperty senderName;
+    SimpleStringProperty content;
+    SimpleObjectProperty<Date> timeSent;
+    ObjectId conversationId;
 
-    public MessageData(String message, String sender, String receiver){
-        senderId = new SimpleStringProperty(sender);
-        receiverId = new SimpleStringProperty(receiver);
-        content = new SimpleStringProperty(message);
-        timeSent = new SimpleStringProperty("2024");
-        conversationId = new SimpleStringProperty("null");
+    public MessageData(){
+        messageId = new ObjectId();
+        senderId = null;
+        senderName = new SimpleStringProperty();
+        content = new SimpleStringProperty("");
+        timeSent = new SimpleObjectProperty<>(new Date());
+        conversationId = null;
     }
 
-    public String getSenderId() {
-        return senderId.get();
+    public MessageData(String message, String sender, String receiver){
+        messageId = new ObjectId();
+        senderId = null;
+        senderName = new SimpleStringProperty();
+        content = new SimpleStringProperty(message);
+        timeSent = new SimpleObjectProperty<>(null);
+        conversationId = null;
+    }
+
+    public ObjectId getMessageId() {
+        return messageId;
+    }
+
+    public ObjectId getSenderId() {
+        return senderId;
     }
 
     public String getContent() {
         return content.get();
     }
 
-    public String getConversationId() {
-        return conversationId.get();
+    public ObjectId getConversationId() {
+        return conversationId;
     }
 
-    public String getReceiverId() {
-        return receiverId.get();
+    public String getSenderName() {
+        return senderName.get();
     }
 
-    public String getTimeSent() {
+    public Date getTimeSent() {
         return timeSent.get();
     }
 
-    public void setReceiverId(String receiverId) {
-        this.receiverId.set(receiverId);
+    public void setMessageId(ObjectId messageId) {
+        this.messageId = messageId;
     }
 
-    public void setSenderId(String senderId) {
-        this.senderId.set(senderId);
+    public void setSenderId(ObjectId senderId) {
+        this.senderId = senderId;
     }
 
     public void setContent(String content) {
         this.content.set(content);
     }
 
-    public void setConversationId(String conversationId) {
-        this.conversationId.set(conversationId);
+    public void setConversationId(ObjectId conversationId) {
+        this.conversationId = conversationId;
     }
 
-    public void setTimeSent(String timeSent) {
+    public void setTimeSent(Date timeSent) {
         this.timeSent.set(timeSent);
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName.set(senderName);
+    }
+
+    public Document toDocument(){
+        Document doc = new Document();
+        doc.append("senderId",this.senderId)
+            .append("senderName", this.senderName.get())
+            .append("content",this.content.get())
+            .append("timeSent",this.timeSent.get())
+            .append("conversationId",this.conversationId);
+        return doc;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this)
+            return true;
+        if (!(object instanceof MessageData))
+            return false;
+        MessageData messageData = (MessageData) object;
+        return messageData.getMessageId().equals(this.messageId);
     }
 }

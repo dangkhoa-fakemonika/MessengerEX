@@ -4,33 +4,39 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane style="-fx-pref-width: 800; -fx-pref-height: 600;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesex.EditProfileController">
+<AnchorPane style="-fx-pref-width: 800; -fx-pref-height: 600;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesex.ui.user_level.EditProfileController">
    <children>
       <SplitPane dividerPositions="0.15" layoutX="1.0" orientation="VERTICAL" prefHeight="600.0" prefWidth="800.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="67.0" prefWidth="798.0">
                <children>
-                  <Label layoutX="408.0" layoutY="12.0" prefHeight="30.0" prefWidth="375.0" text="Name">
+                  <Label fx:id="nameLabel" layoutX="408.0" layoutY="12.0" prefHeight="30.0" prefWidth="375.0" text="Name">
                      <font>
                         <Font name="System Bold" size="25.0" />
                      </font>
                   </Label>
-                  <Text layoutX="408.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" wrappingWidth="183.20000000000005">
+                  <Text fx:id="usernameText" layoutX="408.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" wrappingWidth="183.20000000000005">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Text>
-                  <Button layoutX="542.0" layoutY="45.0" mnemonicParsing="false" onAction="#changeUsername" prefHeight="26.0" prefWidth="98.0" text="Change Name" />
-                  <Button layoutX="14.0" layoutY="30.0" mnemonicParsing="false" onAction="#returnToMain" prefHeight="26.0" prefWidth="98.0" text="Back to Main" />
-                  <Button layoutX="138.0" layoutY="30.0" mnemonicParsing="false" onAction="#returnToMain" prefHeight="26.0" prefWidth="147.0" text="Save Changes and Back" />
+                  <Button fx:id="editProfileButton" layoutX="699.0" layoutY="30.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="84.0" text="Edit Profile" />
+                  <Button fx:id="returnToMainButton" layoutX="14.0" layoutY="30.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="98.0" text="Back to Main" />
+                  <TextField fx:id="nameField" focusTraversable="false" layoutX="408.0" layoutY="8.0" prefHeight="30.0" prefWidth="183.0" promptText="Name" visible="false">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextField>
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="420.0" prefWidth="798.0">
@@ -47,7 +53,7 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Text>
-                        <TextField prefHeight="31.0" prefWidth="335.0" text="address">
+                        <TextField fx:id="addressField" disable="true" focusTraversable="false" prefHeight="31.0" prefWidth="335.0" promptText="Address">
                            <font>
                               <Font size="15.0" />
                            </font>
@@ -59,19 +65,22 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Text>
-                        <TextField prefHeight="31.0" prefWidth="335.0" text="gender">
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </TextField>
-                        <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 25;" />
+                        <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 25;">
+                           <children>
+                              <RadioButton fx:id="maleRadioButton" disable="true" focusTraversable="false" layoutX="86.0" layoutY="4.0" mnemonicParsing="false" text="Male">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="genderToggleGroup" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="femaleRadioButton" disable="true" focusTraversable="false" layoutX="168.0" layoutY="4.0" mnemonicParsing="false" text="Female" toggleGroup="$genderToggleGroup" />
+                           </children></Pane>
                         <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 10;" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Date of birth">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Text>
-                        <DatePicker prefHeight="30.0" prefWidth="176.0" />
+                        <DatePicker fx:id="dateOfBirthPicker" disable="true" focusTraversable="false" prefHeight="30.0" prefWidth="176.0" />
                      </children>
                   </VBox>
                   <VBox layoutX="399.0" layoutY="17.0" prefHeight="490.0" prefWidth="375.0" style="-fx-padding: 20;">
@@ -86,7 +95,7 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Text>
-                        <DatePicker disable="true" prefHeight="30.0" prefWidth="176.0" />
+                        <DatePicker fx:id="dateJoinedPicker" disable="true" prefHeight="30.0" prefWidth="176.0" />
                         <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 10;" />
                         <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 25;" />
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Email">
@@ -94,18 +103,14 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Text>
-                        <TextField disable="true" prefHeight="31.0" prefWidth="335.0" text="username@email.com">
+                        <TextField fx:id="emailField" disable="true" editable="false" prefHeight="31.0" prefWidth="335.0" promptText="email">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </TextField>
                         <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 10;" />
-                        <ButtonBar prefHeight="15.0" prefWidth="335.0">
-                           <buttons>
-                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#changeEmail" text="Change Email" />
-                           </buttons>
-                        </ButtonBar>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+                        <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 25;" />
+                        <Text fx:id="passwordText" strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
                            <font>
                               <Font name="System Bold" size="15.0" />
                            </font>
@@ -113,8 +118,8 @@
                         <Pane prefHeight="25.0" prefWidth="335.0" style="-fx-pref-height: 10;" />
                         <ButtonBar prefHeight="15.0" prefWidth="335.0">
                            <buttons>
-                              <Button mnemonicParsing="false" onAction="#changePassword" text="Change Password" />
-                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#resetPassword" text="Reset Password" />
+                              <Button fx:id="changePasswordButton" disable="true" focusTraversable="false" mnemonicParsing="false" text="Change Password" />
+                              <Button fx:id="resetPasswordButton" alignment="CENTER" contentDisplay="CENTER" disable="true" focusTraversable="false" mnemonicParsing="false" onAction="#resetPassword" text="Reset Password" />
                            </buttons>
                         </ButtonBar>
                      </children>
@@ -124,6 +129,8 @@
                         <Font name="System Bold" size="20.0" />
                      </font>
                   </Label>
+                  <Button fx:id="cancelButton" focusTraversable="false" layoutX="290.0" layoutY="333.0" mnemonicParsing="false" onAction="#returnToMain" prefHeight="26.0" prefWidth="98.0" text="Cancel" visible="false" />
+                  <Button fx:id="confirmButton" focusTraversable="false" layoutX="400.0" layoutY="333.0" mnemonicParsing="false" onAction="#returnToMain" prefHeight="26.0" prefWidth="98.0" text="Confirm" visible="false" />
                </children>
             </AnchorPane>
         </items>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -9,43 +8,28 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesex.ConversationController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesex.ui.user_level.ConversationController">
    <children>
       <SplitPane dividerPositions="0.1407085561497326" layoutX="170.0" layoutY="100.0" orientation="VERTICAL" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
                   <Button layoutX="24.0" layoutY="28.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
+                  <Button layoutX="659.0" layoutY="28.0" mnemonicParsing="false" onAction="#addGroup" text="Create New Group" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
                   <TabPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <tabs>
-                        <Tab closable="false" text="All Groups">
-                           <content>
-                              <AnchorPane>
-                                 <children>
-                                    <TableView fx:id="allGroupTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
-                                    <Button layoutX="691.0" layoutY="13.0" mnemonicParsing="false" onAction="#leaveGroup" text="Leave Group" />
-                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
-                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
-                                    <Button layoutX="616.0" layoutY="13.0" mnemonicParsing="false" onAction="#addMember" text="Add User" />
-                                    <Button layoutX="512.0" layoutY="13.0" mnemonicParsing="false" onAction="#renameGroup" text="Rename Group" />
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                        </Tab>
                         <Tab closable="false" text="My Groups">
                            <content>
                               <AnchorPane>
                                  <children>
                                     <TableView fx:id="myGroupTable" layoutY="50.0" prefHeight="434.0" prefWidth="798.0" />
-                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Filter" />
-                                    <ChoiceBox layoutX="193.0" layoutY="13.0" prefHeight="26.0" prefWidth="104.0" />
+                                    <TextField layoutX="14.0" layoutY="13.0" prefHeight="26.0" prefWidth="166.0" promptText="Group Name" />
                                     <Button layoutX="573.0" layoutY="13.0" mnemonicParsing="false" onAction="#configureGroup" text="Configure Group" />
                                     <Button layoutX="691.0" layoutY="13.0" mnemonicParsing="false" onAction="#leaveGroup" text="Leave Group" />
-                                    <Button layoutX="473.0" layoutY="13.0" mnemonicParsing="false" onAction="#addGroup" text="Create Group" />
                                  </children>
                               </AnchorPane>
                            </content>

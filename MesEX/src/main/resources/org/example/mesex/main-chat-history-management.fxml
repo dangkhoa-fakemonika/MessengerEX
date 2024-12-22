@@ -7,19 +7,19 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesex.MessagesManagerController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.mesex.ui.user_level.MessagesManagerController">
    <children>
       <SplitPane dividerPositions="0.27705410821643284" layoutX="102.0" layoutY="94.0" prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <TextField layoutX="34.0" layoutY="229.0" promptText="Enter something..." />
+                  <TextField fx:id="filterField" layoutX="34.0" layoutY="229.0" promptText="Enter something..." />
                   <Label layoutX="34.0" layoutY="201.0" text="Search for messages" />
-                  <Button layoutX="35.0" layoutY="159.0" mnemonicParsing="false" onAction="#deleteAllUser" text="Delete All Messages" />
-                  <Button layoutX="35.0" layoutY="111.0" mnemonicParsing="false" text="Delete Message" />
-                  <Label layoutX="69.0" layoutY="27.0" text="Conversation 1" />
-                  <Button layoutX="34.0" layoutY="65.0" mnemonicParsing="false" onAction="#reportUser" text="Report User as Spam" />
+                  <Button fx:id="deleteAllButton" layoutX="35.0" layoutY="159.0" mnemonicParsing="false" onAction="#deleteAllMessages" text="Delete All Messages" />
+                  <Button fx:id="deleteOneButton" layoutX="35.0" layoutY="111.0" mnemonicParsing="false" onAction="#deleteOneMessage" text="Delete Message" />
+                  <Label fx:id="title" layoutX="69.0" layoutY="27.0" text="Conversation 1" />
                   <Button layoutX="61.0" layoutY="535.0" mnemonicParsing="false" onAction="#returnToMain" text="Return to Main" />
+                  <Button fx:id="jumpButton" layoutX="35.0" layoutY="273.0" mnemonicParsing="false" text="Go To Message" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">

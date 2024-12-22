@@ -6,14 +6,6 @@ module org.example.mesexadmin {
     requires transitive mongo.java.driver;
     requires jakarta.mail;
     requires java.desktop;
-    // requires javafx.web;
-    
-    // requires org.controlsfx.controls;
-    // requires javax.mail;
-    // requires eu.hansolo.tilesfx;
-    // requires org.kordamp.bootstrapfx.core;
-    // requires com.dlsc.formsfx;
-    // requires net.synedra.validatorfx;
 
     exports org.example.mesexadmin;
     exports org.example.mesexadmin.data_class;

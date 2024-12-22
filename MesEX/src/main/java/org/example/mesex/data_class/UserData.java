@@ -1,46 +1,54 @@
 package org.example.mesex.data_class;
 
-import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import org.bson.Document;
+import org.bson.types.ObjectId;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class UserData {
-    public SimpleStringProperty username;
-    public SimpleStringProperty displayName;
-    public SimpleStringProperty email;
+    private ObjectId userId;
 
-    public SimpleStringProperty status;
-    public SimpleStringProperty lastLogin;
-    public SimpleStringProperty dateCreated;
-    public SimpleStringProperty role;
+    SimpleStringProperty username;
+    SimpleStringProperty displayName;
+    SimpleStringProperty email;
+
+    SimpleStringProperty status;
+    SimpleObjectProperty<Date> lastLogin;
+    SimpleObjectProperty<Date> dateCreated;
+    SimpleStringProperty role;
+    
+    ArrayList<ObjectId> friend;
+    ArrayList<ObjectId> blocked;
+
+    SimpleStringProperty address;
+    SimpleObjectProperty<Date> dateOfBirth;
+    SimpleStringProperty gender;
+    SimpleStringProperty passwordHashed;
 
     // public SimpleListProperty<SimpleStringProperty> friend;
     // public SimpleListProperty<SimpleStringProperty> blocked;
-    public ArrayList<SimpleStringProperty> friend;
-    public ArrayList<SimpleStringProperty> blocked;
-
-    public SimpleStringProperty address;
-    public SimpleStringProperty dateOfBirth;
-    public SimpleStringProperty gender;
-    public SimpleStringProperty passwordHashed;
 
     public UserData() {
+
+        userId = new ObjectId();
+
         username = new SimpleStringProperty("");
         email = new SimpleStringProperty("");
         passwordHashed = new SimpleStringProperty("");
         
         displayName = new SimpleStringProperty("");
-        dateOfBirth = new SimpleStringProperty("");
+        dateOfBirth = new SimpleObjectProperty<Date>(null);
         address = new SimpleStringProperty("");
-        gender = new SimpleStringProperty("");
+        gender = new SimpleStringProperty("male");
         
-        status = new SimpleStringProperty("");
-        role = new SimpleStringProperty("user");
-        dateCreated = new SimpleStringProperty("");
-        lastLogin = new SimpleStringProperty("");
+        status = new SimpleStringProperty("offline");
+        role = new SimpleStringProperty("admin");
+        dateCreated = new SimpleObjectProperty<Date>(null);
+        lastLogin = new SimpleObjectProperty<Date>(null);
         
         friend = new ArrayList<>();
         blocked = new ArrayList<>();
@@ -51,7 +59,7 @@ public class UserData {
         username = new SimpleStringProperty(newUsername);
         email = new SimpleStringProperty(newEmail);
         status = new SimpleStringProperty(currentStatus);
-        lastLogin = new SimpleStringProperty("27 years ago");
+        lastLogin = new SimpleObjectProperty<>(null);
 
         // ObservableList<SimpleStringProperty> observableList1 = FXCollections.observableArrayList(new ArrayList<>());
         // ObservableList<SimpleStringProperty> observableList2 = FXCollections.observableArrayList(new ArrayList<>());
@@ -59,9 +67,24 @@ public class UserData {
         // friend = new SimpleListProperty<>(observableList1);
         // blocked = new SimpleListProperty<>(observableList2);
 
-        dateCreated = new SimpleStringProperty("Tomorrow");
+        // dateCreated = new SimpleStringProperty("");
         address = new SimpleStringProperty("");
-        dateOfBirth = new SimpleStringProperty("");
+        dateOfBirth = new SimpleObjectProperty<Date>(null);
+        gender = new SimpleStringProperty("");
+        passwordHashed = new SimpleStringProperty("");
+        role = new SimpleStringProperty("");
+    }
+
+    public UserData(String newName){
+        displayName = new SimpleStringProperty(newName);
+        username = new SimpleStringProperty("");
+        email = new SimpleStringProperty("");
+        status = new SimpleStringProperty("");
+        // lastLogin = new SimpleStringProperty("27 years ago");
+
+        // dateCreated = new SimpleStringProperty("");
+        address = new SimpleStringProperty("");
+        dateOfBirth = new SimpleObjectProperty<Date>(null);
         gender = new SimpleStringProperty("");
         passwordHashed = new SimpleStringProperty("");
         role = new SimpleStringProperty("");
@@ -76,6 +99,10 @@ public class UserData {
 //        friendCount = new SimpleStringProperty(u.getFriendCount());
 //        dateCreated = new SimpleStringProperty(u.getDateCreated());
 //    }
+
+    public void setUserId(ObjectId userId) {
+        this.userId = userId;
+    }
 
     public void setEmail(String email) {
         this.email.set(email);
@@ -93,19 +120,11 @@ public class UserData {
         this.status.set(status);
     }
 
-    public void setLastLogin(String lastLogin) {
+    public void setLastLogin(Date lastLogin) {
         this.lastLogin.set(lastLogin);
     }
 
-    public void setFriend(String friendCount) {
-//        this.friendCount.set(friendCount);
-    }
-
-    public void setBlocked(ObservableList<SimpleStringProperty> blocked) {
-//        this.blocked.set(blocked);
-    }
-
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(Date dateCreated) {
         this.dateCreated.set(dateCreated);
     }
 
@@ -117,7 +136,7 @@ public class UserData {
         this.role.set(role);
     }
 
-    public void setDateOfBirth(String dateOfBirth) {
+    public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth.set(dateOfBirth);
     }
 
@@ -141,36 +160,63 @@ public class UserData {
         return username.get();
     }
 
+    public SimpleStringProperty getUsernameProperty() {
+        return this.username;
+    }
+
     public String getStatus() {
         return status.get();
     }
 
-    public String getFriend() {
-//        return friendCount.get();
-        StringBuilder res =  new StringBuilder();
-        for (SimpleStringProperty i : friend){
-            if (!i.getValueSafe().trim().isEmpty())
-                res.append(i.getValueSafe()).append(", ");
+    public String getFormattedDate(String field) {
+        Date date = null;
+        String pattern = "dd/MM/yyyy";
+
+        if (field.equals("dateOfBirth")) {
+            date = this.dateOfBirth.get();
+        }
+        else if (field.equals("lastLogin")) {
+            date = this.lastLogin.get();
+            pattern = "yyyy-MM-dd HH:mm:ss";
+        }
+        else if (field.equals("dateJoined")) {
+            date = this.dateCreated.get();
         }
 
-        return !res.isEmpty() ? res.toString() : "No friends.";
+        if (date == null)
+            return "";
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+
+        return dateFormat.format(date);
     }
 
-    public String getBlocked() {
-        StringBuilder res =  new StringBuilder();
-        for (SimpleStringProperty i : blocked){
-            if (!i.getValueSafe().trim().isEmpty())
-                res.append(i.getValueSafe()).append(", ");
-        }
-
-        return !res.isEmpty() ? res.toString() : "No blocked";
+    public ArrayList<ObjectId> getFriend() {
+        return this.friend;
     }
 
-    public String getLastLogin() {
+    public ArrayList<ObjectId> getBlocked() {
+        return this.blocked;
+    }
+
+    public void setFriend(ArrayList<ObjectId> friend) {
+        this.friend.clear();
+        this.friend.addAll(friend);
+    }
+
+    public void setBlocked(ArrayList<ObjectId> blocked) {
+        this.blocked = blocked;
+    }
+
+    public ObjectId getUserId() {
+        return this.userId;
+    }
+
+    public Date getLastLogin() {
         return lastLogin.get();
     }
 
-    public String getDateCreated() {
+    public Date getDateCreated() {
         return dateCreated.get();
     }
 
@@ -178,7 +224,11 @@ public class UserData {
         return address.get();
     }
 
-    public String getDateOfBirth() {
+    public SimpleStringProperty getAddressProperty() {
+        return this.address;
+    }
+
+    public Date getDateOfBirth() {
         return dateOfBirth.get();
     }
 
@@ -192,5 +242,49 @@ public class UserData {
 
     public String getPasswordHashed() {
         return passwordHashed.get();
+    }
+
+    public SimpleObjectProperty<Date> getDateCreatedProperty() {
+        return this.dateCreated;
+    }
+
+    public SimpleStringProperty getDisplayNameProperty() {
+        return this.displayName;
+    }
+
+    public SimpleStringProperty getStatusProperty() {
+        return this.status;
+    }
+
+    public SimpleStringProperty getGenderProperty() {
+        return this.gender;
+    }
+
+    public Document toDocument() {
+        Document doc = new Document();
+        doc.append("username", this.username.get())
+            .append("displayName", this.displayName.get())
+            .append("email", this.email.get())
+            .append("status", this.status.get())
+            .append("lastLogin", this.lastLogin.get())
+            .append("dateCreated", this.dateCreated.get())
+            .append("role", this.role.get())
+            .append("friend", this.friend)
+            .append("blocked", this.blocked)
+            .append("address", this.address.get())
+            .append("dateOfBirth", this.dateOfBirth.get())
+            .append("gender", this.gender.get())
+            .append("passwordHash", this.passwordHashed.get());
+        return doc;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == this)
+            return true;
+        if (!(object instanceof UserData))
+            return false;
+        UserData userData = (UserData) object;
+        return this.userId.equals(userData.getUserId());
     }
 }
