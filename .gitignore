@@ -113,4 +113,4 @@ src/MesEXAdmin/src/main/resources/org/example/mesexadmin/pop-up-delete-member.fx
 src/MesEXAdmin/src/main/resources/org/example/mesexadmin/pop-up-modify-user.fxml
 src/MesEXAdmin/src/main/resources/org/example/mesexadmin/pop-up-reset-password.fxml
 src/MesEXAdmin/src/main/resources/org/example/mesexadmin/pop-up-unfriend.fxml
-release/app.properties
+*.properties
